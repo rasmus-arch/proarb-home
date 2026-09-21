@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 724.284 680.318">
   <defs>
-    <clipPath id="clip"><circle cx="100" cy="100" r="94" /></clipPath>
+    <clipPath id="clip"><path transform="matrix(1,0,0,-1,0,680.318)" d="M0 680.318H724.284V0H0Z" /></clipPath>
   </defs>
-  <circle cx="100" cy="100" r="94" fill="#0e3a41" />
   <g clip-path="url(#clip)">
-    <rect x="0" y="66" width="200" height="68" fill="#f5b73c" />
+    <path transform="matrix(1,0,0,-1,630.0758,335.5635)" d="M0 0C0-163.628-132.646-296.274-296.274-296.274-459.902-296.274-592.548-163.628-592.548 0-592.548 163.628-459.902 296.274-296.274 296.274-132.646 296.274 0 163.628 0 0" fill="#163d47" />
+    <path transform="matrix(1,0,0,-1,87.3192,445.1444)" d="M0 0C42.003-94.335 136.556-160.11 246.482-160.11 356.409-160.11 450.962-94.335 492.965 0Z" fill="#f7bd4c" />
+    <path transform="matrix(1,0,0,-1,580.2841,225.9826)" d="M0 0C-42.003 94.335-136.556 160.11-246.482 160.11-356.409 160.11-450.962 94.335-492.965 0Z" fill="#f7bd4c" />
   </g>
-  <circle cx="100" cy="100" r="94" fill="none" stroke="#0a2a30" stroke-width="7" />
 </svg>
