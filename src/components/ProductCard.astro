@@ -44,10 +44,6 @@ const colors = p.variants.map((v) => v.color).filter(Boolean) as string[];
     width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply;
     padding: 7%; transition: transform .35s cubic-bezier(.2,.8,.3,1);
   }
-  :root[data-theme='dark'] .card__media :global(.card__img) { mix-blend-mode: normal; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .card__media :global(.card__img) { mix-blend-mode: normal; }
-  }
   .card__link:hover .card__media :global(.card__img) { transform: scale(1.04); }
   .card__body { padding: .95rem 1rem 1.05rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; }
   .card__brand { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); font-weight: 620; }

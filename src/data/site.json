@@ -13,6 +13,10 @@
     "city": "Eskilstuna",
     "country": "SE"
   },
+  "hours": [
+    { "days": "Mån–fre", "time": "TODO – fyll i riktiga öppettider" },
+    { "days": "Lör–sön", "time": "TODO – fyll i riktiga öppettider" }
+  ],
   "social": {
     "facebook": "https://www.facebook.com/",
     "instagram": "https://www.instagram.com/",

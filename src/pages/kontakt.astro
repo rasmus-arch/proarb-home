@@ -38,7 +38,19 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Kontakt', href: '/kontakt/'
             {site.address.street}<br />
             {site.address.postalCode} {site.address.city}
           </address>
+          <dl class="khours">
+            {site.hours.map((h: { days: string; time: string }) => (
+              <div><dt>{h.days}</dt><dd>{h.time}</dd></div>
+            ))}
+          </dl>
           <p class="muted">Kom gärna in och känn på plaggen – hör av er innan så finns vi på plats.</p>
+          <iframe
+            class="kmap"
+            title={`Karta till ${site.legalName}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src={`https://www.google.com/maps?q=${encodeURIComponent(site.address.street + ', ' + site.address.postalCode + ' ' + site.address.city)}&output=embed`}
+          ></iframe>
         </div>
         <div class="kcard kcard--accent">
           <h2>Redan kund?</h2>
@@ -65,6 +77,14 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Kontakt', href: '/kontakt/'
   .kmail:hover { color: var(--ink); }
   .kcard p { margin-top: .8rem; font-size: .9rem; }
   address { font-style: normal; line-height: 1.75; color: var(--ink-2); }
+  .khours { margin-top: .9rem; padding-top: .9rem; border-top: 1px solid var(--line); display: grid; gap: .25rem; }
+  .khours div { display: flex; justify-content: space-between; gap: 1rem; font-size: .92rem; }
+  .khours dt { color: var(--ink-2); }
+  .khours dd { font-weight: 560; }
+  .kmap {
+    width: 100%; height: 220px; margin-top: 1.1rem; border: 1px solid var(--line);
+    border-radius: var(--r); filter: grayscale(.15) contrast(1.02);
+  }
   .kcard--accent { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
   .kcard--accent p { color: var(--ink-2); margin-top: 0; }
 </style>

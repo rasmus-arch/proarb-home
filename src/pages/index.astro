@@ -121,7 +121,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <section class="promo">
     <div class="container promo__in">
       <div class="promo__copy">
-        <p class="eyebrow eyebrow--invert">Profilprodukter</p>
+        <p class="eyebrow">Profilprodukter</p>
         <h2>Er billigaste reklampelare</h2>
         <p>
           Profiltröjor syns överallt, hela tiden. Vi brandar pikéer, jackor och skjortor
@@ -129,7 +129,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
         </p>
         <div class="cluster">
           <a class="btn btn--accent" href="/profilprodukter/">Se profilprodukter</a>
-          <a class="btn btn--invert" href="/give-aways/">Give aways</a>
+          <a class="btn btn--ghost" href="/give-aways/">Give aways</a>
         </div>
       </div>
       <div class="promo__cards">
@@ -225,11 +225,6 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
     font-size: .74rem; letter-spacing: .1em; padding: .45rem .9rem; border-radius: var(--r-pill);
     box-shadow: var(--shadow-2); white-space: nowrap;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .tile :global(.tile__img) { mix-blend-mode: normal; }
-  }
-  :root[data-theme='dark'] .tile :global(.tile__img) { mix-blend-mode: normal; }
-
   /* Sektionsrubriker */
   .sechead {
     display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
@@ -248,24 +243,18 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .step p { color: var(--ink-2); font-size: .95rem; }
 
   /* Promo */
-  .promo { background: var(--brand); color: color-mix(in srgb, var(--bg) 92%, transparent); padding-block: var(--section); }
-  :root[data-theme='dark'] .promo, :root:not([data-theme='light']) .promo { color: var(--bg-sunk); }
+  .promo { background: var(--accent-soft); color: var(--ink-2); padding-block: var(--section); }
   .promo__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
   @media (max-width: 860px) { .promo__in { grid-template-columns: 1fr; } }
-  .promo h2 { color: var(--bg); margin: .7rem 0 1rem; }
+  .promo h2 { color: var(--ink); margin: .7rem 0 1rem; }
   .promo p { max-width: 46ch; margin-bottom: 1.8rem; }
-  .eyebrow--invert { color: var(--accent); }
-  .eyebrow--invert::before { background: var(--accent); }
-  .btn--invert { --btn-bg: transparent; --btn-fg: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, transparent); }
-  .btn--invert:hover { border-color: var(--bg); }
   .promo__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
   .promo__card {
-    background: color-mix(in srgb, var(--bg) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--bg) 14%, transparent);
+    background: var(--bg); border: 1px solid var(--line);
     border-radius: var(--r-lg); padding: .8rem; text-decoration: none; color: inherit;
-    display: grid; gap: .6rem; transition: background-color .18s, transform .18s;
+    display: grid; gap: .6rem; transition: border-color .18s, transform .18s;
   }
-  .promo__card:hover { background: color-mix(in srgb, var(--bg) 14%, transparent); transform: translateY(-2px); }
+  .promo__card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
   .promo__card :global(.promo__img) { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--bg); border-radius: var(--r); padding: 8%; }
   .promo__card span { font-size: .84rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
