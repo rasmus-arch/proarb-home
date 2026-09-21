@@ -19,9 +19,14 @@
     { "days": "Lör–sön", "time": "Stängt" }
   ],
   "social": {
-    "facebook": "https://www.facebook.com/",
-    "instagram": "https://www.instagram.com/",
-    "tiktok": "https://www.tiktok.com/"
+    "facebook": "https://www.facebook.com/profilocharbetsklader",
+    "instagram": "https://www.instagram.com/profilocharbetsklader/",
+    "tiktok": "https://www.tiktok.com/@profilocharbetsklader",
+    "linkedin": "https://www.linkedin.com/company/profil-&-arbetskläder-ab/posts/?feedView=all"
+  },
+  "analytics": {
+    "gtmId": "",
+    "googleSiteVerification": ""
   },
   "usp": [
     { "title": "Tryck & brodyr in-house", "text": "Vi brandar plaggen med er logotyp – tryck, brodyr eller reflex. Ett korrektur innan produktion, alltid." },
@@ -36,9 +41,12 @@
     { "title": "Leverans & påfyllning", "text": "Vi levererar och sparar er profil, så nästa beställning tar fem minuter." }
   ],
   "brands": [
-    "Helly Hansen", "Blåkläder", "Jobman", "ProJob", "Printer", "Clique", "Craft",
-    "ID Identity", "TeeJays", "Cutter & Buck", "Harvest & Frost", "James & Nicholson",
-    "Tegera", "ATG", "Jalas", "Graphix", "Portwest"
+    "ATG", "Blåkläder", "Clique", "Cottover", "Craft", "Cutter & Buck", "D&J",
+    "D.A.D Sportswear", "Derby of Sweden", "Graphix", "Harvest & Frost", "Helly Hansen",
+    "ID Identity", "Jalas", "James & Nicholson", "Harvest Sportswear", "Jobman",
+    "Kosta Linnewäveri", "Lord Nelson", "Monitor", "Nightingale", "Orrefors", "Portwest",
+    "Printer", "ProJob", "Queen Anne", "Salomon", "Sievi", "Skechers", "Solstickan Design",
+    "TeeJays", "Tegera", "Toppoint", "Under Armour", "Vinga"
   ],
   "nav": [
     {
