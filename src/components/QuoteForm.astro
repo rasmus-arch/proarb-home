@@ -63,14 +63,15 @@ const { compact = false, heading = 'Få ett förslag inom en arbetsdag' } = Astr
     </label>
   </div>
 
-  <fieldset class="fld fld--check">
-    <legend>Vad gäller det?</legend>
-    <div class="checks">
-      {['Arbetskläder', 'Varselkläder', 'Skor & handskar', 'Profilkläder', 'Give aways', 'Tryck & brodyr'].map((v) => (
-        <label class="chk"><input type="checkbox" name="behov" value={v} /><span>{v}</span></label>
+  <label class="fld">
+    <span>Vad gäller det?</span>
+    <select name="behov">
+      <option value="">Välj…</option>
+      {['Arbetskläder', 'Varselkläder', 'Skor & handskar', 'Profilkläder', 'Give aways'].map((v) => (
+        <option value={v}>{v}</option>
       ))}
-    </div>
-  </fieldset>
+    </select>
+  </label>
 
   <label class="fld">
     <span>Berätta kort om er</span>
@@ -107,11 +108,6 @@ const { compact = false, heading = 'Få ett förslag inom en arbetsdag' } = Astr
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 22%, transparent);
   }
   .fld textarea { resize: vertical; }
-  .checks { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .2rem; }
-  .chk { display: inline-flex; align-items: center; gap: .45rem; padding: .45rem .8rem;
-    border: 1px solid var(--line-strong); border-radius: var(--r-pill); cursor: pointer; font-size: .9rem; }
-  .chk:has(input:checked) { border-color: var(--ink); background: var(--bg-sunk); }
-  .chk input { accent-color: var(--ink); }
   .qf__submit { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .3rem; }
   .qf__fine { font-size: .82rem; color: var(--ink-3); }
 </style>

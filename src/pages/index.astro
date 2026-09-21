@@ -42,13 +42,13 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
           och er logotyp på rätt ställe. Personlig service från första samtalet till leveransen.
         </p>
         <div class="cluster hero__cta">
-          <a class="btn" href="/kontakt/">Begär offert</a>
           <a class="btn btn--ghost" href="/arbetsklader/">Se sortimentet</a>
+          <a class="btn" href="/kontakt/">Begär offert</a>
         </div>
         <dl class="hero__facts">
           <div><dt>Svar</dt><dd>inom en arbetsdag</dd></div>
           <div><dt>Varumärken</dt><dd>{site.brands.length}+ i sortimentet</dd></div>
-          <div><dt>Tryck &amp; brodyr</dt><dd>korrektur innan produktion</dd></div>
+          <div><dt>Personlig service</dt><dd>en kontaktperson, inte en kö</dd></div>
         </dl>
       </div>
 
@@ -58,7 +58,6 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
             <ProductImage file={p.file} src={p.image} alt="" loading={i < 2 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} sizes="(max-width: 900px) 40vw, 260px" class="tile__img" />
           </div>
         ))}
-        <span class="tile__badge">EN ISO 20471</span>
       </div>
     </div>
   </section>
@@ -219,12 +218,6 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .tile--1 { margin-top: clamp(1rem, 3vw, 2.5rem); }
   .tile--2 { margin-top: calc(-1 * clamp(1rem, 3vw, 2.5rem)); }
   .tile--3 { border-radius: var(--r-lg) 3.5rem var(--r-lg) var(--r-lg); }
-  .tile__badge {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-4deg);
-    background: var(--hivis); color: #1a1d00; font-family: var(--font-display); font-weight: 700;
-    font-size: .74rem; letter-spacing: .1em; padding: .45rem .9rem; border-radius: var(--r-pill);
-    box-shadow: var(--shadow-2); white-space: nowrap;
-  }
   /* Sektionsrubriker */
   .sechead {
     display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
@@ -280,4 +273,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .ticks svg { color: var(--accent-ink); flex: none; margin-top: .15rem; }
   .quote__alt { margin-top: 1.8rem; font-size: .95rem; color: var(--ink-3); }
   .quote__alt a { font-weight: 550; color: var(--ink); margin-inline: .2rem; }
+
+  /* Varm bakgrund bara på startsidan */
+  :global(body) { background: var(--accent-soft); }
 </style>
