@@ -1,13 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProductGrid from '../components/ProductGrid.astro';
-import CategoryCard from '../components/CategoryCard.astro';
 import ProductImage from '../components/ProductImage.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import { site, categories, products, productsIn } from '../lib/content';
+import { site, products, productsIn, categoryByUrl } from '../lib/content';
 
-const work = categories.filter((c) => c.group === 'arbete' && c.url !== 'arbetsklader');
-const profile = categories.filter((c) => c.group === 'profil' && c.url !== 'profilprodukter');
+const bySlug = (slug: string) => products.find((p) => p.slug === slug);
+
+const showcase = [
+  { size: 'full', url: 'arbetsklader', slug: 'hellyhansen-bergholm-vinterjacka' },
+  { size: 'half', url: 'varselklader', slug: 'jobman-7586-varselvast' },
+  { size: 'half', url: 'arbetsbyxor', slug: 'blaklader-hantverksbyxa-stretch-x1900-2' },
+  { size: 'full', url: 'arbetsjackor', slug: 'jobman-1284-skaljacka' },
+  { size: 'half', url: 'arbetshandskar', slug: 'tegera-infinity-8801' },
+  { size: 'half', url: 'arbetsskor', slug: 'hellyhansen-kensington-boa-skyddssko-s3s' },
+  { size: 'full', url: 'ovriga-profilklader', slug: 'id-identity-geyser-hybrid-jacket' },
+  { size: 'half', url: 'profiltrojor', slug: 'cutter-buck-advantage-premium-polo-men-2' },
+  { size: 'half', url: 'give-aways', slug: 'vattenflaska-langhals-80-cl' }
+].map((item) => ({ ...item, cat: categoryByUrl(item.url)!, product: bySlug(item.slug) }));
 
 const featured = [
   ...productsIn('arbetsjackor').slice(0, 2),
@@ -63,20 +73,37 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   </section>
 
   <!-- Kategorier -->
-  <section class="section">
+  <section class="section cshow">
     <div class="container">
       <header class="sechead">
         <div>
-          <p class="eyebrow">Arbetskläder</p>
-          <h2>Utrusta hela teamet</h2>
+          <p class="eyebrow">Sortimentet</p>
+          <h2>Hitta rätt kategori direkt</h2>
         </div>
-        <a class="link-arrow" href="/arbetsklader/">
-          Allt inom arbetskläder
-          <svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
       </header>
-      <div class="catgrid">
-        {work.map((c, i) => <CategoryCard category={c} eager={i < 3} />)}
+      <div class="cshow__grid">
+        {showcase.map((item) => (
+          <a class={`cband cband--${item.size}`} href={`/${item.url}/`}>
+            <div class="cband__media">
+              <ProductImage
+                file={item.product?.file}
+                src={item.product?.image}
+                alt=""
+                loading="lazy"
+                sizes={item.size === 'full' ? '(max-width: 900px) 90vw, 640px' : '(max-width: 700px) 90vw, 420px'}
+                class="cband__img"
+              />
+            </div>
+            <div class="cband__copy">
+              <h3>{item.cat.h1}</h3>
+              <p>{item.cat.lead}</p>
+              <span class="link-arrow cband__link">
+                Se sortimentet
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+          </a>
+        ))}
       </div>
     </div>
   </section>
@@ -138,15 +165,6 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
             <span>{p.name}</span>
           </a>
         ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Kategorier profil -->
-  <section class="section">
-    <div class="container">
-      <div class="catgrid">
-        {profile.map((c) => <CategoryCard category={c} />)}
       </div>
     </div>
   </section>
@@ -226,7 +244,36 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .sechead h2 { margin-top: .7rem; }
   .sechead .lead { margin-top: .9rem; font-size: var(--step-0); }
 
-  .catgrid { display: grid; gap: clamp(.7rem, .4rem + 1vw, 1.1rem); grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+  /* Kategorimonter */
+  .cshow__grid { display: grid; gap: clamp(.7rem, .4rem + 1vw, 1.1rem); grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 720px) { .cshow__grid { grid-template-columns: 1fr; } }
+  .cband {
+    position: relative; display: flex; text-decoration: none; color: inherit;
+    border-radius: var(--r-lg); overflow: hidden;
+    transition: transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s;
+  }
+  .cband:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+  .cband--full {
+    grid-column: 1 / -1; display: grid; grid-template-columns: 1.1fr 1fr;
+    align-items: stretch; background: #163d47; color: #f4f1ea; min-height: 22rem;
+  }
+  @media (max-width: 700px) { .cband--full { grid-template-columns: 1fr; min-height: 0; } }
+  .cband--half { flex-direction: column; background: var(--bg-raised); border: 1px solid var(--line); }
+  .cband__media { display: grid; place-items: center; overflow: hidden; }
+  .cband--full .cband__media { order: 2; padding: clamp(1.5rem, 1rem + 2vw, 3rem); }
+  .cband--half .cband__media { aspect-ratio: 4 / 3; width: 100%; background: var(--bg-sunk); padding: 1.6rem; }
+  .cband :global(.cband__img) { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .cband--full :global(.cband__img) { mix-blend-mode: normal; filter: drop-shadow(0 20px 34px rgba(0,0,0,.4)); }
+  .cband__copy { display: flex; flex-direction: column; justify-content: center; gap: .55rem; padding: clamp(1.4rem, 1rem + 1.6vw, 2.75rem); }
+  .cband--full .cband__copy { order: 1; }
+  .cband--full .cband__copy h3 { font-size: var(--step-3); color: #fff; }
+  .cband--full .cband__copy p { color: color-mix(in srgb, #fff 78%, transparent); max-width: 36ch; }
+  .cband--half .cband__copy h3 { font-size: var(--step-1); }
+  .cband--half .cband__copy p { color: var(--ink-2); font-size: .88rem; max-width: 32ch; }
+  .cband__copy h3 { margin: 0; }
+  .cband__link { font-size: .88rem; }
+  .cband--full .cband__link { color: #fff; }
+  .cband--full .cband__link svg { color: var(--accent); }
 
   /* Steg */
   .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .6rem + 1.5vw, 2rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); counter-reset: s; }
