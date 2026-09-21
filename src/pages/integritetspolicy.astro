@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../lib/content';
+const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Integritetspolicy', href: '/integritetspolicy/' }];
+---
+<Base title="Integritetspolicy | Proarb" description="Så behandlar Proarb personuppgifter enligt GDPR." breadcrumbs={crumbs}>
+  <section class="hd">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <h1>Integritetspolicy</h1>
+      <p class="lead">Så hanterar vi de uppgifter du lämnar till oss.</p>
+    </div>
+  </section>
+  <section class="section section--top0">
+    <div class="container legal">
+      <section>
+        <h2>Personuppgiftsansvarig</h2>
+        <p>{site.legalName}, {site.address.street}, {site.address.postalCode} {site.address.city}. Kontakt: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+      </section>
+      <section>
+        <h2>Vilka uppgifter vi samlar in</h2>
+        <p>När du fyller i vårt offertformulär sparar vi namn, företag, e-post, telefonnummer och det du skriver i meddelandet. Uppgifterna används enbart för att svara på din förfrågan och för att kunna fullgöra en eventuell beställning.</p>
+      </section>
+      <section>
+        <h2>Hur länge vi sparar dem</h2>
+        <p>Förfrågningar som inte leder till affär raderas inom 12 månader. Uppgifter kopplade till en order sparas så länge bokföringslagen kräver.</p>
+      </section>
+      <section>
+        <h2>Cookies</h2>
+        <p>Den här webbplatsen är statisk och använder inga cookies för spårning eller annonsering. Inbäddad karta laddas från OpenStreetMap först när sidan visas.</p>
+      </section>
+      <section>
+        <h2>Dina rättigheter</h2>
+        <p>Du har rätt att begära utdrag, rättelse eller radering av dina uppgifter. Hör av dig till <a href={`mailto:${site.email}`}>{site.email}</a> så hjälper vi dig.</p>
+      </section>
+    </div>
+  </section>
+</Base>
+<style>
+  .hd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .hd h1 { margin: 1.3rem 0 1rem; }
+  .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .legal { max-width: 62ch; display: grid; gap: 2rem; }
+  .legal h2 { font-size: var(--step-1); margin-bottom: .6rem; }
+  .legal p { color: var(--ink-2); }
+</style>

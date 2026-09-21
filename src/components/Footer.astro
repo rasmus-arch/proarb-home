@@ -1,0 +1,75 @@
+---
+import Logo from './Logo.astro';
+import { site, categories } from '../lib/content';
+const work = categories.filter((c) => c.group === 'arbete' && c.url !== 'arbetsklader');
+const profile = categories.filter((c) => c.group === 'profil' && c.url !== 'profilprodukter');
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="container">
+    <div class="ftr__grid">
+      <div class="ftr__brand">
+        <Logo />
+        <p class="ftr__pitch">
+          Den personliga butiken för profil- och arbetskläder. Vi hjälper företag och
+          föreningar i Eskilstuna med mälardalen att se bra ut och jobba säkert.
+        </p>
+        <div class="ftr__contact">
+          <a href={site.phoneHref}>{site.phone}</a>
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+          <span>{site.address.street}, {site.address.postalCode} {site.address.city}</span>
+        </div>
+      </div>
+
+      <nav class="ftr__col" aria-label="Arbetskläder">
+        <h2>Arbetskläder</h2>
+        <ul>{work.map((c) => <li><a href={`/${c.url}/`}>{c.name}</a></li>)}</ul>
+      </nav>
+
+      <nav class="ftr__col" aria-label="Profilprodukter">
+        <h2>Profilprodukter</h2>
+        <ul>{profile.map((c) => <li><a href={`/${c.url}/`}>{c.name}</a></li>)}</ul>
+      </nav>
+
+      <nav class="ftr__col" aria-label="Företaget">
+        <h2>Företaget</h2>
+        <ul>
+          <li><a href="/om-oss/">Om oss</a></li>
+          <li><a href="/kontakt/">Kontakt &amp; offert</a></li>
+          <li><a href="/tryck-och-brodyr/">Tryck &amp; brodyr</a></li>
+          <li><a href="/kopvillkor/">Köpvillkor</a></li>
+          <li><a href="/integritetspolicy/">Integritetspolicy</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="ftr__bottom">
+      <p>© {year} {site.legalName}. Org.nr enligt Bolagsverket. Alla priser exkl. moms.</p>
+      <p class="ftr__made">Byggd för hastighet · 100 % statisk</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr { background: var(--bg-sunk); border-top: 1px solid var(--line); padding-block: clamp(3rem, 2rem + 3vw, 4.5rem) 2rem; margin-top: auto; }
+  .ftr__grid { display: grid; gap: 2.5rem; grid-template-columns: 1.4fr repeat(3, 1fr); }
+  @media (max-width: 900px) { .ftr__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .ftr__grid { grid-template-columns: 1fr; } }
+  .ftr__pitch { margin-top: 1rem; color: var(--ink-2); max-width: 34ch; font-size: .95rem; }
+  .ftr__contact { display: grid; gap: .3rem; margin-top: 1.2rem; font-size: .95rem; }
+  .ftr__contact a { text-decoration: none; font-weight: 550; }
+  .ftr__contact a:hover { color: var(--accent-ink); }
+  .ftr__contact span { color: var(--ink-3); }
+  .ftr__col h2 {
+    font-size: .78rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 620; margin-bottom: .9rem;
+  }
+  .ftr__col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; }
+  .ftr__col a { text-decoration: none; color: var(--ink-2); font-size: .95rem; }
+  .ftr__col a:hover { color: var(--ink); }
+  .ftr__bottom {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem;
+    margin-top: 3rem; padding-top: 1.4rem; border-top: 1px solid var(--line);
+    font-size: .82rem; color: var(--ink-3);
+  }
+</style>

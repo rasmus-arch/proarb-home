@@ -1,0 +1,117 @@
+---
+interface Props { compact?: boolean; heading?: string }
+const { compact = false, heading = 'Få ett förslag inom en arbetsdag' } = Astro.props;
+---
+<form
+  class="qf"
+  name="offert"
+  method="POST"
+  action="/send-quote.php"
+>
+  <p class="visually-hidden">
+    <label>Lämna tomt: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  {!compact && <h2 class="qf__title">{heading}</h2>}
+
+  <div class="qf__row">
+    <label class="fld">
+      <span>Namn <em>*</em></span>
+      <input name="namn" required autocomplete="name" />
+    </label>
+    <label class="fld">
+      <span>Företag / förening <em>*</em></span>
+      <input name="foretag" required autocomplete="organization" />
+    </label>
+  </div>
+
+  <div class="qf__row">
+    <label class="fld">
+      <span>E-post <em>*</em></span>
+      <input type="email" name="epost" required autocomplete="email" />
+    </label>
+    <label class="fld">
+      <span>Telefon</span>
+      <input type="tel" name="telefon" autocomplete="tel" inputmode="tel" />
+    </label>
+  </div>
+
+  <div class="qf__row">
+    <label class="fld">
+      <span>Bransch</span>
+      <input name="bransch" list="branscher" placeholder="Bygg, el, städ, förening…" />
+      <datalist id="branscher">
+        <option value="Bygg & anläggning"></option>
+        <option value="El & VVS"></option>
+        <option value="Måleri"></option>
+        <option value="Transport & logistik"></option>
+        <option value="Industri"></option>
+        <option value="Städ & fastighet"></option>
+        <option value="Kontor & tjänsteföretag"></option>
+        <option value="Förening / lag"></option>
+      </datalist>
+    </label>
+    <label class="fld">
+      <span>Ungefär hur många personer?</span>
+      <select name="antal">
+        <option value="">Välj…</option>
+        <option>1–5</option>
+        <option>6–15</option>
+        <option>16–50</option>
+        <option>50+</option>
+      </select>
+    </label>
+  </div>
+
+  <fieldset class="fld fld--check">
+    <legend>Vad gäller det?</legend>
+    <div class="checks">
+      {['Arbetskläder', 'Varselkläder', 'Skor & handskar', 'Profilkläder', 'Give aways', 'Tryck & brodyr'].map((v) => (
+        <label class="chk"><input type="checkbox" name="behov" value={v} /><span>{v}</span></label>
+      ))}
+    </div>
+  </fieldset>
+
+  <label class="fld">
+    <span>Berätta kort om er</span>
+    <textarea name="meddelande" rows="4" placeholder="Vilka yrken, vilken säsong, har ni en logotyp redo?"></textarea>
+  </label>
+
+  <div class="qf__submit">
+    <button class="btn" type="submit">Skicka förfrågan</button>
+    <p class="qf__fine">Vi hör av oss samma eller nästa arbetsdag. Inga massutskick.</p>
+  </div>
+</form>
+
+<style>
+  .qf {
+    display: grid; gap: 1rem;
+    background: var(--bg-raised); border: 1px solid var(--line);
+    border-radius: var(--r-lg); padding: clamp(1.2rem, .8rem + 1.6vw, 2rem);
+  }
+  .qf__title { font-size: var(--step-2); margin-bottom: .2rem; }
+  .qf__row { display: grid; gap: 1rem; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 620px) { .qf__row { grid-template-columns: 1fr; } }
+  .fld { display: grid; gap: .35rem; border: 0; padding: 0; margin: 0; }
+  .fld > span, .fld legend {
+    font-size: .82rem; font-weight: 600; color: var(--ink-2); letter-spacing: .01em; padding: 0;
+  }
+  .fld em { color: var(--accent-ink); font-style: normal; }
+  .fld input, .fld select, .fld textarea {
+    width: 100%; padding: .7rem .85rem; background: var(--bg);
+    border: 1px solid var(--line-strong); border-radius: var(--r);
+    font-size: .97rem; transition: border-color .15s, box-shadow .15s;
+  }
+  .fld input:focus, .fld select:focus, .fld textarea:focus {
+    outline: none; border-color: var(--ink);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 22%, transparent);
+  }
+  .fld textarea { resize: vertical; }
+  .checks { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .2rem; }
+  .chk { display: inline-flex; align-items: center; gap: .45rem; padding: .45rem .8rem;
+    border: 1px solid var(--line-strong); border-radius: var(--r-pill); cursor: pointer; font-size: .9rem; }
+  .chk:has(input:checked) { border-color: var(--ink); background: var(--bg-sunk); }
+  .chk input { accent-color: var(--ink); }
+  .qf__submit { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .3rem; }
+  .qf__fine { font-size: .82rem; color: var(--ink-3); }
+</style>

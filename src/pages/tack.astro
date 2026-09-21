@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../lib/content';
+---
+<Base title="Tack för din förfrågan | Proarb" description="Vi har tagit emot din förfrågan och återkommer inom en arbetsdag." noindex>
+  <section class="ty">
+    <div class="container">
+      <span class="ty__mark" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24"><path d="M4 12.5l5 5 11-11" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <h1>Tack – vi hörs snart</h1>
+      <p class="lead">
+        Förfrågan är mottagen. Vi går igenom den och återkommer med ett förslag inom en
+        arbetsdag. Brådskar det når du oss på <a href={site.phoneHref}>{site.phone}</a>.
+      </p>
+      <div class="cluster">
+        <a class="btn" href="/">Till startsidan</a>
+        <a class="btn btn--ghost" href="/arbetsklader/">Fortsätt titta</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .ty { padding-block: clamp(4rem, 3rem + 6vw, 8rem); text-align: center; }
+  .ty .container { max-width: 44rem; }
+  .ty__mark { display: inline-grid; place-items: center; width: 4rem; height: 4rem; border-radius: 50%; background: var(--accent-soft); color: var(--accent-ink); margin-bottom: 1.5rem; }
+  .ty h1 { margin-bottom: 1rem; }
+  .ty .lead { margin-inline: auto; margin-bottom: 2rem; }
+  .ty .cluster { justify-content: center; }
+</style>

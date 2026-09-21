@@ -1,0 +1,85 @@
+[
+  { "url": "arbetsklader", "cat": "arbetsklader", "id": 1041, "group": "arbete", "name": "Arbetskläder",
+    "h1": "Arbetskläder som håller hela arbetsåret",
+    "lead": "Byxor, jackor, tröjor och skydd från Helly Hansen, Blåkläder, Jobman och ProJob – med er logotyp på rätt ställe.",
+    "seoTitle": "Arbetskläder till företag | Proarb Eskilstuna",
+    "seoDesc": "Arbetskläder för byggföretag, hantverkare och tjänsteföretag. Helly Hansen, Blåkläder, Jobman och ProJob – med tryck och brodyr. Proarb i Eskilstuna." },
+
+  { "url": "arbetsbyxor", "cat": "arbetbyxor", "id": 1058, "group": "arbete", "name": "Arbetsbyxor",
+    "h1": "Arbetsbyxor för proffs och amatörer",
+    "lead": "Hantverksbyxor, servicebyxor och målarbyxor i stretch. Oavsett om de används 360 dagar om året eller i trädgården.",
+    "seoTitle": "Arbetsbyxor & hantverksbyxor | Proarb",
+    "seoDesc": "Hantverksbyxor, servicebyxor och målarbyxor med stretch från Blåkläder, Jobman, ProJob och Helly Hansen. Profilera med er logotyp." },
+
+  { "url": "arbetsjackor", "cat": "arbetsjackor", "id": 970, "group": "arbete", "name": "Arbetsjackor",
+    "h1": "Arbetsjackor som tål att användas",
+    "lead": "Skaljackor, vinterjackor, softshell och fleece – för alla väder och förutsättningar.",
+    "seoTitle": "Arbetsjackor & skaljackor till företag | Proarb",
+    "seoDesc": "Vinterjackor, skaljackor och softshelljackor för arbete. Helly Hansen, Jobman, ProJob och Blåkläder med tryck eller brodyr." },
+
+  { "url": "arbetstrojor", "cat": "arbetstrojor", "id": 969, "group": "arbete", "name": "Arbetströjor",
+    "h1": "Arbetströjor och mellanlager",
+    "lead": "Hoodies, sweatshirts, pikéer och fleece som fungerar både på bygget och på kontoret.",
+    "seoTitle": "Arbetströjor, hoodies & fleece | Proarb",
+    "seoDesc": "Arbetströjor, hoodies, pikéer och fleecejackor för företag och föreningar. Brandade med er logotyp." },
+
+  { "url": "varselklader", "cat": "varselklader", "id": 972, "group": "arbete", "name": "Varselkläder",
+    "h1": "Varselplagg för dig som behöver synas",
+    "lead": "Brandade varselplagg i rätt klassning enligt EN ISO 20471 – klass 1, 2 och 3.",
+    "seoTitle": "Varselkläder klass 1, 2 & 3 | Proarb Eskilstuna",
+    "seoDesc": "Varselkläder certifierade enligt EN ISO 20471. Varselbyxor, varseljackor, varsel-t-shirts och västar – med tryck och reflex." },
+
+  { "url": "arbetsskor", "cat": "arbetsskor", "id": 1059, "group": "arbete", "name": "Arbetsskor",
+    "h1": "Arbetsskor som räddar dig",
+    "lead": "Skyddsskor och kängor i S1P till S7S med BOA, komposittåhätta och spiktrampskydd.",
+    "seoTitle": "Arbetsskor & skyddsskor S3 | Proarb",
+    "seoDesc": "Skyddsskor och skyddskängor från Helly Hansen, ProJob och Jalas. S1PS, S3S och S7S med BOA-passform." },
+
+  { "url": "arbetshandskar", "cat": "arbetshandskar", "id": 971, "group": "arbete", "name": "Arbetshandskar",
+    "h1": "Arbetshandskar – hantverkarens bästa vän",
+    "lead": "Handskar som tål att användas varje dag, året om. Touchfunktion, skärskydd och vinterfoder.",
+    "seoTitle": "Arbetshandskar & skyddshandskar | Proarb",
+    "seoDesc": "Arbetshandskar från Tegera, ATG MaxiFlex och Blåkläder. Touchfunktion, vinterfodrade och oljeresistenta modeller." },
+
+  { "url": "arbetsshorts-piratbyxor", "cat": "arbetsshorts", "id": 1040, "group": "arbete", "name": "Arbetsshorts & piratbyxor",
+    "h1": "Arbetsshorts och piratbyxor",
+    "lead": "För de varma månaderna – samma funktion och fickor, kortare ben.",
+    "seoTitle": "Arbetsshorts & piratbyxor | Proarb",
+    "seoDesc": "Hantverksshorts och piratbyxor i stretch från Helly Hansen och Blåkläder. Varselklassade alternativ finns." },
+
+  { "url": "profilprodukter", "cat": "profilprodukter", "id": 1052, "group": "profil", "name": "Profilprodukter",
+    "h1": "Profilprodukter som gör jobbet åt er",
+    "lead": "Profilkläder och presentprodukter för företag och föreningar – från säljarens piké till julklappen.",
+    "seoTitle": "Profilprodukter & presentreklam | Proarb Eskilstuna",
+    "seoDesc": "Profilkläder, giveaways och presentprodukter med er logotyp. Perfekt till mässan, laget eller julklappen." },
+
+  { "url": "ovriga-profilklader", "cat": "profilklader", "id": 1047, "group": "profil", "name": "Profilkläder",
+    "h1": "Profilkläder för företag och föreningar",
+    "lead": "Vill du profilera dina säljare eller hitta nya matchställ till laget? Här är hela urvalet.",
+    "seoTitle": "Profilkläder till företag & föreningar | Proarb",
+    "seoDesc": "Profilkläder med tryck och brodyr – pikéer, skjortor, jackor och hoodies från Craft, Clique, TeeJays och Cutter & Buck." },
+
+  { "url": "profiljackor", "cat": "profiljackor", "id": 1050, "group": "profil", "name": "Profiljackor",
+    "h1": "Profiljackor",
+    "lead": "Representationsjackor, softshell och bodywarmers som klär både företaget och bäraren.",
+    "seoTitle": "Profiljackor med tryck & brodyr | Proarb",
+    "seoDesc": "Profiljackor, softshelljackor och bodywarmers till företag och föreningar. Brandas med er logotyp." },
+
+  { "url": "profiltrojor", "cat": "profiltrojor", "id": 1039, "group": "profil", "name": "Profiltröjor",
+    "h1": "Profiltröjor – er billigaste reklampelare",
+    "lead": "Pikéer, hoodies och t-shirts som syns överallt, hela tiden.",
+    "seoTitle": "Profiltröjor, pikéer & hoodies med tryck | Proarb",
+    "seoDesc": "Profiltröjor med företagslogga – pikéer, hoodies, sweatshirts och t-shirts från Craft, Clique, Printer och TeeJays." },
+
+  { "url": "profilskjortor", "cat": "profilskjortor", "id": 1051, "group": "profil", "name": "Profilskjortor",
+    "h1": "Profilskjortor",
+    "lead": "Skjortor i stretch och non-iron som håller formen genom hela mässdagen.",
+    "seoTitle": "Profilskjortor till företag | Proarb",
+    "seoDesc": "Företagsskjortor med brodyr från Harvest & Frost, TeeJays och ID Identity. Stretch och non-iron." },
+
+  { "url": "give-aways", "cat": "give-aways", "id": 973, "group": "profil", "name": "Give aways",
+    "h1": "Give aways och presentprodukter",
+    "lead": "Vattenflaskor, badrockar, verktyg och köksprylar – med eller utan tryck. Perfekt som julklapp och representationsgåva.",
+    "seoTitle": "Give aways & presentprodukter med tryck | Proarb",
+    "seoDesc": "Presentprodukter och give aways till företag: vattenflaskor, badrockar, väskor och köksprodukter med er logotyp." }
+]

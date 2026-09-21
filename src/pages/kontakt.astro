@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import { site } from '../lib/content';
+const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Kontakt', href: '/kontakt/' }];
+---
+<Base
+  title="Kontakt & offertförfrågan | Proarb Eskilstuna"
+  description="Begär offert på arbetskläder eller profilkläder. Ring 070 379 44 66 eller fyll i formuläret – vi svarar inom en arbetsdag."
+  breadcrumbs={crumbs}
+>
+  <section class="hd">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">Kontakt</p>
+      <h1>Berätta vad ni behöver</h1>
+      <p class="lead">
+        Fyll i formuläret så återkommer vi med ett förslag – plagg, storlekar, pris och hur
+        logotypen placeras. Vill ni hellre prata är telefonen alltid snabbast.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--top0">
+    <div class="container kwrap">
+      <div class="kside">
+        <div class="kcard">
+          <h2>Ring eller maila</h2>
+          <a class="kbig" href={site.phoneHref}>{site.phone}</a>
+          <a class="kmail" href={`mailto:${site.email}`}>{site.email}</a>
+          <p class="muted">Vi svarar samma eller nästa arbetsdag.</p>
+        </div>
+        <div class="kcard">
+          <h2>Butik &amp; showroom</h2>
+          <address>
+            {site.legalName}<br />
+            {site.address.street}<br />
+            {site.address.postalCode} {site.address.city}
+          </address>
+          <p class="muted">Kom gärna in och känn på plaggen – hör av er innan så finns vi på plats.</p>
+        </div>
+        <div class="kcard kcard--accent">
+          <h2>Redan kund?</h2>
+          <p>Skicka bara artikelnummer och antal så lägger vi ordern direkt mot er sparade profil.</p>
+        </div>
+      </div>
+      <QuoteForm heading="Offertförfrågan" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .hd .eyebrow { margin-top: 1.3rem; }
+  .hd h1 { margin: .7rem 0 1rem; max-width: 16ch; }
+  .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .kwrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(1.5rem, 1rem + 3vw, 3rem); align-items: start; }
+  @media (max-width: 900px) { .kwrap { grid-template-columns: 1fr; } }
+  .kside { display: grid; gap: 1rem; }
+  .kcard { background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.3rem 1.4rem; }
+  .kcard h2 { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); font-weight: 620; margin-bottom: .8rem; }
+  .kbig { display: block; font-family: var(--font-display); font-weight: 680; font-size: var(--step-2); letter-spacing: -.02em; text-decoration: none; }
+  .kmail { display: block; margin-top: .3rem; text-decoration: none; color: var(--ink-2); }
+  .kmail:hover { color: var(--ink); }
+  .kcard p { margin-top: .8rem; font-size: .9rem; }
+  address { font-style: normal; line-height: 1.75; color: var(--ink-2); }
+  .kcard--accent { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  .kcard--accent p { color: var(--ink-2); margin-top: 0; }
+</style>
+
+<script>
+  const p = new URLSearchParams(location.search).get('produkt');
+  if (p) {
+    const ta = document.querySelector<HTMLTextAreaElement>('textarea[name="meddelande"]');
+    if (ta && !ta.value) {
+      ta.value = `Jag är intresserad av: ${p}\n\nAntal: \nStorlekar: \nLogotyp: `;
+    }
+  }
+</script>

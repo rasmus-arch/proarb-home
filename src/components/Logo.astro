@@ -1,0 +1,29 @@
+---
+interface Props { class?: string; compact?: boolean }
+const { class: className, compact = false } = Astro.props;
+---
+<span class={`logo ${className ?? ''}`}>
+  <svg class="logo__mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+    <rect x="1" y="1" width="38" height="38" rx="11" fill="currentColor" />
+    <path d="M12 28V12h7.4c3.2 0 5.1 1.8 5.1 4.6 0 2.5-1.5 4.2-4 4.6L25 28h-3.6l-3.9-6.2h-2.1V28H12Zm3.4-8.8h3.6c1.5 0 2.4-.8 2.4-2.2s-.9-2.1-2.4-2.1h-3.6v4.3Z" fill="var(--bg)" />
+    <circle cx="28.6" cy="15" r="2.6" fill="var(--accent)" />
+  </svg>
+  <span class="logo__text">
+    <span class="logo__word">Proarb</span>
+    {!compact && <span class="logo__sub">Profil &amp; Arbetskläder</span>}
+  </span>
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--ink); }
+  .logo__mark { width: 2.25rem; height: 2.25rem; color: var(--ink); flex: none; }
+  .logo__text { display: flex; flex-direction: column; line-height: 1; }
+  .logo__word {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
+    letter-spacing: -.035em;
+  }
+  .logo__sub {
+    font-size: .625rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-3); margin-top: .22rem; font-weight: 500;
+  }
+</style>

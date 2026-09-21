@@ -1,0 +1,294 @@
+---
+import Base from '../layouts/Base.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import CategoryCard from '../components/CategoryCard.astro';
+import ProductImage from '../components/ProductImage.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import { site, categories, products, productsIn } from '../lib/content';
+
+const work = categories.filter((c) => c.group === 'arbete' && c.url !== 'arbetsklader');
+const profile = categories.filter((c) => c.group === 'profil' && c.url !== 'profilprodukter');
+
+const featured = [
+  ...productsIn('arbetsjackor').slice(0, 2),
+  ...productsIn('arbetsbyxor').slice(0, 2),
+  ...productsIn('varselklader').slice(0, 2),
+  ...productsIn('arbetsskor').slice(0, 1),
+  ...productsIn('arbetshandskar').slice(0, 1)
+].filter((p, i, a) => a.findIndex((x) => x.slug === p.slug) === i).slice(0, 8);
+
+const heroTiles = [
+  productsIn('varselklader')[0],
+  productsIn('arbetsjackor')[0],
+  productsIn('arbetsskor')[0],
+  productsIn('profiltrojor')[0]
+].filter(Boolean);
+
+const profileTeaser = productsIn('profilprodukter').slice(0, 4);
+---
+
+<Base
+  title="Arbetskläder & profilkläder till företag | Proarb Eskilstuna"
+  description={site.description}
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__in">
+      <div class="hero__copy">
+        <p class="eyebrow">Eskilstuna sedan starten</p>
+        <h1>Arbetskläder som håller.<br />Profilkläder som syns.</h1>
+        <p class="lead">
+          Allt för byggföretag, tjänsteföretag och föreningar – rätt plagg, rätt klassning
+          och er logotyp på rätt ställe. Personlig service från första samtalet till leveransen.
+        </p>
+        <div class="cluster hero__cta">
+          <a class="btn" href="/kontakt/">Begär offert</a>
+          <a class="btn btn--ghost" href="/arbetsklader/">Se sortimentet</a>
+        </div>
+        <dl class="hero__facts">
+          <div><dt>Svar</dt><dd>inom en arbetsdag</dd></div>
+          <div><dt>Varumärken</dt><dd>{site.brands.length}+ i sortimentet</dd></div>
+          <div><dt>Tryck &amp; brodyr</dt><dd>korrektur innan produktion</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero__tiles" aria-hidden="true">
+        {heroTiles.map((p, i) => (
+          <div class={`tile tile--${i}`}>
+            <ProductImage file={p.file} src={p.image} alt="" loading={i < 2 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} sizes="(max-width: 900px) 40vw, 260px" class="tile__img" />
+          </div>
+        ))}
+        <span class="tile__badge">EN ISO 20471</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kategorier -->
+  <section class="section">
+    <div class="container">
+      <header class="sechead">
+        <div>
+          <p class="eyebrow">Arbetskläder</p>
+          <h2>Utrusta hela teamet</h2>
+        </div>
+        <a class="link-arrow" href="/arbetsklader/">
+          Allt inom arbetskläder
+          <svg width="15" height="15" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </header>
+      <div class="catgrid">
+        {work.map((c, i) => <CategoryCard category={c} eager={i < 3} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Utvalda produkter -->
+  <section class="section section--sunk">
+    <div class="container">
+      <header class="sechead">
+        <div>
+          <p class="eyebrow">Ett urval</p>
+          <h2>Plagg vi säljer mest av</h2>
+          <p class="lead">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas fulla kataloger.</p>
+        </div>
+      </header>
+      <ProductGrid products={featured} eagerCount={0} />
+    </div>
+  </section>
+
+  <!-- Så funkar det -->
+  <section class="section">
+    <div class="container">
+      <header class="sechead">
+        <div>
+          <p class="eyebrow">Så går det till</p>
+          <h2>Från samtal till levererad kollektion</h2>
+        </div>
+      </header>
+      <ol class="steps">
+        {site.steps.map((s: any, i: number) => (
+          <li class="step">
+            <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Profilprodukter -->
+  <section class="promo">
+    <div class="container promo__in">
+      <div class="promo__copy">
+        <p class="eyebrow eyebrow--invert">Profilprodukter</p>
+        <h2>Er billigaste reklampelare</h2>
+        <p>
+          Profiltröjor syns överallt, hela tiden. Vi brandar pikéer, jackor och skjortor
+          till säljkåren – och fixar give aways till mässan, laget eller julbordet.
+        </p>
+        <div class="cluster">
+          <a class="btn btn--accent" href="/profilprodukter/">Se profilprodukter</a>
+          <a class="btn btn--invert" href="/give-aways/">Give aways</a>
+        </div>
+      </div>
+      <div class="promo__cards">
+        {profileTeaser.map((p) => (
+          <a class="promo__card" href={`/produkt/${p.slug}/`}>
+            <ProductImage file={p.file} src={p.image} alt={p.name} sizes="160px" class="promo__img" />
+            <span>{p.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Kategorier profil -->
+  <section class="section">
+    <div class="container">
+      <div class="catgrid">
+        {profile.map((c) => <CategoryCard category={c} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Varumärken -->
+  <section class="section section--sunk brands">
+    <div class="container">
+      <p class="eyebrow">Varumärken vi jobbar med</p>
+      <ul class="brands__list">
+        {site.brands.map((b: string) => <li>{b}</li>)}
+      </ul>
+      <p class="muted brands__note">…och fler därtill. Har ni ett favoritmärke? Fråga oss.</p>
+    </div>
+  </section>
+
+  <!-- Offert -->
+  <section class="section" id="offert">
+    <div class="container quote">
+      <div class="quote__copy">
+        <p class="eyebrow">Rådgivning</p>
+        <h2>Få rådgivning för ditt företag</h2>
+        <p class="lead">
+          Att välja rätt utrustning för teamet kan vara en utmaning. Berätta om er verksamhet
+          så analyserar vi behovet – slitstyrka, funktion och visuell profilering – och
+          återkommer med ett förslag.
+        </p>
+        <ul class="ticks">
+          {site.usp.map((u: any) => (
+            <li>
+              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span><strong>{u.title}.</strong> {u.text}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="quote__alt">
+          Hellre prata? Ring <a href={site.phoneHref}>{site.phone}</a> eller maila
+          <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </div>
+      <QuoteForm />
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2.5rem, 1.5rem + 3vw, 4.5rem); overflow: clip; }
+  .hero__in { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 1rem + 4vw, 4.5rem); align-items: center; }
+  @media (max-width: 900px) { .hero__in { grid-template-columns: 1fr; } }
+  .hero__copy h1 { margin: .8rem 0 1.1rem; }
+  .hero__cta { margin-top: 1.9rem; }
+  .hero__facts {
+    display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2.6rem;
+    padding-top: 1.6rem; border-top: 1px solid var(--line);
+  }
+  .hero__facts dt { font-family: var(--font-display); font-weight: 650; font-size: .95rem; }
+  .hero__facts dd { margin: .1rem 0 0; font-size: .88rem; color: var(--ink-3); }
+
+  .hero__tiles {
+    position: relative; display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(.6rem, .3rem + 1vw, 1rem);
+  }
+  .tile {
+    background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-lg);
+    aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+  }
+  .tile :global(.tile__img) { width: 100%; height: 100%; object-fit: contain; padding: 12%; mix-blend-mode: multiply; }
+  .tile--0 { border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 3.5rem; }
+  .tile--1 { margin-top: clamp(1rem, 3vw, 2.5rem); }
+  .tile--2 { margin-top: calc(-1 * clamp(1rem, 3vw, 2.5rem)); }
+  .tile--3 { border-radius: var(--r-lg) 3.5rem var(--r-lg) var(--r-lg); }
+  .tile__badge {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-4deg);
+    background: var(--hivis); color: #1a1d00; font-family: var(--font-display); font-weight: 700;
+    font-size: .74rem; letter-spacing: .1em; padding: .45rem .9rem; border-radius: var(--r-pill);
+    box-shadow: var(--shadow-2); white-space: nowrap;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .tile :global(.tile__img) { mix-blend-mode: normal; }
+  }
+  :root[data-theme='dark'] .tile :global(.tile__img) { mix-blend-mode: normal; }
+
+  /* Sektionsrubriker */
+  .sechead {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
+    margin-bottom: clamp(1.6rem, 1rem + 2vw, 2.6rem); flex-wrap: wrap;
+  }
+  .sechead h2 { margin-top: .7rem; }
+  .sechead .lead { margin-top: .9rem; font-size: var(--step-0); }
+
+  .catgrid { display: grid; gap: clamp(.7rem, .4rem + 1vw, 1.1rem); grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+
+  /* Steg */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .6rem + 1.5vw, 2rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); counter-reset: s; }
+  .step { border-top: 2px solid var(--ink); padding-top: 1rem; }
+  .step__n { font-family: var(--font-display); font-weight: 700; font-size: .8rem; letter-spacing: .1em; color: var(--accent-ink); }
+  .step h3 { font-size: var(--step-1); margin: .5rem 0 .45rem; }
+  .step p { color: var(--ink-2); font-size: .95rem; }
+
+  /* Promo */
+  .promo { background: var(--brand); color: color-mix(in srgb, var(--bg) 92%, transparent); padding-block: var(--section); }
+  :root[data-theme='dark'] .promo, :root:not([data-theme='light']) .promo { color: var(--bg-sunk); }
+  .promo__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
+  @media (max-width: 860px) { .promo__in { grid-template-columns: 1fr; } }
+  .promo h2 { color: var(--bg); margin: .7rem 0 1rem; }
+  .promo p { max-width: 46ch; margin-bottom: 1.8rem; }
+  .eyebrow--invert { color: var(--accent); }
+  .eyebrow--invert::before { background: var(--accent); }
+  .btn--invert { --btn-bg: transparent; --btn-fg: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, transparent); }
+  .btn--invert:hover { border-color: var(--bg); }
+  .promo__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
+  .promo__card {
+    background: color-mix(in srgb, var(--bg) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--bg) 14%, transparent);
+    border-radius: var(--r-lg); padding: .8rem; text-decoration: none; color: inherit;
+    display: grid; gap: .6rem; transition: background-color .18s, transform .18s;
+  }
+  .promo__card:hover { background: color-mix(in srgb, var(--bg) 14%, transparent); transform: translateY(-2px); }
+  .promo__card :global(.promo__img) { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--bg); border-radius: var(--r); padding: 8%; }
+  .promo__card span { font-size: .84rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  /* Varumärken */
+  .brands__list {
+    list-style: none; margin: 1.4rem 0 0; padding: 0;
+    display: flex; flex-wrap: wrap; gap: .5rem .6rem;
+  }
+  .brands__list li {
+    font-family: var(--font-display); font-weight: 620; font-size: clamp(1rem, .9rem + .5vw, 1.35rem);
+    letter-spacing: -.02em; color: var(--ink-2);
+    border: 1px solid var(--line); background: var(--bg); border-radius: var(--r-pill);
+    padding: .4rem 1rem;
+  }
+  .brands__note { margin-top: 1.2rem; font-size: .9rem; }
+
+  /* Offert */
+  .quote { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
+  @media (max-width: 900px) { .quote { grid-template-columns: 1fr; } }
+  .quote h2 { margin: .7rem 0 1rem; }
+  .ticks { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; gap: .8rem; }
+  .ticks li { display: flex; gap: .7rem; align-items: flex-start; font-size: .95rem; color: var(--ink-2); }
+  .ticks svg { color: var(--accent-ink); flex: none; margin-top: .15rem; }
+  .quote__alt { margin-top: 1.8rem; font-size: .95rem; color: var(--ink-3); }
+  .quote__alt a { font-weight: 550; color: var(--ink); margin-inline: .2rem; }
+</style>

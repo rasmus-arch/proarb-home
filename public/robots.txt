@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://proarb.se/sitemap-index.xml

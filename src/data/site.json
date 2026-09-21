@@ -1,0 +1,66 @@
+{
+  "name": "Proarb",
+  "legalName": "Profil Arbetskläder i Eskilstuna AB",
+  "tagline": "Arbets- & profilkläder för företag och föreningar",
+  "description": "Proarb i Eskilstuna säljer arbets- och profilkläder till företag och föreningar. Helly Hansen, Blåkläder m.fl., personlig service samt tryck & brodyr.",
+  "url": "https://proarb.se",
+  "phone": "070 379 44 66",
+  "phoneHref": "tel:+46703794466",
+  "email": "info@proarb.se",
+  "address": {
+    "street": "Rinmansgatan 7",
+    "postalCode": "632 20",
+    "city": "Eskilstuna",
+    "country": "SE"
+  },
+  "social": {
+    "facebook": "https://www.facebook.com/",
+    "instagram": "https://www.instagram.com/",
+    "tiktok": "https://www.tiktok.com/"
+  },
+  "usp": [
+    { "title": "Tryck & brodyr in-house", "text": "Vi brandar plaggen med er logotyp – tryck, brodyr eller reflex. Ett korrektur innan produktion, alltid." },
+    { "title": "Rätt klassning, varje gång", "text": "Varselplagg enligt EN ISO 20471 och skyddsskor enligt S1–S7. Vi ser till att ni är certifierade på riktigt." },
+    { "title": "Personlig kontakt", "text": "Ingen kundtjänstkö. Ni når oss direkt på telefon och får svar samma dag." },
+    { "title": "Hela sortimentet", "text": "Sajten visar ett urval. Behöver ni något annat tar vi fram det ur leverantörernas fulla kataloger." }
+  ],
+  "steps": [
+    { "title": "Berätta om behovet", "text": "Antal personer, yrken, säsong och budget. Ett samtal eller ett formulär räcker." },
+    { "title": "Ni får ett förslag", "text": "Vi väljer ut plagg, tar fram pris och visar hur er logotyp sitter på plagget." },
+    { "title": "Korrektur & produktion", "text": "Ni godkänner ett digitalt korrektur innan vi trycker eller broderar något." },
+    { "title": "Leverans & påfyllning", "text": "Vi levererar och sparar er profil, så nästa beställning tar fem minuter." }
+  ],
+  "brands": [
+    "Helly Hansen", "Blåkläder", "Jobman", "ProJob", "Printer", "Clique", "Craft",
+    "ID Identity", "TeeJays", "Cutter & Buck", "Harvest & Frost", "James & Nicholson",
+    "Tegera", "ATG", "Jalas", "Graphix", "Portwest"
+  ],
+  "nav": [
+    {
+      "label": "Arbetskläder",
+      "href": "/arbetsklader/",
+      "children": [
+        { "label": "Arbetsbyxor", "href": "/arbetsbyxor/" },
+        { "label": "Arbetsjackor", "href": "/arbetsjackor/" },
+        { "label": "Arbetströjor", "href": "/arbetstrojor/" },
+        { "label": "Varselkläder", "href": "/varselklader/" },
+        { "label": "Arbetsskor", "href": "/arbetsskor/" },
+        { "label": "Arbetshandskar", "href": "/arbetshandskar/" },
+        { "label": "Arbetsshorts & piratbyxor", "href": "/arbetsshorts-piratbyxor/" }
+      ]
+    },
+    {
+      "label": "Profilprodukter",
+      "href": "/profilprodukter/",
+      "children": [
+        { "label": "Profilkläder", "href": "/ovriga-profilklader/" },
+        { "label": "Profiljackor", "href": "/profiljackor/" },
+        { "label": "Profiltröjor", "href": "/profiltrojor/" },
+        { "label": "Profilskjortor", "href": "/profilskjortor/" },
+        { "label": "Give aways", "href": "/give-aways/" }
+      ]
+    },
+    { "label": "Om oss", "href": "/om-oss/" },
+    { "label": "Kontakt", "href": "/kontakt/" }
+  ]
+}

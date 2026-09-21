@@ -1,0 +1,147 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import ProductGrid from '../../components/ProductGrid.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QuoteCta from '../../components/QuoteCta.astro';
+import { categories, productsIn, site } from '../../lib/content';
+
+export const getStaticPaths = (({ paginate }) =>
+  categories.flatMap((c) =>
+    paginate(productsIn(c.url), {
+      params: { category: c.url },
+      props: { category: c },
+      pageSize: 48
+    })
+  )) satisfies GetStaticPaths;
+
+const { page, category: c } = Astro.props as any;
+const kids = categories.filter(
+  (x) => x.group === c.group && x.url !== c.url && !['arbetsklader', 'profilprodukter'].includes(x.url)
+);
+const root = c.group === 'arbete'
+  ? { name: 'Arbetskläder', href: '/arbetsklader/' }
+  : { name: 'Profilprodukter', href: '/profilprodukter/' };
+const isRoot = ['arbetsklader', 'profilprodukter'].includes(c.url);
+const crumbs = [{ name: 'Hem', href: '/' }, ...(isRoot ? [] : [root]), { name: c.name, href: `/${c.url}/` }];
+const brands = [...new Set(page.data.map((p: any) => p.brand).filter(Boolean))].sort() as string[];
+const suffix = page.currentPage > 1 ? ` – sida ${page.currentPage}` : '';
+
+const itemListLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: c.name,
+  numberOfItems: page.total,
+  itemListElement: page.data.slice(0, 20).map((p: any, i: number) => ({
+    '@type': 'ListItem',
+    position: (page.currentPage - 1) * 48 + i + 1,
+    url: new URL(`/produkt/${p.slug}/`, site.url).toString(),
+    name: p.name
+  }))
+};
+---
+
+<Base
+  title={c.seoTitle + suffix}
+  description={c.seoDesc}
+  breadcrumbs={crumbs}
+  jsonLd={itemListLd}
+  noindex={page.currentPage > 1}
+>
+  <section class="chead">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">{isRoot ? 'Kategori' : root.name}</p>
+      <h1>{c.h1}</h1>
+      <p class="lead">{c.lead}</p>
+      {kids.length > 0 && (
+        <nav class="chips" aria-label="Underkategorier">
+          {isRoot ? <span class="chip chip--on">Alla</span> : <a class="chip" href={root.href}>Alla</a>}
+          {kids.map((k) => <a class="chip" href={`/${k.url}/`}>{k.name}</a>)}
+        </nav>
+      )}
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="listbar">
+        <p class="listbar__count">
+          {page.total} produkter{page.lastPage > 1 && <span class="muted"> · sida {page.currentPage} av {page.lastPage}</span>}
+        </p>
+        {brands.length > 1 && page.lastPage === 1 && (
+          <div class="filters" data-filters>
+            <button class="chip chip--on" type="button" data-brand="">Alla märken</button>
+            {brands.map((b) => <button class="chip" type="button" data-brand={b}>{b}</button>)}
+          </div>
+        )}
+      </div>
+
+      <div data-grid>
+        <ProductGrid products={page.data} />
+      </div>
+
+      <p class="noresult" data-noresult hidden>Inga produkter från det märket på den här sidan.</p>
+
+      {page.lastPage > 1 && (
+        <nav class="pager" aria-label="Sidnavigering">
+          {page.url.prev ? <a class="btn btn--ghost btn--sm" href={page.url.prev}>Föregående</a> : <span></span>}
+          <span class="pager__now">{page.currentPage} / {page.lastPage}</span>
+          {page.url.next ? <a class="btn btn--ghost btn--sm" href={page.url.next}>Nästa</a> : <span></span>}
+        </nav>
+      )}
+    </div>
+  </section>
+
+  <QuoteCta
+    heading={`Hittar ni inte rätt ${c.name.toLowerCase()}?`}
+    text="Sajten visar ett urval. Beskriv behovet så tar vi fram förslag ur leverantörernas fulla kataloger – ofta samma dag."
+  />
+</Base>
+
+<style>
+  .chead { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .chead .eyebrow { margin-top: 1.3rem; }
+  .chead h1 { margin: .7rem 0 1rem; max-width: 20ch; }
+  .chead .lead { max-width: 60ch; }
+  .chips { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.8rem; }
+  .chip {
+    display: inline-flex; align-items: center; padding: .45rem .95rem;
+    border: 1px solid var(--line-strong); border-radius: var(--r-pill);
+    background: var(--bg); font-size: .9rem; font-weight: 520; text-decoration: none;
+    color: var(--ink-2); cursor: pointer; transition: border-color .15s, background-color .15s, color .15s;
+  }
+  .chip:hover { border-color: var(--ink); color: var(--ink); }
+  .chip--on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .section--tight { padding-block: clamp(1.8rem, 1.2rem + 2vw, 3rem) var(--section); }
+  .listbar { display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+  .listbar__count { font-size: .92rem; color: var(--ink-2); }
+  .filters { display: flex; flex-wrap: wrap; gap: .4rem; }
+  .filters .chip { padding: .35rem .8rem; font-size: .84rem; }
+  .noresult { margin-top: 2rem; color: var(--ink-3); }
+  .pager { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-top: 3rem; }
+  .pager__now { font-size: .9rem; color: var(--ink-3); }
+</style>
+
+<script>
+  const bar = document.querySelector('[data-filters]');
+  if (bar) {
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] article')];
+    const empty = document.querySelector<HTMLElement>('[data-noresult]');
+    bar.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-brand]');
+      if (!btn) return;
+      bar.querySelectorAll('.chip').forEach((c) => c.classList.remove('chip--on'));
+      btn.classList.add('chip--on');
+      const want = btn.dataset.brand ?? '';
+      let shown = 0;
+      cards.forEach((card) => {
+        const brand = card.querySelector('.card__brand')?.textContent?.trim() ?? '';
+        const hit = !want || brand === want;
+        card.style.display = hit ? '' : 'none';
+        if (hit) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    });
+  }
+</script>

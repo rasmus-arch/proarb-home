@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QuoteCta from '../components/QuoteCta.astro';
+import { site } from '../lib/content';
+const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Om oss', href: '/om-oss/' }];
+---
+<Base
+  title="Om oss – den personliga butiken för arbets- och profilkläder | Proarb"
+  description="Proarb i Eskilstuna är den personliga butiken för profil- och arbetskläder. Genuint engagemang, noggrant utvalt sortiment och service i centrum."
+  breadcrumbs={crumbs}
+>
+  <section class="hd">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">Om oss</p>
+      <h1>Service i centrum – varje gång</h1>
+      <p class="lead">
+        Vi är den personliga butiken för profil- och arbetskläder där service alltid står i centrum.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--top0">
+    <div class="container prose">
+      <p class="prose__big">
+        Hos oss möts du av ett genuint engagemang, ett högt driv och en vilja att alltid hitta
+        den bästa lösningen för just dig och ditt företag.
+      </p>
+      <p>
+        Vi erbjuder ett noggrant utvalt sortiment av marknadens ledande varumärken kombinerat
+        med prisvärda alternativ. Oavsett behov eller budget ser vi till att du får rätt
+        produkter – utan att kompromissa med kvalitet eller funktion.
+      </p>
+      <p>
+        Bakom verksamheten finns gedigen erfarenhet av försäljning och en stark tro på det
+        personliga mötet. För oss handlar det inte enbart om kläder – det handlar om relationer.
+        När du lämnar oss ska du känna dig trygg i ditt val och nöjd med helheten.
+      </p>
+      <p>
+        Vi siktar högt, tänker långsiktigt och strävar alltid efter att överträffa dina förväntningar.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--sunk">
+    <div class="container">
+      <p class="eyebrow">Det här kan ni räkna med</p>
+      <div class="cards">
+        {site.usp.map((u: any) => (
+          <article class="ucard">
+            <h2>{u.title}</h2>
+            <p>{u.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container find">
+      <div>
+        <p class="eyebrow">Hitta hit</p>
+        <h2>Välkommen in</h2>
+        <address>
+          {site.legalName}<br />
+          {site.address.street}<br />
+          {site.address.postalCode} {site.address.city}
+        </address>
+        <p class="find__links">
+          <a href={site.phoneHref}>{site.phone}</a><br />
+          <a href={`mailto:${site.email}`}>{site.email}</a>
+        </p>
+        <a class="btn btn--ghost" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.address.street + ', ' + site.address.city)}`} rel="noopener" target="_blank">Visa på karta</a>
+      </div>
+      <div class="find__map">
+        <iframe
+          title="Karta till Proarb"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src={`https://www.openstreetmap.org/export/embed.html?bbox=16.49%2C59.36%2C16.53%2C59.38&layer=mapnik`}
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <QuoteCta />
+</Base>
+
+<style>
+  .hd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .hd .eyebrow { margin-top: 1.3rem; }
+  .hd h1 { margin: .7rem 0 1rem; max-width: 18ch; }
+  .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .prose { max-width: 62ch; display: grid; gap: 1.1rem; color: var(--ink-2); font-size: 1.03rem; line-height: 1.7; }
+  .prose__big { font-size: var(--step-1); color: var(--ink); line-height: 1.5; }
+  .cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); margin-top: 1.6rem; }
+  .ucard { background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.3rem 1.4rem 1.5rem; }
+  .ucard h2 { font-size: var(--step-1); margin-bottom: .5rem; }
+  .ucard p { color: var(--ink-2); font-size: .95rem; }
+  .find { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(2rem, 1rem + 3vw, 3.5rem); align-items: center; }
+  @media (max-width: 800px) { .find { grid-template-columns: 1fr; } }
+  .find h2 { margin: .7rem 0 1.2rem; }
+  address { font-style: normal; color: var(--ink-2); line-height: 1.8; }
+  .find__links { margin: 1rem 0 1.6rem; line-height: 1.9; }
+  .find__links a { font-weight: 550; text-decoration: none; }
+  .find__map { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); aspect-ratio: 16/10; background: var(--bg-sunk); }
+  .find__map iframe { width: 100%; height: 100%; border: 0; }
+</style>

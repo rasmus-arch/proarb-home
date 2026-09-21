@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QuoteCta from '../components/QuoteCta.astro';
+const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Tryck & brodyr', href: '/tryck-och-brodyr/' }];
+const methods = [
+  { name: 'Brodyr', text: 'Sytt direkt i plagget. Tåligast över tid och känns påkostat – perfekt på jackor, pikéer och mössor.', best: 'Jackor, pikéer, skjortor' },
+  { name: 'Transfertryck', text: 'Skarpa färger och fina detaljer, även på små ytor. Bra när logotypen har många kulörer.', best: 'T-shirts, hoodies, västar' },
+  { name: 'Screentryck', text: 'Mest prisvärt vid större upplagor. Jämn färg och lång hållbarhet vid tvätt.', best: 'Större serier, föreningar' },
+  { name: 'Reflextryck', text: 'Syns i mörker och kan kombineras med varselplagg utan att bryta certifieringen.', best: 'Varselkläder, arbetsjackor' }
+];
+---
+<Base
+  title="Tryck & brodyr på arbets- och profilkläder | Proarb"
+  description="Vi brandar era plagg med brodyr, transfer-, screen- eller reflextryck. Ni får alltid ett digitalt korrektur innan produktion."
+  breadcrumbs={crumbs}
+>
+  <section class="hd">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">Profilering</p>
+      <h1>Er logotyp, på rätt ställe</h1>
+      <p class="lead">
+        Plagget är halva jobbet. Vi ser till att logotypen sitter rätt, håller i tvätten och
+        fungerar med plaggets certifiering.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--top0">
+    <div class="container">
+      <div class="mgrid">
+        {methods.map((m) => (
+          <article class="mcard">
+            <h2>{m.name}</h2>
+            <p>{m.text}</p>
+            <p class="mcard__best"><span>Passar bäst</span> {m.best}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--sunk">
+    <div class="container">
+      <p class="eyebrow">Filformat</p>
+      <h2>Så vill vi ha logotypen</h2>
+      <ul class="files">
+        <li><strong>Helst vektor</strong> – .ai, .eps, .pdf eller .svg. Skalbart utan kvalitetsförlust.</li>
+        <li><strong>Går också bra</strong> – .png med transparent bakgrund, minst 1000 px bred.</li>
+        <li><strong>Har ni bara en gammal bild?</strong> Vi ritar om den åt er mot en mindre avgift.</li>
+      </ul>
+      <p class="muted files__note">
+        Ni får alltid ett digitalt korrektur som visar placering och storlek innan vi producerar något.
+      </p>
+    </div>
+  </section>
+
+  <QuoteCta heading="Skicka logotypen så visar vi hur det blir" text="Bifoga filen i förfrågan, eller maila den till info@proarb.se." />
+</Base>
+
+<style>
+  .hd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .hd .eyebrow { margin-top: 1.3rem; }
+  .hd h1 { margin: .7rem 0 1rem; max-width: 16ch; }
+  .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .mgrid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+  .mcard { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.4rem; background: var(--bg-raised); }
+  .mcard h2 { font-size: var(--step-1); margin-bottom: .55rem; }
+  .mcard p { color: var(--ink-2); font-size: .95rem; }
+  .mcard__best { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); font-size: .85rem; }
+  .mcard__best span { color: var(--ink-3); display: block; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .15rem; }
+  .files { margin: 1.4rem 0 0; padding-left: 1.1rem; display: grid; gap: .6rem; color: var(--ink-2); max-width: 58ch; }
+  .files__note { margin-top: 1.4rem; font-size: .9rem; }
+  h2 { margin-top: .7rem; }
+</style>

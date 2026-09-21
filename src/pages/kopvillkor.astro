@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { site } from '../lib/content';
+const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Köpvillkor', href: '/kopvillkor/' }];
+const terms = [
+  { h: '1. Allmänt', p: ['Dessa villkor gäller för alla beställningar som görs via proarb.se av företag.', 'Genom att lägga en beställning godkänner kunden dessa villkor.'] },
+  { h: '2. Beställning & avtal', p: ['Avtal mellan kunden och Proarb ingås när Proarb bekräftat beställningen skriftligen, till exempel via orderbekräftelse.', 'Kunden ansvarar för att ange korrekt faktura- och leveransinformation. Fel i adress eller företagsuppgifter kan påverka leverans och kostnad.'] },
+  { h: '3. Priser & betalning', p: ['Alla priser anges exklusive moms om inget annat framgår.', 'Betalning sker enligt de betalningsvillkor som gäller för kundens avtal (fakturering, förskottsbetalning eller liknande).', 'Proarb förbehåller sig rätten att ändra priser vid uppdaterade inköpspriser eller valutaförändringar.'] },
+  { h: '4. Profilerade produkter', p: ['Produkter med tryck eller brodyr tillverkas mot order och kan därför inte bytas eller returneras, annat än vid fel på varan.', 'Kunden godkänner ett digitalt korrektur innan produktion. Godkänt korrektur ligger till grund för leveransen.'] },
+  { h: '5. Leverans', p: ['Leveranstid anges i orderbekräftelsen och kan variera beroende på lagerstatus hos leverantör.', 'Fraktkostnad tillkommer enligt gällande prislista om inget annat avtalats.'] },
+  { h: '6. Reklamation', p: ['Eventuella fel eller brister ska anmälas till info@proarb.se så snart de upptäckts, dock senast inom skälig tid från leverans.', 'Vid godkänd reklamation ersätter eller krediterar Proarb den felaktiga varan.'] },
+  { h: '7. Personuppgifter', p: ['Uppgifter som lämnas vid beställning behandlas enligt vår integritetspolicy och används endast för att fullgöra avtalet.'] }
+];
+---
+<Base title="Köpvillkor | Proarb" description="Köpvillkor för beställningar via proarb.se – för företagskunder." breadcrumbs={crumbs}>
+  <section class="hd">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <h1>Köpvillkor</h1>
+      <p class="lead">
+        Gäller mellan {site.legalName} (”Proarb”) och beställande företag.
+      </p>
+    </div>
+  </section>
+  <section class="section section--top0">
+    <div class="container legal">
+      {terms.map((t) => (
+        <section>
+          <h2>{t.h}</h2>
+          {t.p.map((x) => <p>{x}</p>)}
+        </section>
+      ))}
+      <p class="muted">Har du frågor om villkoren? Hör av dig till <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+    </div>
+  </section>
+</Base>
+<style>
+  .hd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .hd h1 { margin: 1.3rem 0 1rem; }
+  .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .legal { max-width: 62ch; display: grid; gap: 2rem; }
+  .legal h2 { font-size: var(--step-1); margin-bottom: .6rem; }
+  .legal p { color: var(--ink-2); margin-bottom: .6rem; }
+</style>

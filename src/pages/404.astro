@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Sidan finns inte | Proarb" description="Sidan kunde inte hittas." noindex>
+  <section class="nf">
+    <div class="container">
+      <p class="eyebrow">404</p>
+      <h1>Den sidan hittade vi inte</h1>
+      <p class="lead">Länken kan vara gammal, eller så har produkten bytt namn. Sök i sortimentet eller hör av dig så hjälper vi till.</p>
+      <div class="cluster">
+        <button class="btn" type="button" data-search-open>Sök i sortimentet</button>
+        <a class="btn btn--ghost" href="/">Till startsidan</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { padding-block: clamp(4rem, 3rem + 6vw, 8rem); }
+  .nf h1 { margin: .8rem 0 1rem; }
+  .nf .lead { margin-bottom: 2rem; }
+</style>

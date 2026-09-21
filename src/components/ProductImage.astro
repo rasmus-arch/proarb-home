@@ -1,0 +1,77 @@
+---
+/**
+ * Visar en produktbild.
+ * Finns bilden nersynkad lokalt (src/assets/products/) optimeras den av Astro
+ * till AVIF/WebP i flera storlekar. Annars används originalets URL som fallback,
+ * så att sajten alltid byggs även utan `npm run sync`.
+ */
+import { Image } from 'astro:assets';
+
+interface Props {
+  file?: string | null;
+  src?: string | null;
+  alt: string;
+  widths?: number[];
+  sizes?: string;
+  width?: number;
+  height?: number;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+}
+
+const {
+  file,
+  src,
+  alt,
+  widths = [240, 400, 640, 900],
+  sizes = '(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 300px',
+  width = 900,
+  height = 900,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  class: className
+} = Astro.props;
+
+const local = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/products/**/*.{jpeg,jpg,png,webp,avif,gif}',
+  { eager: true }
+);
+const entry = file ? local[`/src/assets/products/${file}`] : undefined;
+---
+
+{
+  entry ? (
+    <Image
+      src={entry.default}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      loading={loading}
+      fetchpriority={fetchpriority}
+      decoding="async"
+      class={className}
+    />
+  ) : src ? (
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      fetchpriority={fetchpriority}
+      decoding="async"
+      class={className}
+    />
+  ) : (
+    <div class={`ph ${className ?? ''}`} aria-hidden="true" />
+  )
+}
+
+<style>
+  .ph {
+    background: linear-gradient(135deg, var(--bg-sunk), color-mix(in srgb, var(--bg-sunk) 60%, var(--line)));
+    aspect-ratio: 1;
+    width: 100%;
+  }
+</style>

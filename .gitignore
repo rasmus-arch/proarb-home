@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+*.log
+.env
+.netlify/
+
+# Synkas ner från proarb.se med `npm run sync` – checkas inte in
+src/assets/products/
+src/data/products.json

@@ -1,0 +1,185 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import ProductImage from '../../components/ProductImage.astro';
+import ProductGrid from '../../components/ProductGrid.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { products, categories, relatedTo, site, excerpt, type Product } from '../../lib/content';
+
+export const getStaticPaths = (() =>
+  products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }))) satisfies GetStaticPaths;
+
+const { product } = Astro.props as { product: Product };
+const cats = product.categories
+  .map((u) => categories.find((c) => c.url === u))
+  .filter(Boolean) as typeof categories;
+const main = cats.find((c) => !['arbetsklader', 'profilprodukter'].includes(c.url)) ?? cats[0];
+const root = cats.find((c) => ['arbetsklader', 'profilprodukter'].includes(c.url));
+const crumbs = [
+  { name: 'Hem', href: '/' },
+  ...(root ? [{ name: root.name, href: `/${root.url}/` }] : []),
+  ...(main && main !== root ? [{ name: main.name, href: `/${main.url}/` }] : []),
+  { name: product.name, href: `/produkt/${product.slug}/` }
+];
+const colors = product.variants.filter((v) => v.color);
+const gallery = product.gallery?.length ? product.gallery : product.image ? [product.image] : [];
+const related = relatedTo(product);
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.name,
+  description: excerpt(product.description, 300) || `${product.name} från Proarb i Eskilstuna.`,
+  ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
+  ...(product.sku ? { sku: product.sku } : {}),
+  ...(product.image ? { image: product.image } : {}),
+  offers: {
+    '@type': 'Offer',
+    availability: 'https://schema.org/InStock',
+    priceCurrency: 'SEK',
+    price: '0',
+    priceSpecification: { '@type': 'PriceSpecification', valueAddedTaxIncluded: false },
+    url: new URL(`/produkt/${product.slug}/`, site.url).toString(),
+    seller: { '@type': 'Organization', name: site.legalName }
+  }
+};
+---
+
+<Base
+  title={`${product.name}${product.brand ? '' : ''} | Proarb`}
+  description={excerpt(product.description, 155) || `${product.name} – beställ med tryck eller brodyr från Proarb i Eskilstuna.`}
+  breadcrumbs={crumbs}
+  image={product.image ?? undefined}
+  jsonLd={ld}
+>
+  <div class="container p-wrap">
+    <Breadcrumbs items={crumbs} />
+
+    <div class="p">
+      <div class="p__media">
+        <div class="p__main" data-stage>
+          <ProductImage
+            file={product.file}
+            src={product.image}
+            alt={product.name}
+            loading="eager"
+            fetchpriority="high"
+            widths={[400, 700, 1000]}
+            sizes="(max-width: 900px) 92vw, 540px"
+            class="p__img"
+          />
+        </div>
+        {(gallery.length > 1 || colors.length > 1) && (
+          <ul class="p__thumbs">
+            {(colors.length > 1 ? colors : gallery.map((g, i) => ({ image: g, file: i === 0 ? product.file : null, color: null }))).map(
+              (v: any, i: number) => (
+                <li>
+                  <button type="button" class={`thumb ${i === 0 ? 'thumb--on' : ''}`} data-src={v.image} title={v.color ?? `Bild ${i + 1}`}>
+                    <ProductImage file={v.file} src={v.image} alt={v.color ?? ''} sizes="80px" widths={[80, 160]} class="thumb__img" />
+                    <span class="visually-hidden">{v.color ?? `Bild ${i + 1}`}</span>
+                  </button>
+                </li>
+              )
+            )}
+          </ul>
+        )}
+      </div>
+
+      <div class="p__info">
+        {product.brand && <p class="eyebrow">{product.brand}</p>}
+        <h1>{product.name}</h1>
+
+        <div class="cluster p__tags">
+          {cats.filter((c) => !['arbetsklader', 'profilprodukter'].includes(c.url)).map((c) => (
+            <a class="tag" href={`/${c.url}/`}>{c.name}</a>
+          ))}
+          {product.categories.includes('varselklader') && <span class="tag tag--hivis">EN ISO 20471</span>}
+        </div>
+
+        {product.description && <p class="p__desc">{product.description}</p>}
+
+        {colors.length > 1 && (
+          <p class="p__colors"><strong>Färger:</strong> {colors.map((c) => c.color).join(', ')}</p>
+        )}
+
+        <dl class="p__spec">
+          {product.sku && <div><dt>Artikelnummer</dt><dd>{product.sku}</dd></div>}
+          {product.brand && <div><dt>Varumärke</dt><dd>{product.brand}</dd></div>}
+          <div><dt>Storlekar</dt><dd>Hela leverantörens storleksskala</dd></div>
+          <div><dt>Profilering</dt><dd>Tryck, brodyr eller reflex – korrektur innan produktion</dd></div>
+        </dl>
+
+        <div class="p__buy">
+          <a class="btn" href={`/kontakt/?produkt=${encodeURIComponent(product.name)}`}>Begär offert på den här</a>
+          <a class="btn btn--ghost" href={site.phoneHref}>Ring {site.phone}</a>
+        </div>
+        <p class="p__fine">
+          Priser sätts per order och antal – därför visar vi inga listpriser. Ni får pris,
+          leveranstid och ett digitalt korrektur innan något produceras.
+        </p>
+      </div>
+    </div>
+
+    {related.length > 0 && (
+      <section class="p__related">
+        <h2>Liknande produkter</h2>
+        <ProductGrid products={related} eagerCount={0} />
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+  .p-wrap { padding-block: clamp(1.25rem, 1rem + 1.5vw, 2.25rem) var(--section); }
+  .p { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.75rem, 1rem + 4vw, 4rem); margin-top: 1.5rem; align-items: start; }
+  @media (max-width: 880px) { .p { grid-template-columns: 1fr; } }
+
+  .p__main {
+    background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-lg);
+    aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+  }
+  .p__main :global(.p__img) { width: 100%; height: 100%; object-fit: contain; padding: 6%; mix-blend-mode: multiply; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .p__main :global(.p__img) { mix-blend-mode: normal; }
+  }
+  .p__thumbs { list-style: none; display: flex; gap: .5rem; padding: 0; margin: .7rem 0 0; flex-wrap: wrap; }
+  .thumb {
+    width: 4.25rem; height: 4.25rem; padding: .3rem; cursor: pointer;
+    background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r);
+    overflow: hidden;
+  }
+  .thumb--on { border-color: var(--ink); }
+  .thumb :global(.thumb__img) { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+
+  .p__info h1 { font-size: var(--step-4); margin: .6rem 0 1rem; }
+  .p__tags { margin-bottom: 1.4rem; }
+  .p__desc { color: var(--ink-2); font-size: 1.02rem; line-height: 1.65; max-width: 56ch; }
+  .p__colors { margin-top: 1rem; font-size: .95rem; color: var(--ink-2); }
+  .p__spec {
+    margin: 1.8rem 0 0; display: grid; gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .p__spec > div { display: flex; gap: 1rem; justify-content: space-between; padding: .7rem 0; border-bottom: 1px solid var(--line); font-size: .93rem; }
+  .p__spec dt { color: var(--ink-3); }
+  .p__spec dd { margin: 0; text-align: right; color: var(--ink); font-weight: 520; max-width: 60%; }
+  .p__buy { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1.9rem; }
+  .p__fine { margin-top: 1rem; font-size: .86rem; color: var(--ink-3); max-width: 52ch; }
+  .p__related { margin-top: clamp(3rem, 2rem + 4vw, 5rem); }
+  .p__related h2 { font-size: var(--step-2); margin-bottom: 1.4rem; }
+</style>
+
+<script>
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  const thumbs = [...document.querySelectorAll<HTMLButtonElement>('.thumb')];
+  thumbs.forEach((t) =>
+    t.addEventListener('click', () => {
+      const img = stage?.querySelector('img');
+      const next = t.querySelector('img');
+      if (!img || !next) return;
+      img.removeAttribute('srcset');
+      img.src = next.currentSrc || next.src;
+      thumbs.forEach((x) => x.classList.remove('thumb--on'));
+      t.classList.add('thumb--on');
+    })
+  );
+</script>

@@ -1,0 +1,15 @@
+# Gamla WordPress-URL:er -> nya
+/product/*            /produkt/:splat        301
+/product-category/arbetsklader/*     /arbetsklader/     301
+/product-category/profilprodukter/*  /profilprodukter/  301
+/ovriga-profilklader/  /ovriga-profilklader/  200
+/shop                  /arbetsklader/         301
+/cart                  /kontakt/              301
+/checkout              /kontakt/              301
+/my-account            /kontakt/              301
+/rea-2                 /arbetsklader/         301
+/ny-start              /                      301
+/sample-page           /                      301
+/privacy-policy        /integritetspolicy/    301
+/wp-admin/*            /                      301
+/wp-login.php          /                      301

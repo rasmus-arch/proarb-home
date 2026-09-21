@@ -1,0 +1,28 @@
+---
+import { site } from '../lib/content';
+interface Props { heading?: string; text?: string }
+const {
+  heading = 'Behöver ni hjälp att välja?',
+  text = 'Berätta om verksamheten så återkommer vi med ett förslag – plagg, storlekar och placering av logotypen.'
+} = Astro.props;
+---
+<section class="cta">
+  <div class="container cta__in">
+    <div>
+      <h2>{heading}</h2>
+      <p>{text}</p>
+    </div>
+    <div class="cluster">
+      <a class="btn btn--accent" href="/kontakt/">Begär offert</a>
+      <a class="btn btn--invert" href={site.phoneHref}>Ring {site.phone}</a>
+    </div>
+  </div>
+</section>
+<style>
+  .cta { background: var(--brand); color: color-mix(in srgb, var(--bg) 85%, transparent); padding-block: clamp(2.5rem, 2rem + 2.5vw, 4rem); }
+  .cta__in { display: flex; justify-content: space-between; align-items: center; gap: 2rem; flex-wrap: wrap; }
+  .cta h2 { color: var(--bg); font-size: var(--step-3); max-width: 18ch; }
+  .cta p { margin-top: .7rem; max-width: 48ch; font-size: .97rem; }
+  .btn--invert { --btn-bg: transparent; --btn-fg: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, transparent); }
+  .btn--invert:hover { border-color: var(--bg); }
+</style>

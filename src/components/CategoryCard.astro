@@ -1,0 +1,46 @@
+---
+import ProductImage from './ProductImage.astro';
+import { productsIn, type Category } from '../lib/content';
+interface Props { category: Category; size?: 'sm' | 'lg'; eager?: boolean }
+const { category: c, size = 'sm', eager = false } = Astro.props;
+const items = productsIn(c.url);
+const cover = items.find((p) => p.image) ?? items[0];
+---
+<a class={`ccard ccard--${size}`} href={`/${c.url}/`}>
+  <span class="ccard__media">
+    {cover && <ProductImage file={cover.file} src={cover.image} alt="" loading={eager ? 'eager' : 'lazy'} sizes="(max-width: 700px) 45vw, 22vw" class="ccard__img" />}
+  </span>
+  <span class="ccard__text">
+    <span class="ccard__name">{c.name}</span>
+    <span class="ccard__count">{items.length} produkter</span>
+  </span>
+  <span class="ccard__arrow" aria-hidden="true">
+    <svg width="16" height="16" viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </span>
+</a>
+
+<style>
+  .ccard {
+    display: flex; align-items: center; gap: 1rem;
+    padding: .75rem .95rem .75rem .75rem;
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    background: var(--bg-raised); text-decoration: none; color: inherit;
+    transition: border-color .18s, transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s;
+  }
+  .ccard:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: var(--shadow-2); }
+  .ccard__media {
+    width: 4.25rem; height: 4.25rem; flex: none; border-radius: var(--r);
+    background: var(--bg-sunk); display: grid; place-items: center; overflow: hidden;
+  }
+  .ccard__media :global(.ccard__img) { width: 100%; height: 100%; object-fit: contain; padding: 8%; mix-blend-mode: multiply; }
+  .ccard__text { display: flex; flex-direction: column; gap: .12rem; min-width: 0; }
+  .ccard__name { font-family: var(--font-display); font-weight: 620; font-size: 1.02rem; letter-spacing: -.015em; }
+  .ccard__count { font-size: .82rem; color: var(--ink-3); }
+  .ccard__arrow { margin-left: auto; color: var(--ink-3); transition: transform .2s, color .2s; }
+  .ccard:hover .ccard__arrow { transform: translateX(3px); color: var(--ink); }
+
+  .ccard--lg { flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; }
+  .ccard--lg .ccard__media { width: 100%; height: auto; aspect-ratio: 4/3; border-radius: 0; }
+  .ccard--lg .ccard__text { padding: 1rem 1.1rem 1.1rem; }
+  .ccard--lg .ccard__arrow { display: none; }
+</style>

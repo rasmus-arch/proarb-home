@@ -1,0 +1,16 @@
+---
+import ProductCard from './ProductCard.astro';
+import type { Product } from '../lib/content';
+interface Props { products: Product[]; eagerCount?: number }
+const { products, eagerCount = 4 } = Astro.props;
+---
+<div class="pgrid">
+  {products.map((p, i) => <ProductCard product={p} eager={i < eagerCount} />)}
+</div>
+<style>
+  .pgrid {
+    display: grid; gap: clamp(.75rem, .4rem + 1vw, 1.5rem);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+  @media (max-width: 520px) { .pgrid { grid-template-columns: repeat(2, 1fr); gap: .7rem; } }
+</style>
