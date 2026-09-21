@@ -14,8 +14,9 @@
     "country": "SE"
   },
   "hours": [
-    { "days": "Mån–fre", "time": "TODO – fyll i riktiga öppettider" },
-    { "days": "Lör–sön", "time": "TODO – fyll i riktiga öppettider" }
+    { "days": "Mån–tors", "time": "07–16" },
+    { "days": "Fredag", "time": "07–15" },
+    { "days": "Lör–sön", "time": "Stängt" }
   ],
   "social": {
     "facebook": "https://www.facebook.com/",
