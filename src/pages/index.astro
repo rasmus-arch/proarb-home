@@ -3,21 +3,21 @@ import Base from '../layouts/Base.astro';
 import ProductGrid from '../components/ProductGrid.astro';
 import ProductImage from '../components/ProductImage.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import { site, products, productsIn, categoryByUrl } from '../lib/content';
+import { site, productsIn, categoryByUrl } from '../lib/content';
 
-const bySlug = (slug: string) => products.find((p) => p.slug === slug);
+const UPLOADS = 'https://proarb.se/wp-content/uploads/2026/04/';
 
 const showcase = [
-  { size: 'full', url: 'arbetsklader', slug: 'hellyhansen-bergholm-vinterjacka' },
-  { size: 'half', url: 'varselklader', slug: 'jobman-7586-varselvast' },
-  { size: 'half', url: 'arbetsbyxor', slug: 'blaklader-hantverksbyxa-stretch-x1900-2' },
-  { size: 'full', url: 'arbetsjackor', slug: 'jobman-1284-skaljacka' },
-  { size: 'half', url: 'arbetshandskar', slug: 'tegera-infinity-8801' },
-  { size: 'half', url: 'arbetsskor', slug: 'hellyhansen-kensington-boa-skyddssko-s3s' },
-  { size: 'full', url: 'ovriga-profilklader', slug: 'id-identity-geyser-hybrid-jacket' },
-  { size: 'half', url: 'profiltrojor', slug: 'cutter-buck-advantage-premium-polo-men-2' },
-  { size: 'half', url: 'give-aways', slug: 'vattenflaska-langhals-80-cl' }
-].map((item) => ({ ...item, cat: categoryByUrl(item.url)!, product: bySlug(item.slug) }));
+  { size: 'full', url: 'arbetsklader', image: UPLOADS + 'nwp-arbetsklader-arbetsklader-ss21-33-redigera3-1536x707.jpg' },
+  { size: 'half', url: 'varselklader', image: UPLOADS + 'Skarmbild-2026-04-01-102343-768x664.png' },
+  { size: 'half', url: 'arbetsbyxor', image: UPLOADS + 'Skarmbild-2026-04-01-102516-768x585.png' },
+  { size: 'full', url: 'arbetsjackor', image: UPLOADS + '5993D2F324403F5A1FF9.webp' },
+  { size: 'half', url: 'arbetshandskar', image: UPLOADS + 'ei_7776-12-768x512.webp' },
+  { size: 'half', url: 'arbetsskor', image: UPLOADS + 'dsc04899-768x512.jpg' },
+  { size: 'full', url: 'ovriga-profilklader', image: UPLOADS + 'profilklader-1536x540.webp' },
+  { size: 'half', url: 'profiltrojor', image: UPLOADS + '1110228_HeavyTshirt_2.jpg' },
+  { size: 'half', url: 'give-aways', image: UPLOADS + 'Skarmbild-2026-04-01-103244.png' }
+].map((item) => ({ ...item, cat: categoryByUrl(item.url)! }));
 
 const featured = [
   ...productsIn('arbetsjackor').slice(0, 2),
@@ -84,20 +84,12 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
       <div class="cshow__grid">
         {showcase.map((item) => (
           <a class={`cband cband--${item.size}`} href={`/${item.url}/`}>
-            <div class="cband__media">
-              <ProductImage
-                file={item.product?.file}
-                src={item.product?.image}
-                alt=""
-                loading="lazy"
-                sizes={item.size === 'full' ? '(max-width: 900px) 90vw, 640px' : '(max-width: 700px) 90vw, 420px'}
-                class="cband__img"
-              />
-            </div>
+            <img class="cband__img" src={item.image} alt="" loading="lazy" />
+            <span class="cband__scrim" aria-hidden="true"></span>
             <div class="cband__copy">
               <h3>{item.cat.h1}</h3>
               <p>{item.cat.lead}</p>
-              <span class="link-arrow cband__link">
+              <span class="btn btn--sm cband__btn">
                 Se sortimentet
                 <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
@@ -253,32 +245,35 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .cshow__grid { display: grid; gap: clamp(.7rem, .4rem + 1vw, 1.1rem); grid-template-columns: repeat(2, 1fr); }
   @media (max-width: 720px) { .cshow__grid { grid-template-columns: 1fr; } }
   .cband {
-    position: relative; display: flex; text-decoration: none; color: inherit;
-    border-radius: var(--r-lg); overflow: hidden;
+    position: relative; display: block; text-decoration: none; color: #fff;
+    border-radius: var(--r-lg); overflow: hidden; isolation: isolate;
     transition: transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s;
   }
   .cband:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
-  .cband--full {
-    grid-column: 1 / -1; display: grid; grid-template-columns: 1.1fr 1fr;
-    align-items: stretch; background: #163d47; color: #f4f1ea; min-height: 22rem;
+  .cband:hover .cband__img { transform: scale(1.045); }
+  .cband--full { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
+  .cband--half { aspect-ratio: 4 / 3; }
+  @media (max-width: 700px) { .cband--full { aspect-ratio: 4 / 3; } }
+  .cband__img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    z-index: -2; transition: transform .4s cubic-bezier(.2,.8,.3,1);
   }
-  @media (max-width: 700px) { .cband--full { grid-template-columns: 1fr; min-height: 0; } }
-  .cband--half { flex-direction: column; background: var(--bg-raised); border: 1px solid var(--line); }
-  .cband__media { display: grid; place-items: center; overflow: hidden; }
-  .cband--full .cband__media { order: 2; padding: clamp(1.5rem, 1rem + 2vw, 3rem); }
-  .cband--half .cband__media { aspect-ratio: 4 / 3; width: 100%; background: var(--bg-sunk); padding: 1.6rem; }
-  .cband :global(.cband__img) { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
-  .cband--full :global(.cband__img) { mix-blend-mode: normal; filter: drop-shadow(0 20px 34px rgba(0,0,0,.4)); }
-  .cband__copy { display: flex; flex-direction: column; justify-content: center; gap: .55rem; padding: clamp(1.4rem, 1rem + 1.6vw, 2.75rem); }
-  .cband--full .cband__copy { order: 1; }
-  .cband--full .cband__copy h3 { font-size: var(--step-3); color: #fff; }
-  .cband--full .cband__copy p { color: color-mix(in srgb, #fff 78%, transparent); max-width: 36ch; }
-  .cband--half .cband__copy h3 { font-size: var(--step-1); }
-  .cband--half .cband__copy p { color: var(--ink-2); font-size: .88rem; max-width: 32ch; }
-  .cband__copy h3 { margin: 0; }
-  .cband__link { font-size: .88rem; }
-  .cband--full .cband__link { color: #fff; }
-  .cband--full .cband__link svg { color: var(--accent); }
+  .cband__scrim {
+    position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, rgba(10,20,23,.15) 0%, rgba(10,20,23,.42) 55%, rgba(10,20,23,.72) 100%);
+  }
+  .cband__copy {
+    position: relative; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end; text-align: center; gap: .5rem;
+    padding: clamp(1.2rem, 1rem + 1.5vw, 2.25rem); text-wrap: balance;
+  }
+  .cband--full .cband__copy { justify-content: center; }
+  .cband__copy h3 { margin: 0; color: #fff; font-size: var(--step-2); }
+  .cband--full .cband__copy h3 { font-size: var(--step-3); }
+  .cband__copy p { margin: 0; color: rgba(255,255,255,.88); max-width: 34ch; font-size: .92rem; }
+  .cband--full .cband__copy p { font-size: 1rem; max-width: 46ch; }
+  .cband__btn { margin-top: .3rem; --btn-bg: #fff; --btn-fg: var(--ink); gap: .45rem; }
+  .cband__btn:hover { --btn-bg: #fff; }
 
   /* Steg */
   .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .6rem + 1.5vw, 2rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); counter-reset: s; }
