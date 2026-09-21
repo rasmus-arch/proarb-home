@@ -97,3 +97,31 @@ på subdomänen – kräver ingen kodändring.
 6. Testa formuläret och några gamla WordPress-länkar (t.ex. `/product/...`)
    för att bekräfta att redirectarna i `.htaccess` fungerar på den riktiga
    domänen.
+
+## 7. Google Tag Manager, Analytics & Search Console
+
+Förberett men avstängt tills ni har egna ID:n – fyll i `src/data/site.json`
+under `"analytics"`:
+
+```json
+"analytics": {
+  "gtmId": "GTM-XXXXXXX",
+  "googleSiteVerification": "koden-fran-verifieringstaggen"
+}
+```
+
+- **`gtmId`** – skapa en Google Tag Manager-container (tagmanager.google.com),
+  klistra in container-ID:t (`GTM-...`). Google Analytics 4 läggs sedan till
+  som en *tagg inuti GTM* (ingen extra kod behövs här) – skapa en GA4-egendom,
+  lägg till GA4-taggen i GTM-gränssnittet, publicera containern.
+- **`googleSiteVerification`** – Search Console → lägg till egendom
+  `proarb.se` → verifieringsmetod "HTML-tagg" → klistra in bara `content`-
+  värdet (inte hela `<meta>`-taggen) här.
+- Bygg om (`npm run build`) och ladda upp. Så länge fälten är tomma laddas
+  ingenting – sajten förblir skriptfri tills ni aktivt fyller i dem.
+
+**Kom ihåg cookiesamtycke:** GTM/GA4 sätter cookies för besöksstatistik.
+Enligt svensk lag (kompletterande till GDPR) krävs samtycke innan sådana
+cookies sätts – den här sajten har idag ingen cookie-banner. Prata med er
+jurist/webbyrå om ni vill vara på den säkra sidan, eller fråga mig så kan
+jag sätta upp Consent Mode/en enkel samtyckesruta innan ni aktiverar GTM.
