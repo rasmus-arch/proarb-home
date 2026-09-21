@@ -18,6 +18,8 @@ interface Props {
 
 const { title, description, image, noindex = false, breadcrumbs = [], jsonLd = null } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).toString();
+const staging = process.env.STAGING === '1';
+const isNoindex = noindex || staging;
 
 const org = {
   '@context': 'https://schema.org',
@@ -61,7 +63,7 @@ const crumbLd = breadcrumbs.length
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    {isNoindex && <meta name="robots" content="noindex, nofollow" />}
     <meta name="theme-color" content="#14181b" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />

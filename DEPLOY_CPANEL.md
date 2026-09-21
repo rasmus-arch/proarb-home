@@ -52,8 +52,48 @@ dokumentrot mot den katalog du laddade upp till (*Domains* i cPanel).
 Ligger domänen någon annanstans: uppdatera DNS (A-post/CNAME) till detta
 webbhotells server, enligt hotellets instruktioner.
 
-## 5. Efter lansering
+Allt i sajten är relativa sökvägar (menyer, bilder, `.htaccess`-redirects,
+formuläret), så den fungerar oavsett vilken domän/subdomän den ligger på –
+du kan testa fritt på `new.proarb.se` och sen flytta samma filer till
+`proarb.se` utan att röra koden.
 
-- Verifiera sajten i Google Search Console, skicka in `sitemap-index.xml`.
-- Testa formuläret och några gamla WordPress-länkar (t.ex. `/product/...`)
-  för att bekräfta att redirectarna i `.htaccess` fungerar.
+## 5. Testa på new.proarb.se innan lansering
+
+Två saker pekar redan mot det slutgiltiga domännamnet `proarb.se`
+(`src/data/site.json` → `url`, samt `astro.config.mjs` → `site`): canonical-
+taggar, Open Graph, JSON-LD och sitemapen. Det är avsiktligt och behöver
+**inte** ändras – så länge sajten ligger på `new.proarb.se` säger den själv
+till Google att "originalet" finns på proarb.se, vilket minskar risken för
+duplicerat innehåll.
+
+Det som ändå är värt att stänga ute sökmotorer helt under testperioden,
+använd flaggan `STAGING=1` när du bygger:
+
+```bash
+STAGING=1 npm run build:nosync
+```
+
+Det gör att `/robots.txt` svarar `Disallow: /` och varje sida får
+`<meta name="robots" content="noindex, nofollow">`, så `new.proarb.se`
+inte hamnar i sökresultat. Vill du dessutom hindra utomstående från att
+hitta sidan alls: cPanel → *Directory Privacy* (lösenordsskydda katalogen)
+på subdomänen – kräver ingen kodändring.
+
+## 6. Vid lansering (flytt till proarb.se)
+
+1. Kör `npm run sync` en sista gång så produktdatan är uppdaterad från
+   WordPress-sajten (se README för hur ni sedan checkar in `products.json`
+   permanent när WordPress stängs av).
+2. Bygg **utan** staging-flaggan så robots/indexering blir normal igen:
+   ```bash
+   npm run build
+   ```
+3. Ladda upp innehållet i `dist/` till dokumentroten för `proarb.se` (samma
+   steg som i punkt 2 ovan, men på huvuddomänen istället för `new.proarb.se`).
+4. Ta ner eller lösenordsskydda `new.proarb.se` igen (eller låt den 301-
+   redirecta till `proarb.se`) så den inte blir en permanent dubblett.
+5. Verifiera sajten i Google Search Console för `proarb.se` och skicka in
+   `sitemap-index.xml`.
+6. Testa formuläret och några gamla WordPress-länkar (t.ex. `/product/...`)
+   för att bekräfta att redirectarna i `.htaccess` fungerar på den riktiga
+   domänen.
