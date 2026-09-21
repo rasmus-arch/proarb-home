@@ -15,10 +15,29 @@ interface Props {
   jsonLd?: object | null;
 }
 
-const { title, description, image, noindex = false, breadcrumbs = [], jsonLd = null } = Astro.props;
+const { title, description, image = '/og.png', noindex = false, breadcrumbs = [], jsonLd = null } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url).toString();
 const staging = process.env.STAGING === '1';
 const isNoindex = noindex || staging;
+
+const DAY_GROUPS: Record<string, string[]> = {
+  'Mån–tors': ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
+  Fredag: ['Friday'],
+  'Lör–sön': []
+};
+
+const openingHoursSpecification = site.hours
+  .filter((h: { days: string; time: string }) => h.time !== 'Stängt')
+  .map((h: { days: string; time: string }) => {
+    const [opens, closes] = h.time.split('–').map((t) => `${t.padStart(2, '0')}:00`);
+    return {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: DAY_GROUPS[h.days] ?? [],
+      opens,
+      closes
+    };
+  })
+  .filter((spec: { dayOfWeek: string[] }) => spec.dayOfWeek.length);
 
 const org = {
   '@context': 'https://schema.org',
@@ -37,7 +56,8 @@ const org = {
     addressCountry: 'SE'
   },
   areaServed: 'Sverige',
-  priceRange: '$$'
+  priceRange: '$$',
+  openingHoursSpecification
 };
 
 const crumbLd = breadcrumbs.length
@@ -63,7 +83,7 @@ const crumbLd = breadcrumbs.length
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {isNoindex && <meta name="robots" content="noindex, nofollow" />}
-    <meta name="theme-color" content="#14181b" />
+    <meta name="theme-color" content="#163d47" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:locale" content="sv_SE" />
@@ -74,11 +94,9 @@ const crumbLd = breadcrumbs.length
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <set:html
-      value={`<script type="application/ld+json">${JSON.stringify(org)}</script>`}
-    />
-    {crumbLd && <set:html value={`<script type="application/ld+json">${JSON.stringify(crumbLd)}</script>`} />}
-    {jsonLd && <set:html value={`<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`} />}
+    <script type="application/ld+json" set:html={JSON.stringify(org)} />
+    {crumbLd && <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />}
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
     <Header />
