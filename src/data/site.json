@@ -29,10 +29,10 @@
     "googleSiteVerification": ""
   },
   "usp": [
-    { "title": "Tryck & brodyr in-house", "text": "Vi brandar plaggen med er logotyp – tryck, brodyr eller reflex. Ett korrektur innan produktion, alltid." },
+    { "title": "Eget tryckeri & broderi", "text": "In-house tryck, brodyr och reflex – full kontroll på kvalitet och leveranstider, utan mellanhänder." },
     { "title": "Rätt klassning, varje gång", "text": "Varselplagg enligt EN ISO 20471 och skyddsskor enligt S1–S7. Vi ser till att ni är certifierade på riktigt." },
-    { "title": "Personlig kontakt", "text": "Ingen kundtjänstkö. Ni når oss direkt på telefon och får svar samma dag." },
-    { "title": "Hela sortimentet", "text": "Sajten visar ett urval. Behöver ni något annat tar vi fram det ur leverantörernas fulla kataloger." }
+    { "title": "Personlig rådgivning", "text": "Ingen kundtjänstkö. Ni når oss direkt på telefon och får svar samma dag." },
+    { "title": "Hela sortimentet", "text": "Sajten visar ett urval. Behöver ni något annat tar vi fram det ur leverantörernas kataloger." }
   ],
   "steps": [
     { "title": "Berätta om behovet", "text": "Antal personer, yrken, säsong och budget. Ett samtal eller ett formulär räcker." },

@@ -30,9 +30,11 @@
 
   --shadow-1: 0 1px 2px rgba(20, 24, 27, .06), 0 1px 3px rgba(20, 24, 27, .04);
   --shadow-2: 0 8px 24px -12px rgba(20, 24, 27, .22);
+  --shadow-3: 0 28px 60px -24px rgba(14, 20, 23, .38);
+  --border-soft: color-mix(in srgb, var(--ink) 8%, transparent);
 
   /* Typografi */
-  --font-display: 'Archivo Variable', 'Archivo', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --step--1: clamp(0.83rem, 0.81rem + 0.11vw, 0.89rem);
@@ -81,7 +83,7 @@ h1, h2, h3, h4 {
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
-h1 { font-size: var(--step-5); }
+h1 { font-size: var(--step-5); font-weight: 720; letter-spacing: -0.035em; }
 h2 { font-size: var(--step-4); }
 h3 { font-size: var(--step-2); }
 h4 { font-size: var(--step-1); letter-spacing: -0.015em; }

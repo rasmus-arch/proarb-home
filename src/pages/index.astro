@@ -9,14 +9,14 @@ const UPLOADS = 'https://proarb.se/wp-content/uploads/2026/04/';
 
 const showcase = [
   { size: 'full', url: 'arbetsklader', image: '/images/kategorier/arbetsklader.jpg' },
-  { size: 'half', url: 'varselklader', image: '/images/kategorier/varselklader.webp' },
-  { size: 'half', url: 'arbetsbyxor', image: '/images/kategorier/arbetsbyxor.webp' },
+  { size: 'compact', url: 'arbetsbyxor', image: '/images/kategorier/arbetsbyxor.webp' },
+  { size: 'compact', url: 'arbetshandskar', image: UPLOADS + 'ei_7776-12-768x512.webp' },
+  { size: 'full', url: 'varselklader', image: '/images/kategorier/varselklader.webp' },
+  { size: 'compact', url: 'arbetsskor', image: UPLOADS + 'dsc04899-768x512.jpg' },
+  { size: 'compact', url: 'profiltrojor', image: UPLOADS + '1110228_HeavyTshirt_2.jpg', imgPosition: 'top' },
   { size: 'full', url: 'arbetsjackor', image: '/images/kategorier/arbetsjackor.webp' },
-  { size: 'half', url: 'arbetshandskar', image: UPLOADS + 'ei_7776-12-768x512.webp' },
-  { size: 'half', url: 'arbetsskor', image: UPLOADS + 'dsc04899-768x512.jpg' },
-  { size: 'full', url: 'ovriga-profilklader', image: UPLOADS + 'profilklader-1536x540.webp' },
-  { size: 'half', url: 'profiltrojor', image: UPLOADS + '1110228_HeavyTshirt_2.jpg' },
-  { size: 'half', url: 'give-aways', image: UPLOADS + 'Skarmbild-2026-04-01-103244.png' }
+  { size: 'compact-wide', url: 'give-aways', image: UPLOADS + 'Skarmbild-2026-04-01-103244.png' },
+  { size: 'full', url: 'ovriga-profilklader', image: UPLOADS + 'profilklader-1536x540.webp' }
 ].map((item) => ({ ...item, cat: categoryByUrl(item.url)! }));
 
 const featured = [
@@ -27,14 +27,8 @@ const featured = [
   ...productsIn('arbetshandskar').slice(0, 1)
 ].filter((p, i, a) => a.findIndex((x) => x.slug === p.slug) === i).slice(0, 8);
 
-const heroTiles = [
-  productsIn('varselklader')[0],
-  productsIn('arbetsjackor')[0],
-  productsIn('arbetsskor')[0],
-  productsIn('profiltrojor')[0]
-].filter(Boolean);
-
 const profileTeaser = productsIn('profilprodukter').slice(0, 4);
+const brandRow = [...site.brands, ...site.brands];
 ---
 
 <Base
@@ -44,30 +38,40 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <!-- Hero -->
   <section class="hero">
     <div class="container hero__in">
-      <div class="hero__copy">
-        <p class="eyebrow">Eskilstuna sedan starten</p>
+      <div class="hero__copy reveal">
+        <a class="badge" href="#butik">
+          <svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5c-3.4 0-6.2 2.7-6.2 6.2 0 4.5 6.2 10.8 6.2 10.8s6.2-6.3 6.2-10.8c0-3.5-2.8-6.2-6.2-6.2Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="7.7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          Fysisk butik &amp; showroom i Eskilstuna – Rinmansgatan 7
+        </a>
         <h1>Arbetskläder som håller.<br />Profilkläder som syns.</h1>
         <p class="lead">
-          Allt för byggföretag, tjänsteföretag och föreningar – rätt plagg, rätt klassning
-          och er logotyp på rätt ställe. Personlig service från första samtalet till leveransen.
+          Helhetsleverantör av arbets- och profilkläder för företag i Mälardalen –
+          rätt plagg, rätt klassning och er logotyp på rätt ställe, med eget tryckeri
+          och personlig rådgivning hela vägen.
         </p>
         <div class="cluster hero__cta">
-          <a class="btn btn--ghost" href="/arbetsklader/">Se sortimentet</a>
           <a class="btn" href="/kontakt/">Begär offert</a>
+          <a class="btn btn--ghost" href="/arbetsklader/">Se sortimentet</a>
         </div>
-        <dl class="hero__facts">
-          <div><dt>Svar</dt><dd>inom en arbetsdag</dd></div>
-          <div><dt>Varumärken</dt><dd>{site.brands.length}+ i sortimentet</dd></div>
-          <div><dt>Personlig service</dt><dd>en kontaktperson, inte en kö</dd></div>
-        </dl>
+        <div class="hero__quick">
+          <a class="hero__qitem" href={site.phoneHref}>
+            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3.5c.6-.4 1.9-.9 2.6-.4.7.5 1.7 2.3 1.9 2.9.2.6-.1 1-.6 1.4-.5.4-.9.7-.6 1.4.3.7 1.1 1.9 2 2.8.9.9 2.1 1.7 2.8 2 .7.3 1-.1 1.4-.6.4-.5.8-.8 1.4-.6.6.2 2.4 1.2 2.9 1.9.5.7 0 2-.4 2.6-.4.6-1.4 1.5-2.7 1.5-1.9 0-4.7-1-7.3-3.6C4.8 12.2 3.8 9.4 3.8 7.5c0-1.3.9-2.3 1.5-2.7Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            <span><strong>Ring direkt</strong>{site.phone}</span>
+          </a>
+          <a class="hero__qitem" href="/kontakt/">
+            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2.5h7l3.5 3.5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 10.5h6M7 13.5h6M7 7.5h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <span><strong>Begär offert</strong>Svar inom en arbetsdag</span>
+          </a>
+          <a class="hero__qitem" href="#butik">
+            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10.5" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 6.5v4l2.8 1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span><strong>Öppettider</strong>Mån–fre, se nedan</span>
+          </a>
+        </div>
       </div>
 
-      <div class="hero__tiles" aria-hidden="true">
-        {heroTiles.map((p, i) => (
-          <div class={`tile tile--${i}`}>
-            <ProductImage file={p.file} src={p.image} alt="" loading={i < 2 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} sizes="(max-width: 900px) 40vw, 260px" class="tile__img" />
-          </div>
-        ))}
+      <div class="hero__media reveal">
+        <img src="/images/kategorier/arbetsklader.jpg" alt="Arbets- och profilkläder från Proarb" class="hero__img" />
+        <span class="hero__badge">17+ varumärken i sortimentet</span>
       </div>
     </div>
   </section>
@@ -75,7 +79,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <!-- Kategorier -->
   <section class="section cshow">
     <div class="container">
-      <header class="sechead">
+      <header class="sechead reveal">
         <div>
           <p class="eyebrow">Sortimentet</p>
           <h2>Hitta rätt kategori direkt</h2>
@@ -83,16 +87,29 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
       </header>
       <div class="cshow__grid">
         {showcase.map((item) => (
-          <a class={`cband cband--${item.size}`} href={`/${item.url}/`}>
-            <img class="cband__img" src={item.image} alt="" loading="lazy" />
-            <span class="cband__scrim" aria-hidden="true"></span>
+          <a class={`cband cband--${item.size} reveal`} href={`/${item.url}/`}>
+            <img
+              class="cband__img"
+              src={item.image}
+              alt=""
+              loading="lazy"
+              style={item.imgPosition ? `object-position: ${item.imgPosition}` : undefined}
+            />
+            {item.size !== 'compact' && item.size !== 'compact-wide' && <span class="cband__scrim" aria-hidden="true"></span>}
             <div class="cband__copy">
               <h3>{item.cat.h1}</h3>
               <p>{item.cat.lead}</p>
-              <span class="btn btn--sm cband__btn">
-                Se sortimentet
-                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
+              {item.size === 'compact' || item.size === 'compact-wide' ? (
+                <span class="link-arrow cband__link">
+                  Se sortimentet
+                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              ) : (
+                <span class="btn btn--sm cband__btn">
+                  Se sortimentet
+                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              )}
             </div>
           </a>
         ))}
@@ -103,11 +120,11 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <!-- Utvalda produkter -->
   <section class="section section--sunk">
     <div class="container">
-      <header class="sechead">
+      <header class="sechead reveal">
         <div>
           <p class="eyebrow">Ett urval</p>
           <h2>Plagg vi säljer mest av</h2>
-          <p class="lead">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas fulla kataloger.</p>
+          <p class="lead">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas kataloger.</p>
         </div>
       </header>
       <ProductGrid products={featured} eagerCount={0} />
@@ -117,7 +134,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <!-- Så funkar det -->
   <section class="section">
     <div class="container">
-      <header class="sechead">
+      <header class="sechead reveal">
         <div>
           <p class="eyebrow">Så går det till</p>
           <h2>Från samtal till levererad kollektion</h2>
@@ -125,7 +142,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
       </header>
       <ol class="steps">
         {site.steps.map((s: any, i: number) => (
-          <li class="step">
+          <li class="step reveal">
             <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
             <h3>{s.title}</h3>
             <p>{s.text}</p>
@@ -135,22 +152,54 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
     </div>
   </section>
 
+  <!-- Butik -->
+  <section class="section store" id="butik">
+    <div class="container store__in">
+      <div class="store__copy reveal">
+        <p class="eyebrow">Besök oss</p>
+        <h2>Showroom på Rinmansgatan 7</h2>
+        <p class="lead">
+          Personlig rådgivning och showroom mitt i Eskilstuna. Kom in, känn på tygerna
+          och se hur er logotyp sitter på plagget – vi bjuder på kaffe.
+        </p>
+        <dl class="store__hours">
+          {site.hours.map((h: { days: string; time: string }) => (
+            <div><dt>{h.days}</dt><dd>{h.time}</dd></div>
+          ))}
+        </dl>
+        <div class="cluster store__cta">
+          <a class="btn" href={site.phoneHref}>Ring {site.phone}</a>
+          <a class="btn btn--ghost" href="/kontakt/">Boka besök</a>
+        </div>
+      </div>
+      <div class="store__map reveal">
+        <iframe
+          title={`Karta till ${site.legalName}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps?q=${encodeURIComponent(site.address.street + ', ' + site.address.postalCode + ' ' + site.address.city)}&output=embed`}
+        ></iframe>
+        <address>{site.address.street}, {site.address.postalCode} {site.address.city}</address>
+      </div>
+    </div>
+  </section>
+
   <!-- Profilprodukter -->
   <section class="promo">
     <div class="container promo__in">
-      <div class="promo__copy">
-        <p class="eyebrow">Profilprodukter</p>
-        <h2>Er billigaste reklampelare</h2>
+      <div class="promo__copy reveal">
+        <p class="eyebrow eyebrow--invert">Profilprodukter</p>
+        <h2>Synlighet som stärker varumärket</h2>
         <p>
-          Profiltröjor syns överallt, hela tiden. Vi brandar pikéer, jackor och skjortor
-          till säljkåren – och fixar give aways till mässan, laget eller julbordet.
+          Profiltröjor, pikéer och give aways med er logotyp – till säljkåren, mässan,
+          laget eller julbordet.
         </p>
         <div class="cluster">
           <a class="btn btn--accent" href="/profilprodukter/">Se profilprodukter</a>
           <a class="btn btn--ghost" href="/give-aways/">Give aways</a>
         </div>
       </div>
-      <div class="promo__cards">
+      <div class="promo__cards reveal">
         {profileTeaser.map((p) => (
           <a class="promo__card" href={`/produkt/${p.slug}/`}>
             <ProductImage file={p.file} src={p.image} alt={p.name} sizes="160px" class="promo__img" />
@@ -164,15 +213,19 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <!-- Varumärken -->
   <section class="section section--sunk brands">
     <div class="container">
-      <header class="sechead">
+      <header class="sechead reveal">
         <div>
           <p class="eyebrow">Leverantörer</p>
           <h2>Varumärken vi jobbar med</h2>
         </div>
       </header>
-      <ul class="brands__grid">
-        {site.brands.map((b: string) => <li class="brands__tile">{b}</li>)}
-      </ul>
+    </div>
+    <div class="brands__marquee" role="list" aria-label="Varumärken vi jobbar med">
+      <div class="brands__track">
+        {brandRow.map((b: string) => <span class="brands__item" role="listitem">{b}</span>)}
+      </div>
+    </div>
+    <div class="container">
       <p class="muted brands__note">…och fler därtill. Har ni ett favoritmärke? Fråga oss.</p>
     </div>
   </section>
@@ -180,7 +233,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   <!-- Offert -->
   <section class="section" id="offert">
     <div class="container quote">
-      <div class="quote__copy">
+      <div class="quote__copy reveal">
         <p class="eyebrow">Rådgivning</p>
         <h2>Få rådgivning för ditt företag</h2>
         <p class="lead">
@@ -197,7 +250,7 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
           ))}
         </ul>
         <p class="quote__alt">
-          Hellre prata? Ring <a href={site.phoneHref}>{site.phone}</a> eller maila
+          Vill du hellre prata? Ring <a href={site.phoneHref}>{site.phone}</a> eller maila
           <a href={`mailto:${site.email}`}>{site.email}</a>.
         </p>
       </div>
@@ -208,31 +261,52 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
 
 <style>
   /* Hero */
-  .hero { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem) clamp(2.5rem, 1.5rem + 3vw, 4.5rem); overflow: clip; }
-  .hero__in { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 1rem + 4vw, 4.5rem); align-items: center; }
+  .hero { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(2.5rem, 1.5rem + 3vw, 4.5rem); overflow: clip; }
+  .hero__in { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 1rem + 4vw, 4.5rem); align-items: center; }
   @media (max-width: 900px) { .hero__in { grid-template-columns: 1fr; } }
-  .hero__copy h1 { margin: .8rem 0 1.1rem; }
-  .hero__cta { margin-top: 1.9rem; }
-  .hero__facts {
-    display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2.6rem;
-    padding-top: 1.6rem; border-top: 1px solid var(--line);
-  }
-  .hero__facts dt { font-family: var(--font-display); font-weight: 650; font-size: .95rem; }
-  .hero__facts dd { margin: .1rem 0 0; font-size: .88rem; color: var(--ink-3); }
 
-  .hero__tiles {
-    position: relative; display: grid; grid-template-columns: 1fr 1fr;
-    gap: clamp(.6rem, .3rem + 1vw, 1rem);
+  .badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .5rem .95rem .5rem .7rem; border-radius: var(--r-pill);
+    background: var(--bg-raised); border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-1); font-size: .82rem; font-weight: 560;
+    color: var(--ink-2); text-decoration: none; margin-bottom: 1.3rem;
+    transition: border-color .18s, color .18s;
   }
-  .tile {
-    background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-lg);
-    aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+  .badge:hover { border-color: var(--accent); color: var(--ink); }
+  .badge svg { color: var(--accent-ink); flex: none; }
+
+  .hero__copy h1 { margin: 0 0 1.1rem; }
+  .hero__cta { margin-top: 1.9rem; }
+
+  .hero__quick {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem;
+    margin-top: 2.4rem; padding-top: 1.8rem; border-top: 1px solid var(--line);
   }
-  .tile :global(.tile__img) { width: 100%; height: 100%; object-fit: contain; padding: 12%; mix-blend-mode: multiply; }
-  .tile--0 { border-radius: var(--r-lg) var(--r-lg) var(--r-lg) 3.5rem; }
-  .tile--1 { margin-top: clamp(1rem, 3vw, 2.5rem); }
-  .tile--2 { margin-top: calc(-1 * clamp(1rem, 3vw, 2.5rem)); }
-  .tile--3 { border-radius: var(--r-lg) 3.5rem var(--r-lg) var(--r-lg); }
+  @media (max-width: 560px) { .hero__quick { grid-template-columns: 1fr; } }
+  .hero__qitem {
+    display: flex; align-items: center; gap: .6rem; padding: .7rem .5rem;
+    border-radius: var(--r); text-decoration: none; color: var(--ink-2);
+    transition: background-color .18s, color .18s;
+  }
+  .hero__qitem:hover { background: var(--bg-raised); color: var(--ink); }
+  .hero__qitem svg { flex: none; color: var(--accent-ink); }
+  .hero__qitem span { display: flex; flex-direction: column; font-size: .84rem; line-height: 1.35; }
+  .hero__qitem strong { font-family: var(--font-display); font-weight: 640; font-size: .9rem; color: var(--ink); }
+
+  .hero__media { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-3); aspect-ratio: 4 / 5; }
+  .hero__img { width: 100%; height: 100%; object-fit: cover; }
+  .hero__badge {
+    position: absolute; left: 1.1rem; bottom: 1.1rem;
+    background: color-mix(in srgb, #0e1416 78%, transparent); backdrop-filter: blur(8px);
+    color: #fff; font-family: var(--font-display); font-weight: 600; font-size: .82rem;
+    padding: .55rem .95rem; border-radius: var(--r-pill); border: 1px solid rgba(255,255,255,.18);
+  }
+
+  /* Reveal on scroll (progressive enhancement, no-op without JS or with reduced motion) */
+  :global(html.js-reveal) .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.3,1); }
+  :global(html.js-reveal) .reveal.is-visible { opacity: 1; transform: none; }
+
   /* Sektionsrubriker */
   .sechead {
     display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
@@ -249,11 +323,11 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
     border-radius: var(--r-lg); overflow: hidden; isolation: isolate;
     transition: transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s;
   }
-  .cband:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); }
+  .cband:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); }
   .cband:hover .cband__img { transform: scale(1.045); }
   .cband--full { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
-  .cband--half { aspect-ratio: 4 / 3; }
   @media (max-width: 700px) { .cband--full { aspect-ratio: 4 / 3; } }
+
   .cband__img {
     position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
     z-index: -2; transition: transform .4s cubic-bezier(.2,.8,.3,1);
@@ -264,16 +338,35 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   }
   .cband__copy {
     position: relative; height: 100%; display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-end; text-align: center; gap: .5rem;
+    align-items: center; justify-content: center; text-align: center; gap: .5rem;
     padding: clamp(1.2rem, 1rem + 1.5vw, 2.25rem); text-wrap: balance;
   }
-  .cband--full .cband__copy { justify-content: center; }
-  .cband__copy h3 { margin: 0; color: #fff; font-size: var(--step-2); }
-  .cband--full .cband__copy h3 { font-size: var(--step-3); }
-  .cband__copy p { margin: 0; color: rgba(255,255,255,.88); max-width: 34ch; font-size: .92rem; }
-  .cband--full .cband__copy p { font-size: 1rem; max-width: 46ch; }
+  .cband__copy h3 { margin: 0; color: #fff; font-size: var(--step-3); }
+  .cband__copy p { margin: 0; color: rgba(255,255,255,.88); max-width: 46ch; font-size: 1rem; }
   .cband__btn { margin-top: .3rem; --btn-bg: #fff; --btn-fg: var(--ink); gap: .45rem; }
-  .cband__btn:hover { --btn-bg: #fff; }
+
+  /* Kompakta kategorikort – ljus, ren stil för sekundära kategorier */
+  .cband--compact, .cband--compact-wide {
+    color: var(--ink); background: var(--bg-raised); border: 1px solid var(--line);
+  }
+  .cband--compact:hover, .cband--compact-wide:hover { border-color: var(--line-strong); }
+  .cband--compact { display: flex; flex-direction: column; }
+  .cband--compact .cband__img { position: static; z-index: auto; aspect-ratio: 4 / 3; }
+  .cband--compact .cband__copy {
+    position: static; height: auto; align-items: flex-start; text-align: left;
+    padding: 1rem 1.15rem 1.2rem; gap: .35rem;
+  }
+  .cband--compact .cband__copy h3 { color: var(--ink); font-size: var(--step-1); }
+  .cband--compact .cband__copy p { color: var(--ink-2); font-size: .87rem; max-width: 30ch; }
+  .cband--compact .cband__link { color: var(--ink); font-size: .87rem; margin-top: .2rem; }
+
+  .cband--compact-wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1.4fr; align-items: stretch; min-height: 11rem; }
+  @media (max-width: 700px) { .cband--compact-wide { grid-template-columns: 1fr; } }
+  .cband--compact-wide .cband__img { position: static; z-index: auto; width: 100%; height: 100%; min-height: 9rem; }
+  .cband--compact-wide .cband__copy { position: static; height: 100%; align-items: flex-start; text-align: left; justify-content: center; padding: clamp(1.2rem, 1rem + 1vw, 1.75rem); }
+  .cband--compact-wide .cband__copy h3 { color: var(--ink); font-size: var(--step-2); }
+  .cband--compact-wide .cband__copy p { color: var(--ink-2); font-size: .92rem; max-width: 38ch; }
+  .cband--compact-wide .cband__link { color: var(--ink); }
 
   /* Steg */
   .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .6rem + 1.5vw, 2rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); counter-reset: s; }
@@ -282,37 +375,58 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .step h3 { font-size: var(--step-1); margin: .5rem 0 .45rem; }
   .step p { color: var(--ink-2); font-size: .95rem; }
 
+  /* Butik */
+  .store__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
+  @media (max-width: 860px) { .store__in { grid-template-columns: 1fr; } }
+  .store__hours { display: grid; gap: .35rem; margin: 1.6rem 0 0; padding: 1.1rem 1.3rem; background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--r-lg); }
+  .store__hours div { display: flex; justify-content: space-between; gap: 1rem; font-size: .92rem; }
+  .store__hours dt { color: var(--ink-2); }
+  .store__hours dd { font-weight: 600; }
+  .store__cta { margin-top: 1.6rem; }
+  .store__map { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-2); }
+  .store__map iframe { width: 100%; height: 320px; display: block; border: 0; }
+  .store__map address { font-style: normal; padding: .9rem 1.1rem; background: var(--bg-raised); font-size: .88rem; color: var(--ink-2); }
+
   /* Promo */
-  .promo { background: var(--accent-soft); color: var(--ink-2); padding-block: var(--section); }
+  .promo { background: #163d47; color: rgba(244,241,234,.86); padding-block: var(--section); }
   .promo__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
   @media (max-width: 860px) { .promo__in { grid-template-columns: 1fr; } }
-  .promo h2 { color: var(--ink); margin: .7rem 0 1rem; }
+  .promo h2 { color: #fff; margin: .7rem 0 1rem; }
   .promo p { max-width: 46ch; margin-bottom: 1.8rem; }
+  .eyebrow--invert { color: var(--accent); }
+  .eyebrow--invert::before { background: var(--accent); }
   .promo__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
   .promo__card {
-    background: var(--bg); border: 1px solid var(--line);
-    border-radius: var(--r-lg); padding: .8rem; text-decoration: none; color: inherit;
-    display: grid; gap: .6rem; transition: border-color .18s, transform .18s;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14);
+    border-radius: var(--r-lg); padding: .8rem; text-decoration: none; color: #fff;
+    display: grid; gap: .6rem; transition: border-color .18s, transform .18s, background-color .18s;
   }
-  .promo__card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
-  .promo__card :global(.promo__img) { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--bg); border-radius: var(--r); padding: 8%; }
+  .promo__card:hover { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.1); transform: translateY(-2px); }
+  .promo__card :global(.promo__img) { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border-radius: var(--r); padding: 8%; }
   .promo__card span { font-size: .84rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-  /* Varumärken */
-  .brands__grid {
-    list-style: none; margin: 0; padding: 0;
-    display: grid; gap: .8rem;
-    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  /* Varumärken – marquee */
+  .brands__marquee {
+    margin-top: clamp(1.6rem, 1rem + 2vw, 2.6rem);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
-  .brands__tile {
-    display: grid; place-items: center; text-align: center;
-    min-height: 4.5rem; padding: .6rem .8rem;
-    font-family: var(--font-display); font-weight: 620; font-size: .92rem;
-    letter-spacing: -.01em; color: var(--ink-2);
-    border: 1px solid var(--line); background: var(--bg); border-radius: var(--r);
-    transition: border-color .15s, color .15s;
+  .brands__track {
+    display: flex; width: max-content; gap: 3.2rem;
+    animation: brands-scroll 42s linear infinite;
   }
-  .brands__tile:hover { border-color: var(--line-strong); color: var(--ink); }
+  .brands__marquee:hover .brands__track { animation-play-state: paused; }
+  .brands__item {
+    font-family: var(--font-display); font-weight: 640; font-size: clamp(1.1rem, 1rem + .6vw, 1.5rem);
+    letter-spacing: -.02em; color: var(--ink-3); white-space: nowrap;
+    transition: color .18s;
+  }
+  .brands__item:hover { color: var(--ink); }
+  @keyframes brands-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
   .brands__note { margin-top: 1.4rem; font-size: .9rem; }
 
   /* Offert */
@@ -325,3 +439,28 @@ const profileTeaser = productsIn('profilprodukter').slice(0, 4);
   .quote__alt { margin-top: 1.8rem; font-size: .95rem; color: var(--ink-3); }
   .quote__alt a { font-weight: 550; color: var(--ink); margin-inline: .2rem; }
 </style>
+
+<script>
+  const items = document.querySelectorAll('.reveal');
+  const revealAll = () => items.forEach((el) => el.classList.add('is-visible'));
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
+    );
+    items.forEach((el) => io.observe(el));
+    // Safety net: a fast scroll/jump (or anything else unexpected) must never leave
+    // content permanently invisible, so force-reveal everything after a short delay.
+    setTimeout(revealAll, 2500);
+  } else {
+    revealAll();
+  }
+</script>
