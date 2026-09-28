@@ -188,9 +188,10 @@
     "founded": "2000",
     "photo": "",
     "quote": {
-      "text": "",
-      "name": "",
-      "company": ""
+      "text": "Man ringer, och sen är det löst. Så har det varit sedan första beställningen.",
+      "name": "Rasmus",
+      "company": "Näshultakök",
+      "label": "Helhetskund arbetskläder"
     }
   }
 }

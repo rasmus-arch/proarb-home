@@ -226,7 +226,7 @@ const [weekdays, friday] = site.hours;
           {quote.text ? (
             <figure>
               <blockquote class="pquote">{quote.text}</blockquote>
-              <figcaption class="pquote__by">— {quote.name}{quote.company && `, ${quote.company}`}</figcaption>
+              <figcaption class="pquote__by">— {quote.name}{quote.company && `, ${quote.company}`}{quote.label && <span class="pquote__tag">{quote.label}</span>}</figcaption>
             </figure>
           ) : staging ? (
             <figure>
@@ -440,8 +440,12 @@ const [weekdays, friday] = site.hours;
     padding: 2px 6px; letter-spacing: .03em; text-transform: uppercase; vertical-align: middle; justify-self: center;
   }
   .pquote { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1.3rem + 2.2vw, 3.2rem); line-height: 1.05; }
-  blockquote.pquote::before { content: '”'; color: var(--amber); }
+  blockquote.pquote::before, blockquote.pquote::after { content: '”'; color: var(--amber); }
   .pquote__by { margin-top: 1.4rem; font-size: .95rem; color: color-mix(in srgb, var(--paper) 75%, transparent); }
+  .pquote__tag {
+    display: inline-block; margin-left: .5rem; background: var(--amber); color: var(--ink); font-size: .7rem; font-weight: 650;
+    padding: 2px 6px; letter-spacing: .03em; text-transform: uppercase; vertical-align: middle;
+  }
   .facts { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 3.5rem; border-top: 1.5px solid var(--paper); }
   .facts > div { padding: 1.2rem 1.2rem 0 0; }
   .facts > div + div { border-left: 1px solid color-mix(in srgb, var(--paper) 35%, transparent); padding-left: 1.2rem; }
