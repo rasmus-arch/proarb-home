@@ -38,7 +38,7 @@ const colors = p.variants.map((v) => v.color).filter(Boolean) as string[];
     background: var(--bg-raised); overflow: hidden;
     transition: border-color .18s, transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s;
   }
-  .card__link:hover { border-color: var(--line-strong); transform: translateY(-3px); box-shadow: var(--shadow-2); }
+  .card__link:hover { border-color: var(--ink); }
   .card__media { background: var(--bg-sunk); aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; }
   .card__media :global(.card__img) {
     width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply;
@@ -46,9 +46,10 @@ const colors = p.variants.map((v) => v.color).filter(Boolean) as string[];
   }
   .card__link:hover .card__media :global(.card__img) { transform: scale(1.04); }
   .card__body { padding: .95rem 1rem 1.05rem; display: flex; flex-direction: column; gap: .3rem; flex: 1; }
-  .card__brand { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent-ink); font-weight: 620; }
+  .card__brand { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); font-weight: 620; }
   .card__title {
-    font-size: 1rem; font-weight: 600; line-height: 1.3; letter-spacing: -.012em;
+    font-family: var(--font-body); font-size: .98rem; font-weight: 600; line-height: 1.3; letter-spacing: -.01em;
+    text-transform: none;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   }
   .card__foot { margin-top: auto; padding-top: .7rem; display: flex; align-items: center; justify-content: space-between; }

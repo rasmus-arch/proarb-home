@@ -14,9 +14,18 @@
     "country": "SE"
   },
   "hours": [
-    { "days": "Mån–tors", "time": "07–16" },
-    { "days": "Fredag", "time": "07–15" },
-    { "days": "Lör–sön", "time": "Stängt" }
+    {
+      "days": "Mån–tors",
+      "time": "07–16"
+    },
+    {
+      "days": "Fredag",
+      "time": "07–15"
+    },
+    {
+      "days": "Lör–sön",
+      "time": "Stängt"
+    }
   ],
   "social": {
     "facebook": "https://www.facebook.com/profilocharbetsklader",
@@ -29,51 +38,159 @@
     "googleSiteVerification": ""
   },
   "usp": [
-    { "title": "Eget tryckeri & broderi", "text": "In-house tryck, brodyr och reflex – full kontroll på kvalitet och leveranstider, utan mellanhänder." },
-    { "title": "Rätt klassning, varje gång", "text": "Varselplagg enligt EN ISO 20471 och skyddsskor enligt S1–S7. Vi ser till att ni är certifierade på riktigt." },
-    { "title": "Personlig rådgivning", "text": "Ingen kundtjänstkö. Ni når oss direkt på telefon och får svar samma dag." },
-    { "title": "Hela sortimentet", "text": "Sajten visar ett urval. Behöver ni något annat tar vi fram det ur leverantörernas kataloger." }
+    {
+      "title": "Eget tryckeri & broderi",
+      "text": "In-house tryck, brodyr och reflex – full kontroll på kvalitet och leveranstider, utan mellanhänder."
+    },
+    {
+      "title": "Rätt klassning, varje gång",
+      "text": "Varselplagg enligt EN ISO 20471 och skyddsskor enligt S1–S7. Vi ser till att ni är certifierade på riktigt."
+    },
+    {
+      "title": "Personlig rådgivning",
+      "text": "Ingen kundtjänstkö. Ni når oss direkt på telefon och får svar samma dag."
+    },
+    {
+      "title": "Hela sortimentet",
+      "text": "Sajten visar ett urval. Behöver ni något annat tar vi fram det ur leverantörernas kataloger."
+    }
   ],
   "steps": [
-    { "title": "Berätta om behovet", "text": "Antal personer, yrken, säsong och budget. Ett samtal eller ett formulär räcker." },
-    { "title": "Ni får ett förslag", "text": "Vi väljer ut plagg, tar fram pris och visar hur er logotyp sitter på plagget." },
-    { "title": "Korrektur & produktion", "text": "Ni godkänner ett digitalt korrektur innan vi trycker eller broderar något." },
-    { "title": "Leverans & påfyllning", "text": "Vi levererar och sparar er profil, så nästa beställning tar fem minuter." }
+    {
+      "title": "Berätta om behovet",
+      "text": "Antal personer, yrken, säsong och budget. Ett samtal eller ett formulär räcker."
+    },
+    {
+      "title": "Ni får ett förslag",
+      "text": "Vi väljer ut plagg, tar fram pris och visar hur er logotyp sitter på plagget."
+    },
+    {
+      "title": "Korrektur & produktion",
+      "text": "Ni godkänner ett digitalt korrektur innan vi trycker eller broderar något."
+    },
+    {
+      "title": "Leverans & påfyllning",
+      "text": "Vi levererar och sparar er profil, så nästa beställning tar fem minuter."
+    }
   ],
   "brands": [
-    "ATG", "Blåkläder", "Clique", "Cottover", "Craft", "Cutter & Buck", "D&J",
-    "D.A.D Sportswear", "Derby of Sweden", "Graphix", "Harvest & Frost", "Helly Hansen",
-    "ID Identity", "Jalas", "James & Nicholson", "Harvest Sportswear", "Jobman",
-    "Kosta Linnewäveri", "Lord Nelson", "Monitor", "Nightingale", "Orrefors", "Portwest",
-    "Printer", "ProJob", "Queen Anne", "Salomon", "Sievi", "Skechers", "Solstickan Design",
-    "TeeJays", "Tegera", "Toppoint", "Under Armour", "Vinga"
+    "ATG",
+    "Blåkläder",
+    "Clique",
+    "Cottover",
+    "Craft",
+    "Cutter & Buck",
+    "D&J",
+    "D.A.D Sportswear",
+    "Derby of Sweden",
+    "Graphix",
+    "Harvest & Frost",
+    "Helly Hansen",
+    "ID Identity",
+    "Jalas",
+    "James & Nicholson",
+    "Harvest Sportswear",
+    "Jobman",
+    "Kosta Linnewäveri",
+    "Lord Nelson",
+    "Monitor",
+    "Nightingale",
+    "Orrefors",
+    "Portwest",
+    "Printer",
+    "ProJob",
+    "Queen Anne",
+    "Salomon",
+    "Sievi",
+    "Skechers",
+    "Solstickan Design",
+    "TeeJays",
+    "Tegera",
+    "Toppoint",
+    "Under Armour",
+    "Vinga"
   ],
   "nav": [
     {
       "label": "Arbetskläder",
       "href": "/arbetsklader/",
       "children": [
-        { "label": "Arbetsbyxor", "href": "/arbetsbyxor/" },
-        { "label": "Arbetsjackor", "href": "/arbetsjackor/" },
-        { "label": "Arbetströjor", "href": "/arbetstrojor/" },
-        { "label": "Varselkläder", "href": "/varselklader/" },
-        { "label": "Arbetsskor", "href": "/arbetsskor/" },
-        { "label": "Arbetshandskar", "href": "/arbetshandskar/" },
-        { "label": "Arbetsshorts & piratbyxor", "href": "/arbetsshorts-piratbyxor/" }
+        {
+          "label": "Arbetsbyxor",
+          "href": "/arbetsbyxor/"
+        },
+        {
+          "label": "Arbetsjackor",
+          "href": "/arbetsjackor/"
+        },
+        {
+          "label": "Arbetströjor",
+          "href": "/arbetstrojor/"
+        },
+        {
+          "label": "Varselkläder",
+          "href": "/varselklader/"
+        },
+        {
+          "label": "Arbetsskor",
+          "href": "/arbetsskor/"
+        },
+        {
+          "label": "Arbetshandskar",
+          "href": "/arbetshandskar/"
+        },
+        {
+          "label": "Arbetsshorts & piratbyxor",
+          "href": "/arbetsshorts-piratbyxor/"
+        }
       ]
     },
     {
       "label": "Profilprodukter",
       "href": "/profilprodukter/",
       "children": [
-        { "label": "Profilkläder", "href": "/ovriga-profilklader/" },
-        { "label": "Profiljackor", "href": "/profiljackor/" },
-        { "label": "Profiltröjor", "href": "/profiltrojor/" },
-        { "label": "Profilskjortor", "href": "/profilskjortor/" },
-        { "label": "Give aways", "href": "/give-aways/" }
+        {
+          "label": "Profilkläder",
+          "href": "/ovriga-profilklader/"
+        },
+        {
+          "label": "Profiljackor",
+          "href": "/profiljackor/"
+        },
+        {
+          "label": "Profiltröjor",
+          "href": "/profiltrojor/"
+        },
+        {
+          "label": "Profilskjortor",
+          "href": "/profilskjortor/"
+        },
+        {
+          "label": "Give aways",
+          "href": "/give-aways/"
+        }
       ]
     },
-    { "label": "Om oss", "href": "/om-oss/" },
-    { "label": "Kontakt", "href": "/kontakt/" }
-  ]
+    {
+      "label": "Tryck & brodyr",
+      "href": "/tryck-och-brodyr/"
+    },
+    {
+      "label": "Om oss",
+      "href": "/om-oss/"
+    },
+    {
+      "label": "Kontakt",
+      "href": "/kontakt/"
+    }
+  ],
+  "about": {
+    "founded": "",
+    "photo": "",
+    "quote": {
+      "text": "",
+      "name": "",
+      "company": ""
+    }
+  }
 }

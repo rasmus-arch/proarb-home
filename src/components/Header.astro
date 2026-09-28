@@ -7,16 +7,6 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
 <a class="skip" href="#main">Hoppa till innehållet</a>
 
-<div class="topbar">
-  <div class="container topbar__in">
-    <span class="topbar__item">Arbets- &amp; profilkläder till företag och föreningar · Eskilstuna</span>
-    <span class="topbar__links">
-      <a href={site.phoneHref}>{site.phone}</a>
-      <a href={`mailto:${site.email}`}>{site.email}</a>
-    </span>
-  </div>
-</div>
-
 <header class="hdr" id="hdr">
   <div class="container hdr__in">
     <a href="/" class="hdr__logo" aria-label="Proarb – till startsidan"><Logo /></a>
@@ -50,7 +40,8 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     </nav>
 
     <div class="hdr__actions">
-      <a class="btn btn--sm hdr__cta" href="/kontakt/">Begär offert</a>
+      <a class="hdr__tel" href={site.phoneHref}>{site.phone}</a>
+      <a class="btn btn--sm btn--accent hdr__cta" href="/kontakt/">Begär offert</a>
       <button class="menubtn" type="button" data-menu-open aria-expanded="false" aria-controls="drawer">
         <svg width="19" height="19" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         <span>Meny</span>
@@ -79,109 +70,117 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
       ))}
     </nav>
     <div class="drawer__foot">
-      <a class="btn" href="/kontakt/">Begär offert</a>
+      <a class="btn btn--accent" href="/kontakt/">Begär offert</a>
       <a class="btn btn--ghost" href={site.phoneHref}>Ring {site.phone}</a>
     </div>
   </div>
 </div>
 
 <style>
-  .topbar {
-    background: var(--bg-sunk); color: var(--ink-2); border-bottom: 1px solid var(--line);
-    font-size: .78rem; letter-spacing: .01em;
-  }
-  .topbar__in { display: flex; justify-content: space-between; gap: 1rem; padding-block: .5rem; }
-  .topbar__item { color: var(--ink-3); }
-  .topbar__links { display: flex; gap: 1.25rem; }
-  .topbar__links a { text-decoration: none; color: var(--ink); font-weight: 500; }
-  .topbar__links a:hover { color: var(--accent-ink); }
-  @media (max-width: 720px) { .topbar__item { display: none; } .topbar__in { justify-content: center; } }
-
   .hdr {
     position: sticky; top: 0; z-index: 50;
-    background: color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter: saturate(1.4) blur(14px);
-    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    border-bottom: var(--rule);
   }
-  .hdr__in { display: flex; align-items: center; gap: 1.5rem; min-height: 4.4rem; }
-  .hdr__logo { text-decoration: none; margin-right: auto; }
+  .hdr__in { display: flex; align-items: center; gap: 2rem; min-height: 4.75rem; }
+  .hdr__logo { text-decoration: none; margin-right: auto; display: block; }
+  .hdr__logo :global(.logo__mark) { height: 3.3rem; }
 
-  .nav__list { display: flex; gap: .35rem; list-style: none; padding: 0; margin: 0; }
-  .nav__item { position: relative; }
+  .nav { align-self: stretch; display: flex; }
+  .nav__list { display: flex; gap: 1.6rem; list-style: none; padding: 0; margin: 0; }
+  .nav__item { position: relative; display: flex; align-items: center; }
   .nav__link {
     display: inline-flex; align-items: center; gap: .35rem;
-    padding: .55rem .8rem; border-radius: var(--r-pill);
-    font-family: var(--font-display); font-weight: 560; font-size: .95rem;
-    text-decoration: none; color: var(--ink-2);
+    padding-block: .4rem; border-bottom: 2px solid transparent;
+    font-size: .94rem; font-weight: 550;
+    text-decoration: none; color: var(--ink);
   }
-  .nav__link:hover, .nav__item:focus-within .nav__link { color: var(--ink); background: var(--bg-sunk); }
-  .nav__link[aria-current='page'] { color: var(--ink); }
+  .nav__link:hover, .nav__item:focus-within .nav__link { border-bottom-color: var(--ink); }
+  .nav__link[aria-current='page'] { border-bottom-color: var(--amber); }
 
   .mega {
-    position: absolute; top: calc(100% + .5rem); left: 0; min-width: 16rem;
-    background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--r-lg);
-    box-shadow: var(--shadow-2); padding: .6rem;
-    opacity: 0; visibility: hidden; transform: translateY(-6px);
-    transition: opacity .16s, transform .16s, visibility .16s;
+    position: absolute; top: 100%; left: -1.1rem; min-width: 17rem;
+    background: var(--bg); border: var(--rule);
+    padding: .5rem 0 .9rem;
+    opacity: 0; visibility: hidden; transform: translateY(-4px);
+    transition: opacity .14s, transform .14s, visibility .14s;
   }
   .nav__item--has-menu:hover .mega, .nav__item--has-menu:focus-within .mega {
     opacity: 1; visibility: visible; transform: translateY(0);
   }
   .mega__list { list-style: none; margin: 0; padding: 0; }
   .mega__list a {
-    display: block; padding: .5rem .7rem; border-radius: var(--r-sm);
-    text-decoration: none; font-size: .95rem; color: var(--ink-2);
+    display: block; padding: .5rem 1.1rem;
+    text-decoration: none; font-size: .95rem; color: var(--ink);
   }
-  .mega__list a:hover { background: var(--bg-sunk); color: var(--ink); }
-  .mega__all { margin: .4rem .7rem .3rem; font-size: .9rem; color: var(--accent-ink); }
+  .mega__list a:hover { background: var(--amber); }
+  .mega__all { margin: .6rem 1.1rem 0; font-size: .9rem; }
 
-  .hdr__actions { display: flex; align-items: center; gap: .6rem; }
-  .iconbtn {
-    display: grid; place-items: center; width: 2.4rem; height: 2.4rem;
-    background: transparent; border: 1px solid var(--line); border-radius: var(--r-pill);
-    cursor: pointer; color: var(--ink-2); transition: border-color .15s, color .15s;
+  .hdr__actions { display: flex; align-items: center; gap: .6rem; align-self: stretch; }
+  .hdr__tel {
+    display: flex; align-items: center; align-self: stretch;
+    border-left: var(--rule); padding-left: 1.6rem; margin-right: .6rem;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: .01em;
+    text-decoration: none; white-space: nowrap;
   }
-  .iconbtn:hover { border-color: var(--ink); color: var(--ink); }
+  .hdr__tel:hover { color: var(--petrol); }
+  .hdr__cta, .menubtn { align-self: center; }
+
+  .iconbtn {
+    display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
+    background: transparent; border: var(--rule); border-radius: var(--r);
+    cursor: pointer; color: var(--ink);
+  }
+  .iconbtn:hover { background: var(--ink); color: var(--paper); }
 
   .menubtn {
-    display: none; align-items: center; gap: .4rem;
-    background: var(--ink); color: var(--bg); border: 1px solid var(--ink);
-    border-radius: var(--r-pill); padding: .5rem .9rem .5rem .8rem;
-    font-family: var(--font-display); font-weight: 620; font-size: .88rem;
-    cursor: pointer; flex: none; transition: background-color .15s;
+    display: none; align-items: center; gap: .45rem;
+    background: var(--ink); color: var(--paper); border: 1.5px solid var(--ink);
+    border-radius: var(--r); padding: .6rem .9rem .55rem .8rem;
+    font-family: var(--font-display); font-weight: 700; font-size: 1rem;
+    text-transform: uppercase; letter-spacing: .03em; line-height: 1;
+    cursor: pointer; flex: none;
   }
-  .menubtn:hover { background: var(--ink-2); border-color: var(--ink-2); }
+  .menubtn:hover { background: var(--petrol); border-color: var(--petrol); }
 
+  @media (max-width: 1180px) {
+    .hdr__tel { display: none; }
+  }
   @media (max-width: 1040px) {
     .nav { display: none; }
     .menubtn { display: inline-flex; }
+    .hdr__in { gap: 1rem; }
     .hdr__logo :global(.logo__mark) { height: 3rem; }
   }
   @media (max-width: 480px) {
-    .hdr__cta { padding-inline: 1rem; }
+    .hdr__cta { padding-inline: .8rem; font-size: .95rem; }
+    .menubtn { padding-inline: .7rem; }
   }
 
-  .drawer { position: fixed; inset: 0; z-index: 100; background: rgba(10,12,14,.45); }
+  .drawer { position: fixed; inset: 0; z-index: 100; background: rgba(15, 44, 51, .5); }
   .drawer[hidden] { display: none; }
   .drawer__panel {
-    position: absolute; inset: 0 0 0 auto; width: min(22rem, 92vw);
-    background: var(--bg); display: flex; flex-direction: column;
+    position: absolute; inset: 0 0 0 auto; width: min(24rem, 100vw);
+    background: var(--bg); border-left: var(--rule); display: flex; flex-direction: column;
     padding: 1.1rem var(--gutter) 1.5rem; overflow-y: auto;
-    animation: slide .22s cubic-bezier(.2,.8,.3,1);
+    animation: slide .2s cubic-bezier(.2,.8,.3,1);
   }
-  @keyframes slide { from { transform: translateX(12%); opacity: .6 } }
-  .drawer__top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+  @keyframes slide { from { transform: translateX(10%); opacity: .6 } }
+  .drawer__top {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 1rem; margin-bottom: 1.2rem; border-bottom: var(--rule);
+  }
   .drawer__nav { flex: 1; }
-  .drawer__group + .drawer__group { margin-top: 1.4rem; }
+  .drawer__group + .drawer__group { margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid var(--line); }
   .drawer__head {
-    font-family: var(--font-display); font-weight: 650; font-size: 1.1rem;
-    text-decoration: none; display: block; margin-bottom: .4rem;
+    font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; line-height: 1;
+    text-transform: uppercase; text-decoration: none; display: block;
   }
-  .drawer__nav ul { list-style: none; margin: 0; padding: 0 0 0 .1rem; }
+  .drawer__nav ul { list-style: none; margin: .6rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
   .drawer__nav ul a {
-    display: block; padding: .42rem 0; color: var(--ink-2); text-decoration: none; font-size: .97rem;
+    display: block; padding: .4rem 0; color: var(--ink-2); text-decoration: none; font-size: .97rem;
   }
-  .drawer__nav ul a:hover { color: var(--ink); }
+  .drawer__nav ul a:hover { color: var(--ink); text-decoration: underline; }
   .drawer__foot { display: grid; gap: .6rem; margin-top: 2rem; }
 </style>
 

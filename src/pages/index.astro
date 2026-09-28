@@ -1,149 +1,215 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProductGrid from '../components/ProductGrid.astro';
-import ProductImage from '../components/ProductImage.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import { site, productsIn, categoryByUrl } from '../lib/content';
 
 const UPLOADS = 'https://proarb.se/wp-content/uploads/2026/04/';
+const staging = process.env.STAGING === '1';
+const about = (site as any).about ?? {};
+const quote = about.quote ?? {};
 
-const showcase = [
-  { size: 'full', url: 'arbetsklader', image: '/images/kategorier/arbetsklader.jpg' },
-  { size: 'compact', url: 'arbetsbyxor', image: '/images/kategorier/arbetsbyxor.webp' },
-  { size: 'compact', url: 'arbetshandskar', image: UPLOADS + 'ei_7776-12-768x512.webp' },
-  { size: 'full', url: 'varselklader', image: '/images/kategorier/varselklader.webp' },
-  { size: 'compact', url: 'arbetsskor', image: UPLOADS + 'dsc04899-768x512.jpg' },
-  { size: 'compact', url: 'profiltrojor', image: UPLOADS + '1110228_HeavyTshirt_2.jpg', imgPosition: 'top' },
-  { size: 'full', url: 'arbetsjackor', image: '/images/kategorier/arbetsjackor.webp' },
-  { size: 'compact-wide', url: 'give-aways', image: UPLOADS + 'Skarmbild-2026-04-01-103244.png' },
-  { size: 'full', url: 'ovriga-profilklader', image: UPLOADS + 'profilklader-1536x540.webp' }
-].map((item) => ({ ...item, cat: categoryByUrl(item.url)! }));
+const count = (url: string) => productsIn(url).length;
+const withCat = <T extends { url: string }>(items: T[]) =>
+  items.map((item) => ({ ...item, cat: categoryByUrl(item.url)!, n: count(item.url) }));
+
+// Arbetskläder – fyra bildkort i asymmetriskt raster
+const workFeature = withCat([
+  { url: 'arbetsklader', slot: 'c1', title: 'Arbetskläder', meta: 'plagg', image: '/images/kategorier/arbetsklader.jpg',
+    text: 'Byxor, jackor och tröjor från Blåkläder, Helly Hansen, Jobman och ProJob.' },
+  { url: 'varselklader', slot: 'c2', title: 'Varsel', meta: 'plagg', image: '/images/kategorier/varselklader.webp',
+    text: 'Certifierat enligt EN ISO 20471. Vi kollar klassningen åt er.' },
+  { url: 'arbetsbyxor', slot: 'c3', title: 'Byxor', meta: 'modeller', image: '/images/kategorier/arbetsbyxor.webp' },
+  { url: 'arbetsjackor', slot: 'c4', title: 'Jackor', meta: 'modeller', image: '/images/kategorier/arbetsjackor.webp' }
+]);
+
+// …resten som indexrader
+const workIndex = withCat([
+  { url: 'arbetstrojor', note: 'Fleece, softshell, t-shirts' },
+  { url: 'arbetsskor', note: 'Skyddsskor S1P–S7S' },
+  { url: 'arbetshandskar', note: 'Touch, skärskydd, vinter' },
+  { url: 'arbetsshorts-piratbyxor', note: 'För sommarhalvåret' }
+]);
+
+const profileFeature = withCat([
+  { url: 'profiltrojor', slot: 'p1', title: 'Profiltröjor', image: UPLOADS + '1110228_HeavyTshirt_2.jpg', pos: 'center top' },
+  { url: 'ovriga-profilklader', slot: 'p2', title: 'Profilkläder', image: UPLOADS + 'profilklader-1536x540.webp' },
+  { url: 'give-aways', slot: 'p3', title: 'Give aways', image: UPLOADS + 'Skarmbild-2026-04-01-103244.png' }
+]);
+
+const profileIndex = withCat([
+  { url: 'profiljackor', note: 'Softshell, vinter, regn' },
+  { url: 'profilskjortor', note: 'Till kontoret och kassan' }
+]);
 
 const featured = [
-  ...productsIn('arbetsjackor').slice(0, 2),
-  ...productsIn('arbetsbyxor').slice(0, 2),
-  ...productsIn('varselklader').slice(0, 2),
-  ...productsIn('arbetsskor').slice(0, 1),
-  ...productsIn('arbetshandskar').slice(0, 1)
-].filter((p, i, a) => a.findIndex((x) => x.slug === p.slug) === i).slice(0, 8);
+  ...productsIn('arbetsjackor').slice(0, 1),
+  ...productsIn('arbetsbyxor').slice(0, 1),
+  ...productsIn('varselklader').slice(0, 1),
+  ...productsIn('arbetsskor').slice(0, 1)
+].filter((p, i, a) => a.findIndex((x) => x.slug === p.slug) === i);
 
-const profileTeaser = productsIn('profilprodukter').slice(0, 4);
-const brandRow = [...site.brands, ...site.brands];
+const pad = (n: number) => String(n).padStart(2, '0');
+const mapQuery = encodeURIComponent(`${site.address.street}, ${site.address.postalCode} ${site.address.city}`);
+const DAY_LONG: Record<string, string> = { 'Mån–tors': 'Måndag–torsdag', Fredag: 'Fredag', 'Lör–sön': 'Lördag–söndag' };
+const [weekdays, friday] = site.hours;
 ---
 
 <Base
   title="Arbetskläder & profilkläder till företag | Proarb Eskilstuna"
   description={site.description}
 >
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="duo" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values=".33 .33 .33 0 0  .33 .33 .33 0 0  .33 .33 .33 0 0  0 0 0 1 0" />
+      <feComponentTransfer>
+        <feFuncR type="table" tableValues="0.059 0.937" />
+        <feFuncG type="table" tableValues="0.173 0.914" />
+        <feFuncB type="table" tableValues="0.2 0.867" />
+      </feComponentTransfer>
+    </filter>
+  </svg>
+
   <!-- Hero -->
   <section class="hero">
-    <div class="container hero__in">
-      <div class="hero__copy reveal">
-        <a class="badge" href="#butik">
-          <svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5c-3.4 0-6.2 2.7-6.2 6.2 0 4.5 6.2 10.8 6.2 10.8s6.2-6.3 6.2-10.8c0-3.5-2.8-6.2-6.2-6.2Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="7.7" r="2.3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          Fysisk butik &amp; showroom i Eskilstuna – Rinmansgatan 7
-        </a>
-        <h1>Arbetskläder som håller.<br />Profilkläder som syns.</h1>
-        <p class="lead">
-          Helhetsleverantör av arbets- och profilkläder för företag i Mälardalen –
-          rätt plagg, rätt klassning och er logotyp på rätt ställe, med eget tryckeri
-          och personlig rådgivning hela vägen.
-        </p>
-        <div class="cluster hero__cta">
-          <a class="btn" href="/kontakt/">Begär offert</a>
-          <a class="btn btn--ghost" href="/arbetsklader/">Se sortimentet</a>
+    <img
+      class="hero__img"
+      src="/images/kategorier/arbetsjackor.webp"
+      alt="Arbetsjackor från Proarbs sortiment"
+      width="1680" height="720"
+      fetchpriority="high"
+    />
+    <div class="hero__type">
+      <div class="container hero__in">
+        <h1>Kläder för folk som <em>jobbar.</em></h1>
+        <div class="hero__note">
+          <p>
+            Arbets- och profilkläder till hantverkare, åkerier, företag och föreningar
+            i Mälardalen – och vi trycker loggan själva, i butiken på Rinmansgatan.
+          </p>
+          <p>Ring, maila eller kom förbi. Du pratar alltid med någon som kan plaggen.</p>
+          <div class="hero__actions">
+            <a class="btn btn--accent" href="#offert">Begär offert</a>
+            <a class="link-arrow" href="/arbetsklader/">Se sortimentet</a>
+          </div>
         </div>
-        <div class="hero__quick">
-          <a class="hero__qitem" href={site.phoneHref}>
-            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 3.5c.6-.4 1.9-.9 2.6-.4.7.5 1.7 2.3 1.9 2.9.2.6-.1 1-.6 1.4-.5.4-.9.7-.6 1.4.3.7 1.1 1.9 2 2.8.9.9 2.1 1.7 2.8 2 .7.3 1-.1 1.4-.6.4-.5.8-.8 1.4-.6.6.2 2.4 1.2 2.9 1.9.5.7 0 2-.4 2.6-.4.6-1.4 1.5-2.7 1.5-1.9 0-4.7-1-7.3-3.6C4.8 12.2 3.8 9.4 3.8 7.5c0-1.3.9-2.3 1.5-2.7Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-            <span><strong>Ring direkt</strong>{site.phone}</span>
-          </a>
-          <a class="hero__qitem" href="/kontakt/">
-            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2.5h7l3.5 3.5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-13a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 10.5h6M7 13.5h6M7 7.5h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            <span><strong>Begär offert</strong>Svar inom en arbetsdag</span>
-          </a>
-          <a class="hero__qitem" href="#butik">
-            <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10.5" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 6.5v4l2.8 1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span><strong>Öppettider</strong>Mån–fre, se nedan</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="hero__media reveal">
-        <img src="/images/kategorier/arbetsklader.jpg" alt="Arbets- och profilkläder från Proarb" class="hero__img" />
-        <span class="hero__badge">17+ varumärken i sortimentet</span>
       </div>
     </div>
   </section>
 
-  <!-- Kategorier -->
-  <section class="section cshow">
+  <!-- Skyltremsa -->
+  <div class="strip">
+    <div class="container strip__in">
+      <a href="#butik">{site.address.street}<small>{site.address.postalCode} {site.address.city} · Butik &amp; showroom</small></a>
+      <a href="#butik">{weekdays.days} {weekdays.time}<small>{friday.days} {friday.time} · helger stängt</small></a>
+      <a href="/tryck-och-brodyr/">Eget tryck &amp; brodyr<small>I huset, inte på entreprenad</small></a>
+    </div>
+  </div>
+
+  <!-- 01 Arbetskläder -->
+  <section class="section">
     <div class="container">
-      <header class="sechead reveal">
+      <header class="shead">
+        <span class="shead__num">01</span>
         <div>
-          <p class="eyebrow">Sortimentet</p>
-          <h2>Hitta rätt kategori direkt</h2>
+          <h2>Arbetskläder</h2>
+          <p class="shead__lead">
+            Rätt plagg och rätt klassning för jobbet – från byxan som klarar knästående
+            hela dagen till varseljackan som håller vintern ut.
+          </p>
         </div>
       </header>
-      <div class="cshow__grid">
-        {showcase.map((item) => (
-          <a class={`cband cband--${item.size} reveal`} href={`/${item.url}/`}>
-            <img
-              class="cband__img"
-              src={item.image}
-              alt=""
-              loading="lazy"
-              style={item.imgPosition ? `object-position: ${item.imgPosition}` : undefined}
-            />
-            {item.size !== 'compact' && item.size !== 'compact-wide' && <span class="cband__scrim" aria-hidden="true"></span>}
-            <div class="cband__copy">
-              <h3>{item.cat.h1}</h3>
-              <p>{item.cat.lead}</p>
-              {item.size === 'compact' || item.size === 'compact-wide' ? (
-                <span class="link-arrow cband__link">
-                  Se sortimentet
-                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-              ) : (
-                <span class="btn btn--sm cband__btn">
-                  Se sortimentet
-                  <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-              )}
+
+      <div class="cats">
+        {workFeature.map((c) => (
+          <a class={`cat ${c.slot}`} href={`/${c.url}/`}>
+            <figure><img src={c.image} alt="" loading="lazy" /></figure>
+            <div class="cat__cap">
+              <h3>{c.title}</h3>
+              <span>{c.n} {c.meta}</span>
+            </div>
+            {c.text && <p>{c.text}</p>}
+          </a>
+        ))}
+      </div>
+
+      <nav class="index" aria-label="Fler arbetskläder">
+        {workIndex.map((c, i) => (
+          <a href={`/${c.url}/`}>
+            <b>{pad(i + 1)}</b>
+            <strong>{c.cat.name}</strong>
+            <i>{c.note} · {c.n} st</i>
+            <svg width="22" height="22" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" /></svg>
+          </a>
+        ))}
+      </nav>
+
+      <div class="picks">
+        <div class="picks__head">
+          <h3>Ett urval</h3>
+          <p class="muted">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas kataloger.</p>
+        </div>
+        <ProductGrid products={featured} eagerCount={0} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 Profilprodukter -->
+  <section class="section section--sunk">
+    <div class="container">
+      <header class="shead">
+        <span class="shead__num">02</span>
+        <div>
+          <h2>Profilprodukter</h2>
+          <p class="shead__lead">
+            Tröjor, pikéer och give aways med er logotyp – till säljkåren, mässan,
+            laget eller julbordet. Tryck och brodyr gör vi själva.
+          </p>
+        </div>
+      </header>
+
+      <div class="pcats">
+        {profileFeature.map((c) => (
+          <a class={`cat ${c.slot}`} href={`/${c.url}/`}>
+            <figure><img src={c.image} alt="" loading="lazy" style={c.pos ? `object-position:${c.pos}` : undefined} /></figure>
+            <div class="cat__cap">
+              <h3>{c.title}</h3>
+              <span>{c.n} produkter</span>
             </div>
           </a>
         ))}
       </div>
+
+      <nav class="index" aria-label="Fler profilprodukter">
+        {profileIndex.map((c, i) => (
+          <a href={`/${c.url}/`}>
+            <b>{pad(i + 1)}</b>
+            <strong>{c.cat.name}</strong>
+            <i>{c.note} · {c.n} st</i>
+            <svg width="22" height="22" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" /></svg>
+          </a>
+        ))}
+        <a href="/tryck-och-brodyr/">
+          <b>{pad(profileIndex.length + 1)}</b>
+          <strong>Tryck &amp; brodyr</strong>
+          <i>Så funkar det, filformat och priser</i>
+          <svg width="22" height="22" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" /></svg>
+        </a>
+      </nav>
     </div>
   </section>
 
-  <!-- Utvalda produkter -->
-  <section class="section section--sunk">
-    <div class="container">
-      <header class="sechead reveal">
-        <div>
-          <p class="eyebrow">Ett urval</p>
-          <h2>Plagg vi säljer mest av</h2>
-          <p class="lead">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas kataloger.</p>
-        </div>
-      </header>
-      <ProductGrid products={featured} eagerCount={0} />
-    </div>
-  </section>
-
-  <!-- Så funkar det -->
+  <!-- 03 Så går det till -->
   <section class="section">
     <div class="container">
-      <header class="sechead reveal">
-        <div>
-          <p class="eyebrow">Så går det till</p>
-          <h2>Från samtal till levererad kollektion</h2>
-        </div>
+      <header class="shead">
+        <span class="shead__num">03</span>
+        <div><h2>Så går det till</h2></div>
       </header>
       <ol class="steps">
         {site.steps.map((s: any, i: number) => (
-          <li class="step reveal">
-            <span class="step__n">{String(i + 1).padStart(2, '0')}</span>
+          <li>
+            <span class="steps__n">{pad(i + 1)}</span>
             <h3>{s.title}</h3>
             <p>{s.text}</p>
           </li>
@@ -152,315 +218,321 @@ const brandRow = [...site.brands, ...site.brands];
     </div>
   </section>
 
-  <!-- Butik -->
-  <section class="section store" id="butik">
-    <div class="container store__in">
-      <div class="store__copy reveal">
-        <p class="eyebrow">Besök oss</p>
-        <h2>Showroom på Rinmansgatan 7</h2>
-        <p class="lead">
-          Personlig rådgivning och showroom mitt i Eskilstuna. Kom in, känn på tygerna
-          och se hur er logotyp sitter på plagget – vi bjuder på kaffe.
-        </p>
-        <dl class="store__hours">
-          {site.hours.map((h: { days: string; time: string }) => (
-            <div><dt>{h.days}</dt><dd>{h.time}</dd></div>
-          ))}
-        </dl>
-        <div class="cluster store__cta">
-          <a class="btn" href={site.phoneHref}>Ring {site.phone}</a>
-          <a class="btn btn--ghost" href="/kontakt/">Boka besök</a>
-        </div>
-      </div>
-      <div class="store__map reveal">
-        <iframe
-          title={`Karta till ${site.legalName}`}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-          src={`https://www.google.com/maps?q=${encodeURIComponent(site.address.street + ', ' + site.address.postalCode + ' ' + site.address.city)}&output=embed`}
-        ></iframe>
-        <address>{site.address.street}, {site.address.postalCode} {site.address.city}</address>
-      </div>
-    </div>
-  </section>
-
-  <!-- Profilprodukter -->
-  <section class="promo">
-    <div class="container promo__in">
-      <div class="promo__copy reveal">
-        <p class="eyebrow eyebrow--invert">Profilprodukter</p>
-        <h2>Synlighet som stärker varumärket</h2>
-        <p>
-          Profiltröjor, pikéer och give aways med er logotyp – till säljkåren, mässan,
-          laget eller julbordet.
-        </p>
-        <div class="cluster">
-          <a class="btn btn--accent" href="/profilprodukter/">Se profilprodukter</a>
-          <a class="btn btn--ghost" href="/give-aways/">Give aways</a>
-        </div>
-      </div>
-      <div class="promo__cards reveal">
-        {profileTeaser.map((p) => (
-          <a class="promo__card" href={`/produkt/${p.slug}/`}>
-            <ProductImage file={p.file} src={p.image} alt={p.name} sizes="160px" class="promo__img" />
-            <span>{p.name}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Varumärken -->
-  <section class="section section--sunk brands">
+  <!-- 04 Personlig service -->
+  <section class="section people">
     <div class="container">
-      <header class="sechead reveal">
+      <header class="shead">
+        <span class="shead__num">04</span>
+        <div><h2>Personlig service</h2></div>
+      </header>
+      <div class="people__in">
+        {about.photo ? (
+          <img class="people__photo" src={about.photo} alt={`Personalen i butiken på ${site.address.street}`} loading="lazy" />
+        ) : staging ? (
+          <div class="ph">
+            <span class="ph__tag">Platshållare – syns bara på testsajten</span>
+            Foto på er i butiken.<br />Riktigt foto, inte stockbild – det enskilt starkaste förtroendegreppet på sidan.
+          </div>
+        ) : null}
+        <div class="people__copy">
+          {quote.text ? (
+            <figure>
+              <blockquote class="pquote">{quote.text}</blockquote>
+              <figcaption class="pquote__by">— {quote.name}{quote.company && `, ${quote.company}`}</figcaption>
+            </figure>
+          ) : staging ? (
+            <figure>
+              <blockquote class="pquote">Man ringer, och sen är det löst. Så har det varit sedan första beställningen.</blockquote>
+              <figcaption class="pquote__by">— [Namn], [Kund i Eskilstuna] <span class="ph__tag">Exempeltext – byt mot riktigt citat</span></figcaption>
+            </figure>
+          ) : (
+            <p class="pquote">
+              Ingen kundtjänstkö. Ni når oss direkt på telefon, får svar samma dag
+              och pratar med samma person från förslag till leverans.
+            </p>
+          )}
+          <div class="facts">
+            {about.founded ? (
+              <div><b>{about.founded}</b><span>Grundat i Eskilstuna</span></div>
+            ) : staging ? (
+              <div><b>[ÅR]</b><span>Grundat i Eskilstuna <span class="ph__tag">Fyll i</span></span></div>
+            ) : (
+              <div><b>1 dag</b><span>Svar på offert</span></div>
+            )}
+            <div><b>{site.brands.length}</b><span>Varumärken</span></div>
+            <div><b>0</b><span>Mellanhänder på tryck &amp; brodyr</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Märkena -->
+  <section class="section brands">
+    <div class="container">
+      <header class="shead">
+        <span class="shead__num">05</span>
         <div>
-          <p class="eyebrow">Leverantörer</p>
-          <h2>Varumärken vi jobbar med</h2>
+          <h2>Märkena</h2>
+          <p class="shead__lead">Leverantörer vi jobbar med. Saknas ert favoritmärke? Fråga – vi har fler.</p>
         </div>
       </header>
-    </div>
-    <div class="brands__marquee" role="list" aria-label="Varumärken vi jobbar med">
-      <div class="brands__track">
-        {brandRow.map((b: string) => <span class="brands__item" role="listitem">{b}</span>)}
-      </div>
-    </div>
-    <div class="container">
-      <p class="muted brands__note">…och fler därtill. Har ni ett favoritmärke? Fråga oss.</p>
+      <ul class="brands__list" aria-label="Varumärken vi jobbar med">
+        {site.brands.map((b: string) => <li>{b}</li>)}
+      </ul>
     </div>
   </section>
 
-  <!-- Offert -->
-  <section class="section" id="offert">
-    <div class="container quote">
-      <div class="quote__copy reveal">
-        <p class="eyebrow">Rådgivning</p>
-        <h2>Få rådgivning för ditt företag</h2>
-        <p class="lead">
-          Att välja rätt utrustning för teamet kan vara en utmaning. Berätta om er verksamhet
-          så analyserar vi behovet – slitstyrka, funktion och visuell profilering – och
-          återkommer med ett förslag.
-        </p>
-        <ul class="ticks">
-          {site.usp.map((u: any) => (
-            <li>
-              <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span><strong>{u.title}.</strong> {u.text}</span>
-            </li>
-          ))}
-        </ul>
-        <p class="quote__alt">
-          Vill du hellre prata? Ring <a href={site.phoneHref}>{site.phone}</a> eller maila
-          <a href={`mailto:${site.email}`}>{site.email}</a>.
-        </p>
+  <!-- 06 Kom förbi -->
+  <section class="section section--sunk visit" id="butik">
+    <div class="container">
+      <header class="shead">
+        <span class="shead__num">06</span>
+        <div><h2>Kom förbi</h2></div>
+      </header>
+      <div class="visit__in">
+        <div class="visit__copy">
+          <h3>{site.address.street},<br />{site.address.city}</h3>
+          <p>
+            Personlig rådgivning och showroom mitt i Eskilstuna. Prova storlekar, känn på
+            tygerna och se hur loggan blir innan något trycks. Kaffet står på.
+          </p>
+          <table class="hours">
+            <caption class="visually-hidden">Öppettider</caption>
+            <tbody>
+              {site.hours.map((h: { days: string; time: string }) => (
+                <tr><th scope="row">{DAY_LONG[h.days] ?? h.days}</th><td>{h.time}</td></tr>
+              ))}
+            </tbody>
+          </table>
+          <a class="bigtel" href={site.phoneHref}>{site.phone}</a>
+          <a class="visit__mail" href={`mailto:${site.email}`}>{site.email}</a>
+        </div>
+        <div class="visit__map">
+          <iframe
+            title={`Karta till ${site.legalName}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
+          ></iframe>
+        </div>
       </div>
-      <QuoteForm />
+    </div>
+  </section>
+
+  <!-- 07 Offert -->
+  <section class="section" id="offert">
+    <div class="container">
+      <header class="shead">
+        <span class="shead__num">07</span>
+        <div><h2>Begär offert</h2></div>
+      </header>
+      <div class="quote">
+        <div class="quote__copy">
+          <p class="lead">
+            Berätta om er verksamhet – antal personer, yrken och vad som ska tryckas – så
+            återkommer vi med ett förslag inom en arbetsdag.
+          </p>
+          <ul class="ticks">
+            {site.usp.map((u: any) => (
+              <li><strong>{u.title}</strong><span>{u.text}</span></li>
+            ))}
+          </ul>
+          <p class="quote__alt">
+            Vill du hellre prata? Ring <a href={site.phoneHref}>{site.phone}</a> eller maila
+            <a href={`mailto:${site.email}`}>{site.email}</a>.
+          </p>
+        </div>
+        <QuoteForm heading="Få ett förslag" />
+      </div>
     </div>
   </section>
 </Base>
 
 <style>
-  /* Hero */
-  .hero { padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem) clamp(2.5rem, 1.5rem + 3vw, 4.5rem); overflow: clip; }
-  .hero__in { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(2rem, 1rem + 4vw, 4.5rem); align-items: center; }
-  @media (max-width: 900px) { .hero__in { grid-template-columns: 1fr; } }
-
-  .badge {
-    display: inline-flex; align-items: center; gap: .5rem;
-    padding: .5rem .95rem .5rem .7rem; border-radius: var(--r-pill);
-    background: var(--bg-raised); border: 1px solid var(--border-soft);
-    box-shadow: var(--shadow-1); font-size: .82rem; font-weight: 560;
-    color: var(--ink-2); text-decoration: none; margin-bottom: 1.3rem;
-    transition: border-color .18s, color .18s;
+  /* Hero ------------------------------------------------------------------ */
+  .hero { position: relative; background: var(--petrol-deep); }
+  .hero__img {
+    width: 100%; height: min(80vh, 780px); min-height: 520px;
+    object-fit: cover; object-position: 30% 40%;
   }
-  .badge:hover { border-color: var(--accent); color: var(--ink); }
-  .badge svg { color: var(--accent-ink); flex: none; }
-
-  .hero__copy h1 { margin: 0 0 1.1rem; }
-  .hero__cta { margin-top: 1.9rem; }
-
-  .hero__quick {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: .7rem;
-    margin-top: 2.4rem; padding-top: 1.8rem; border-top: 1px solid var(--line);
+  .hero__type {
+    position: absolute; inset: auto 0 0 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(15, 44, 51, .55) 100%);
   }
-  @media (max-width: 560px) { .hero__quick { grid-template-columns: 1fr; } }
-  .hero__qitem {
-    display: flex; align-items: center; gap: .6rem; padding: .7rem .5rem;
-    border-radius: var(--r); text-decoration: none; color: var(--ink-2);
-    transition: background-color .18s, color .18s;
+  .hero__in { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+  .hero h1 {
+    font-size: clamp(3.6rem, 1rem + 8.4vw, 9.4rem); line-height: .84; letter-spacing: -.01em;
+    color: var(--paper); padding-bottom: 2.4rem; max-width: 12ch;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, .25);
   }
-  .hero__qitem:hover { background: var(--bg-raised); color: var(--ink); }
-  .hero__qitem svg { flex: none; color: var(--accent-ink); }
-  .hero__qitem span { display: flex; flex-direction: column; font-size: .84rem; line-height: 1.35; }
-  .hero__qitem strong { font-family: var(--font-display); font-weight: 640; font-size: .9rem; color: var(--ink); }
+  .hero h1 em { font-style: normal; color: var(--amber); }
+  .hero__note {
+    background: var(--paper); color: var(--ink); width: 23rem; flex: none;
+    padding: 1.6rem 1.6rem 1.8rem; font-size: 1rem;
+    border: var(--rule); border-bottom: 0;
+  }
+  .hero__note p + p { margin-top: .9rem; }
+  .hero__actions { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; margin-top: 1.4rem; }
 
-  .hero__media { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-3); aspect-ratio: 4 / 5; }
-  .hero__img { width: 100%; height: 100%; object-fit: cover; }
-  .hero__badge {
-    position: absolute; left: 1.1rem; bottom: 1.1rem;
-    background: color-mix(in srgb, #0e1416 78%, transparent); backdrop-filter: blur(8px);
-    color: #fff; font-family: var(--font-display); font-weight: 600; font-size: .82rem;
-    padding: .55rem .95rem; border-radius: var(--r-pill); border: 1px solid rgba(255,255,255,.18);
+  /* Skyltremsa ------------------------------------------------------------ */
+  .strip { background: var(--amber); border-block: var(--rule); }
+  .strip__in { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .strip a {
+    padding: 1rem 0 1.05rem; text-decoration: none;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.35rem;
+    text-transform: uppercase; letter-spacing: .02em; line-height: 1.1;
+  }
+  .strip a + a { border-left: var(--rule); padding-left: 1.4rem; }
+  .strip a:hover small { text-decoration: underline; }
+  .strip small {
+    display: block; margin-top: .2rem; font-family: var(--font-body); text-transform: none;
+    font-weight: 500; font-size: .88rem; letter-spacing: 0;
   }
 
-  /* Reveal on scroll (progressive enhancement, no-op without JS or with reduced motion) */
-  :global(html.js-reveal) .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.3,1); }
-  :global(html.js-reveal) .reveal.is-visible { opacity: 1; transform: none; }
+  /* Kategorier: redaktionellt raster + duoton ------------------------------ */
+  .cats { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2.6rem 1.6rem; }
+  .cat { text-decoration: none; display: block; }
+  .cat figure { background: var(--petrol); overflow: hidden; }
+  .cat img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: url(#duo); transition: filter .35s, transform .5s cubic-bezier(.2, .8, .3, 1);
+  }
+  .cat:hover img, .cat:focus-visible img { filter: none; transform: scale(1.03); }
+  .cat__cap {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    border-bottom: var(--rule); padding: .85rem 0 .7rem;
+  }
+  .cat h3 { font-size: clamp(1.7rem, 1.4rem + 1vw, 2.2rem); font-weight: 800; text-transform: uppercase; line-height: 1; }
+  .cat__cap span { font-size: .88rem; color: var(--ink-2); white-space: nowrap; }
+  .cat p { font-size: .95rem; color: var(--ink-2); margin-top: .7rem; max-width: 38ch; }
+  .c1 { grid-column: 1 / 8; } .c1 figure { aspect-ratio: 4 / 3.1; }
+  .c2 { grid-column: 8 / 13; margin-top: 7rem; } .c2 figure { aspect-ratio: 4 / 5; }
+  .c3 { grid-column: 1 / 5; } .c3 figure { aspect-ratio: 1; }
+  .c4 { grid-column: 5 / 13; } .c4 figure { aspect-ratio: 16 / 9; }
 
-  /* Sektionsrubriker */
-  .sechead {
-    display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
-    margin-bottom: clamp(1.6rem, 1rem + 2vw, 2.6rem); flex-wrap: wrap;
-  }
-  .sechead h2 { margin-top: .7rem; }
-  .sechead .lead { margin-top: .9rem; font-size: var(--step-0); }
+  .pcats { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2.6rem 1.6rem; }
+  .p1 { grid-column: 1 / 6; grid-row: span 2; } .p1 figure { aspect-ratio: 4 / 5; }
+  .p2 { grid-column: 6 / 13; } .p2 figure { aspect-ratio: 21 / 9; }
+  .p3 { grid-column: 6 / 13; } .p3 figure { aspect-ratio: 21 / 9; }
 
-  /* Kategorimonter */
-  .cshow__grid { display: grid; gap: clamp(.7rem, .4rem + 1vw, 1.1rem); grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 720px) { .cshow__grid { grid-template-columns: 1fr; } }
-  .cband {
-    position: relative; display: block; text-decoration: none; color: #fff;
-    border-radius: var(--r-lg); overflow: hidden; isolation: isolate;
-    transition: transform .2s cubic-bezier(.2,.8,.3,1), box-shadow .2s;
+  /* Indexrader */
+  .index { margin-top: 4rem; border-top: var(--rule); }
+  .index a {
+    display: grid; grid-template-columns: 7.5rem 1fr auto 2rem; align-items: center; gap: 1rem;
+    padding: 1.05rem 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+    text-decoration: none; transition: background-color .15s, padding .2s;
   }
-  .cband:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); }
-  .cband:hover .cband__img { transform: scale(1.045); }
-  .cband--full { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
-  @media (max-width: 700px) { .cband--full { aspect-ratio: 4 / 3; } }
+  .index a:hover { background: var(--amber); padding-inline: 1rem; }
+  .index b { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; }
+  .index strong { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.4rem); line-height: 1; }
+  .index i { font-style: normal; font-size: .9rem; color: var(--ink-2); }
+  .index svg { justify-self: end; }
 
-  .cband__img {
-    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
-    z-index: -2; transition: transform .4s cubic-bezier(.2,.8,.3,1);
-  }
-  .cband__scrim {
-    position: absolute; inset: 0; z-index: -1;
-    background: linear-gradient(180deg, rgba(10,20,23,.15) 0%, rgba(10,20,23,.42) 55%, rgba(10,20,23,.72) 100%);
-  }
-  .cband__copy {
-    position: relative; height: 100%; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center; gap: .5rem;
-    padding: clamp(1.2rem, 1rem + 1.5vw, 2.25rem); text-wrap: balance;
-  }
-  .cband__copy h3 { margin: 0; color: #fff; font-size: var(--step-3); }
-  .cband__copy p { margin: 0; color: rgba(255,255,255,.88); max-width: 46ch; font-size: 1rem; }
-  .cband__btn { margin-top: .3rem; --btn-bg: #fff; --btn-fg: var(--ink); gap: .45rem; }
+  .picks { margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem); }
+  .picks__head { display: flex; justify-content: space-between; align-items: baseline; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+  .picks__head h3 { font-size: var(--step-2); font-weight: 800; text-transform: uppercase; }
+  .picks__head p { max-width: 52ch; font-size: .95rem; }
 
-  /* Kompakta kategorikort – ljus, ren stil för sekundära kategorier */
-  .cband--compact, .cband--compact-wide {
-    color: var(--ink); background: var(--bg-raised); border: 1px solid var(--line);
-  }
-  .cband--compact:hover, .cband--compact-wide:hover { border-color: var(--line-strong); }
-  .cband--compact { display: flex; flex-direction: column; }
-  .cband--compact .cband__img { position: static; z-index: auto; aspect-ratio: 4 / 3; }
-  .cband--compact .cband__copy {
-    position: static; height: auto; align-items: flex-start; text-align: left;
-    padding: 1rem 1.15rem 1.2rem; gap: .35rem;
-  }
-  .cband--compact .cband__copy h3 { color: var(--ink); font-size: var(--step-1); }
-  .cband--compact .cband__copy p { color: var(--ink-2); font-size: .87rem; max-width: 30ch; }
-  .cband--compact .cband__link { color: var(--ink); font-size: .87rem; margin-top: .2rem; }
+  /* Steg ------------------------------------------------------------------ */
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: var(--rule); }
+  .steps li { padding: 1.3rem 1.4rem 0 0; }
+  .steps li + li { border-left: 1px solid var(--line); padding-left: 1.4rem; }
+  .steps__n { font-family: var(--font-display); font-weight: 800; font-size: 3.4rem; line-height: 1; color: var(--amber); -webkit-text-stroke: 1.5px var(--ink); }
+  .steps h3 { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin: .9rem 0 .5rem; }
+  .steps p { color: var(--ink-2); font-size: .95rem; }
 
-  .cband--compact-wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1.4fr; align-items: stretch; min-height: 11rem; }
-  @media (max-width: 700px) { .cband--compact-wide { grid-template-columns: 1fr; } }
-  .cband--compact-wide .cband__img { position: static; z-index: auto; width: 100%; height: 100%; min-height: 9rem; }
-  .cband--compact-wide .cband__copy { position: static; height: 100%; align-items: flex-start; text-align: left; justify-content: center; padding: clamp(1.2rem, 1rem + 1vw, 1.75rem); }
-  .cband--compact-wide .cband__copy h3 { color: var(--ink); font-size: var(--step-2); }
-  .cband--compact-wide .cband__copy p { color: var(--ink-2); font-size: .92rem; max-width: 38ch; }
-  .cband--compact-wide .cband__link { color: var(--ink); }
-
-  /* Steg */
-  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1rem, .6rem + 1.5vw, 2rem); grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); counter-reset: s; }
-  .step { border-top: 2px solid var(--ink); padding-top: 1rem; }
-  .step__n { font-family: var(--font-display); font-weight: 700; font-size: .8rem; letter-spacing: .1em; color: var(--accent-ink); }
-  .step h3 { font-size: var(--step-1); margin: .5rem 0 .45rem; }
-  .step p { color: var(--ink-2); font-size: .95rem; }
-
-  /* Butik */
-  .store__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
-  @media (max-width: 860px) { .store__in { grid-template-columns: 1fr; } }
-  .store__hours { display: grid; gap: .35rem; margin: 1.6rem 0 0; padding: 1.1rem 1.3rem; background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--r-lg); }
-  .store__hours div { display: flex; justify-content: space-between; gap: 1rem; font-size: .92rem; }
-  .store__hours dt { color: var(--ink-2); }
-  .store__hours dd { font-weight: 600; }
-  .store__cta { margin-top: 1.6rem; }
-  .store__map { border-radius: var(--r-lg); overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-2); }
-  .store__map iframe { width: 100%; height: 320px; display: block; border: 0; }
-  .store__map address { font-style: normal; padding: .9rem 1.1rem; background: var(--bg-raised); font-size: .88rem; color: var(--ink-2); }
-
-  /* Promo */
-  .promo { background: #163d47; color: rgba(244,241,234,.86); padding-block: var(--section); }
-  .promo__in { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: center; }
-  @media (max-width: 860px) { .promo__in { grid-template-columns: 1fr; } }
-  .promo h2 { color: #fff; margin: .7rem 0 1rem; }
-  .promo p { max-width: 46ch; margin-bottom: 1.8rem; }
-  .eyebrow--invert { color: var(--accent); }
-  .eyebrow--invert::before { background: var(--accent); }
-  .promo__cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
-  .promo__card {
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14);
-    border-radius: var(--r-lg); padding: .8rem; text-decoration: none; color: #fff;
-    display: grid; gap: .6rem; transition: border-color .18s, transform .18s, background-color .18s;
+  /* Personlig service ----------------------------------------------------- */
+  .people { background: var(--petrol); color: var(--paper); }
+  .people .shead { border-color: var(--paper); }
+  .people__in { display: grid; grid-template-columns: 5fr 7fr; gap: 3rem; align-items: start; }
+  .people__in > .people__copy:only-child { grid-column: 1 / -1; max-width: 62rem; }
+  .people__photo { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .ph {
+    aspect-ratio: 4 / 5; border: 1.5px dashed color-mix(in srgb, var(--paper) 55%, transparent);
+    display: grid; place-content: center; gap: 1rem; text-align: center; padding: 2rem;
+    font-size: .9rem; color: color-mix(in srgb, var(--paper) 75%, transparent);
   }
-  .promo__card:hover { border-color: rgba(255,255,255,.32); background: rgba(255,255,255,.1); transform: translateY(-2px); }
-  .promo__card :global(.promo__img) { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border-radius: var(--r); padding: 8%; }
-  .promo__card span { font-size: .84rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .ph__tag {
+    display: inline-block; background: var(--amber); color: var(--ink); font-size: .7rem; font-weight: 650;
+    padding: 2px 6px; letter-spacing: .03em; text-transform: uppercase; vertical-align: middle; justify-self: center;
+  }
+  .pquote { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1.3rem + 2.2vw, 3.2rem); line-height: 1.05; }
+  blockquote.pquote::before { content: '”'; color: var(--amber); }
+  .pquote__by { margin-top: 1.4rem; font-size: .95rem; color: color-mix(in srgb, var(--paper) 75%, transparent); }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 3.5rem; border-top: 1.5px solid var(--paper); }
+  .facts > div { padding: 1.2rem 1.2rem 0 0; }
+  .facts > div + div { border-left: 1px solid color-mix(in srgb, var(--paper) 35%, transparent); padding-left: 1.2rem; }
+  .facts b { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(2.4rem, 1.8rem + 2vw, 3.5rem); line-height: 1; color: var(--amber); }
+  .facts span { font-size: .9rem; }
 
-  /* Varumärken – marquee */
-  .brands__marquee {
-    margin-top: clamp(1.6rem, 1rem + 2vw, 2.6rem);
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  /* Märken ---------------------------------------------------------------- */
+  .brands__list {
+    list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap;
+    font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
+    font-size: clamp(1.7rem, 1.1rem + 2vw, 2.9rem); line-height: 1.12;
   }
-  .brands__track {
-    display: flex; width: max-content; gap: 3.2rem;
-    animation: brands-scroll 42s linear infinite;
+  .brands__list li { white-space: nowrap; }
+  .brands__list li:not(:last-child)::after {
+    content: '/'; margin-inline: .35em; font-weight: 600;
+    color: color-mix(in srgb, var(--ink) 28%, transparent);
   }
-  .brands__marquee:hover .brands__track { animation-play-state: paused; }
-  .brands__item {
-    font-family: var(--font-display); font-weight: 640; font-size: clamp(1.1rem, 1rem + .6vw, 1.5rem);
-    letter-spacing: -.02em; color: var(--ink-3); white-space: nowrap;
-    transition: color .18s;
-  }
-  .brands__item:hover { color: var(--ink); }
-  @keyframes brands-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  .brands__note { margin-top: 1.4rem; font-size: .9rem; }
 
-  /* Offert */
-  .quote { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(2rem, 1rem + 4vw, 4rem); align-items: start; }
-  @media (max-width: 900px) { .quote { grid-template-columns: 1fr; } }
-  .quote h2 { margin: .7rem 0 1rem; }
-  .ticks { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; gap: .8rem; }
-  .ticks li { display: flex; gap: .7rem; align-items: flex-start; font-size: .95rem; color: var(--ink-2); }
-  .ticks svg { color: var(--accent-ink); flex: none; margin-top: .15rem; }
-  .quote__alt { margin-top: 1.8rem; font-size: .95rem; color: var(--ink-3); }
-  .quote__alt a { font-weight: 550; color: var(--ink); margin-inline: .2rem; }
+  /* Besök ----------------------------------------------------------------- */
+  .visit__in { display: grid; grid-template-columns: 1fr 1fr; border: var(--rule); background: var(--bg); }
+  .visit__copy { padding: clamp(1.4rem, 1rem + 1.5vw, 2.4rem); }
+  .visit__map { border-left: var(--rule); min-height: 420px; }
+  .visit__map iframe { width: 100%; height: 100%; min-height: 420px; border: 0; display: block; filter: grayscale(.35); }
+  .visit h3 { font-size: clamp(2.2rem, 1.6rem + 2vw, 3rem); font-weight: 800; text-transform: uppercase; line-height: .95; margin-bottom: 1rem; }
+  .visit__copy > p { color: var(--ink-2); max-width: 44ch; }
+  .hours { width: 100%; border-collapse: collapse; margin-top: 1.4rem; }
+  .hours th, .hours td { padding: .6rem 0; border-bottom: 1px solid var(--line); text-align: left; font-weight: 400; }
+  .hours td { text-align: right; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .bigtel {
+    display: block; margin-top: 1.8rem; text-decoration: none;
+    font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 1.8rem + 3vw, 4rem); line-height: 1;
+  }
+  .bigtel:hover { color: var(--petrol); }
+  .visit__mail { display: inline-block; margin-top: .5rem; font-weight: 550; }
+
+  /* Offert ---------------------------------------------------------------- */
+  .quote { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(2rem, 1rem + 4vw, 4.5rem); align-items: start; }
+  .ticks { list-style: none; margin: 2rem 0 0; padding: 0; border-top: var(--rule); }
+  .ticks li { display: grid; grid-template-columns: 13rem 1fr; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+  .ticks strong { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; text-transform: uppercase; line-height: 1.1; }
+  .ticks span { color: var(--ink-2); }
+  .quote__alt { margin-top: 1.8rem; font-size: 1rem; color: var(--ink-2); }
+  .quote__alt a { font-weight: 600; color: var(--ink); }
+
+  /* Responsivt ------------------------------------------------------------ */
+  @media (max-width: 1000px) {
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps li:nth-child(3) { border-left: 0; padding-left: 0; }
+    .steps li:nth-child(n + 3) { margin-top: 1.4rem; border-top: 1px solid var(--line); }
+    .quote { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 860px) {
+    .hero__img { height: 74vh; min-height: 460px; object-position: 38% 30%; }
+    .hero__type { position: static; margin-top: -10rem; background: none; }
+    .hero__in { flex-direction: column; align-items: stretch; gap: 0; padding-inline: 0; }
+    .hero h1 { padding-inline: var(--gutter); padding-bottom: 1.4rem; }
+    .hero__note { width: auto; border-inline: 0; }
+    .strip__in { grid-template-columns: 1fr; }
+    .strip a + a { border-left: 0; border-top: var(--rule); padding-left: 0; }
+    .cats, .pcats { grid-template-columns: 1fr; gap: 2.4rem; }
+    .c1, .c2, .c3, .c4, .p1, .p2, .p3 { grid-column: auto; grid-row: auto; margin-top: 0; }
+    .c2 figure, .p1 figure { aspect-ratio: 4 / 3.4; }
+    .index a { grid-template-columns: 2.6rem 1fr 1.6rem; }
+    .index i { display: none; }
+    .people__in, .visit__in { grid-template-columns: 1fr; }
+    .visit__map { border-left: 0; border-top: var(--rule); min-height: 320px; }
+    .visit__map iframe { min-height: 320px; }
+  }
+  @media (max-width: 560px) {
+    .steps { grid-template-columns: 1fr; }
+    .steps li + li { border-left: 0; padding-left: 0; margin-top: 1.4rem; border-top: 1px solid var(--line); }
+    .facts { grid-template-columns: 1fr; }
+    .facts > div + div { border-left: 0; padding-left: 0; border-top: 1px solid color-mix(in srgb, var(--paper) 35%, transparent); margin-top: 1.2rem; }
+    .ticks li { grid-template-columns: 1fr; gap: .3rem; }
+  }
 </style>
-
-<script>
-  const items = document.querySelectorAll('.reveal');
-  const revealAll = () => items.forEach((el) => el.classList.add('is-visible'));
-
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            io.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0, rootMargin: '0px 0px -10% 0px' }
-    );
-    items.forEach((el) => io.observe(el));
-    // Safety net: a fast scroll/jump (or anything else unexpected) must never leave
-    // content permanently invisible, so force-reveal everything after a short delay.
-    setTimeout(revealAll, 2500);
-  } else {
-    revealAll();
-  }
-</script>
