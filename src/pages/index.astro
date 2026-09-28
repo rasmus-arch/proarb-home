@@ -384,6 +384,14 @@ const [weekdays, friday] = site.hours;
     filter: url(#duo); transition: filter .35s, transform .5s cubic-bezier(.2, .8, .3, 1);
   }
   .cat:hover img, .cat:focus-visible img { filter: none; transform: scale(1.03); }
+  /* Touch: bilden får färg när den passerar mitten av skärmen (se script) */
+  @media (hover: none) {
+    .cat img { transition: filter .6s ease, transform .8s cubic-bezier(.2, .8, .3, 1); }
+    .cat.is-lit img { filter: none; transform: scale(1.03); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cat.is-lit img, .cat:hover img { transform: none; }
+  }
   .cat__cap {
     display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
     border-bottom: var(--rule); padding: .85rem 0 .7rem;
@@ -522,3 +530,15 @@ const [weekdays, friday] = site.hours;
     .ticks li { grid-template-columns: 1fr; gap: .3rem; }
   }
 </style>
+
+<script>
+  // På touchskärmar finns ingen hover – tänd kategoribilderna när de scrollas
+  // in i mittenbandet av skärmen, och släck dem igen när de lämnar det.
+  if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.classList.toggle('is-lit', e.isIntersecting)),
+      { rootMargin: '-35% 0px -35% 0px' }
+    );
+    document.querySelectorAll('.cat').forEach((el) => io.observe(el));
+  }
+</script>
