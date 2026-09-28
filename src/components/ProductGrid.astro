@@ -1,11 +1,11 @@
 ---
 import ProductCard from './ProductCard.astro';
 import type { Product } from '../lib/content';
-interface Props { products: Product[]; eagerCount?: number }
-const { products, eagerCount = 4 } = Astro.props;
+interface Props { products: Product[]; eagerCount?: number; note?: string }
+const { products, eagerCount = 4, note } = Astro.props;
 ---
 <div class="pgrid">
-  {products.map((p, i) => <ProductCard product={p} eager={i < eagerCount} />)}
+  {products.map((p, i) => <ProductCard product={p} eager={i < eagerCount} note={note} />)}
 </div>
 <style>
   .pgrid {

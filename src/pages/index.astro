@@ -9,18 +9,17 @@ const staging = process.env.STAGING === '1';
 const about = (site as any).about ?? {};
 const quote = about.quote ?? {};
 
-const count = (url: string) => productsIn(url).length;
 const withCat = <T extends { url: string }>(items: T[]) =>
-  items.map((item) => ({ ...item, cat: categoryByUrl(item.url)!, n: count(item.url) }));
+  items.map((item) => ({ ...item, cat: categoryByUrl(item.url)! }));
 
 // Arbetskläder – fyra bildkort i asymmetriskt raster
 const workFeature = withCat([
-  { url: 'arbetsklader', slot: 'c1', title: 'Arbetskläder', meta: 'plagg', image: '/images/kategorier/arbetsklader.jpg',
+  { url: 'arbetsklader', slot: 'c1', title: 'Arbetskläder', image: '/images/kategorier/arbetsklader.jpg',
     text: 'Byxor, jackor och tröjor från Blåkläder, Helly Hansen, Jobman och ProJob.' },
-  { url: 'varselklader', slot: 'c2', title: 'Varsel', meta: 'plagg', image: '/images/kategorier/varselklader.webp',
+  { url: 'varselklader', slot: 'c2', title: 'Varsel', image: '/images/kategorier/varselklader.webp',
     text: 'Certifierat enligt EN ISO 20471. Vi kollar klassningen åt er.' },
-  { url: 'arbetsbyxor', slot: 'c3', title: 'Byxor', meta: 'modeller', image: '/images/kategorier/arbetsbyxor.webp' },
-  { url: 'arbetsjackor', slot: 'c4', title: 'Jackor', meta: 'modeller', image: '/images/kategorier/arbetsjackor.webp' }
+  { url: 'arbetsbyxor', slot: 'c3', title: 'Byxor', image: '/images/kategorier/arbetsbyxor.webp' },
+  { url: 'arbetsjackor', slot: 'c4', title: 'Jackor', image: '/images/kategorier/arbetsjackor.webp' }
 ]);
 
 // …resten som indexrader
@@ -49,7 +48,6 @@ const featured = [
   ...productsIn('arbetsskor').slice(0, 1)
 ].filter((p, i, a) => a.findIndex((x) => x.slug === p.slug) === i);
 
-const pad = (n: number) => String(n).padStart(2, '0');
 const mapQuery = encodeURIComponent(`${site.address.street}, ${site.address.postalCode} ${site.address.city}`);
 const DAY_LONG: Record<string, string> = { 'Mån–tors': 'Måndag–torsdag', Fredag: 'Fredag', 'Lör–sön': 'Lördag–söndag' };
 const [weekdays, friday] = site.hours;
@@ -102,7 +100,7 @@ const [weekdays, friday] = site.hours;
     <div class="container strip__in">
       <a href="#butik">{site.address.street}<small>{site.address.postalCode} {site.address.city} · Butik &amp; showroom</small></a>
       <a href="#butik">{weekdays.days} {weekdays.time}<small>{friday.days} {friday.time} · helger stängt</small></a>
-      <a href="/tryck-och-brodyr/">Eget tryck &amp; brodyr<small>I huset, inte på entreprenad</small></a>
+      <a href="/tryck-och-brodyr/">Eget tryck &amp; brodyr</a>
     </div>
   </div>
 
@@ -110,7 +108,6 @@ const [weekdays, friday] = site.hours;
   <section class="section">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">01</span>
         <div>
           <h2>Arbetskläder</h2>
           <p class="shead__lead">
@@ -126,7 +123,6 @@ const [weekdays, friday] = site.hours;
             <figure><img src={c.image} alt="" loading="lazy" /></figure>
             <div class="cat__cap">
               <h3>{c.title}</h3>
-              <span>{c.n} {c.meta}</span>
             </div>
             {c.text && <p>{c.text}</p>}
           </a>
@@ -136,9 +132,8 @@ const [weekdays, friday] = site.hours;
       <nav class="index" aria-label="Fler arbetskläder">
         {workIndex.map((c, i) => (
           <a href={`/${c.url}/`}>
-            <b>{pad(i + 1)}</b>
             <strong>{c.cat.name}</strong>
-            <i>{c.note} · {c.n} st</i>
+            <i>{c.note}</i>
             <svg width="22" height="22" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" /></svg>
           </a>
         ))}
@@ -149,7 +144,7 @@ const [weekdays, friday] = site.hours;
           <h3>Ett urval</h3>
           <p class="muted">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas kataloger.</p>
         </div>
-        <ProductGrid products={featured} eagerCount={0} />
+        <ProductGrid products={featured} eagerCount={0} note="Begär offert" />
       </div>
     </div>
   </section>
@@ -158,7 +153,6 @@ const [weekdays, friday] = site.hours;
   <section class="section section--sunk">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">02</span>
         <div>
           <h2>Profilprodukter</h2>
           <p class="shead__lead">
@@ -174,7 +168,6 @@ const [weekdays, friday] = site.hours;
             <figure><img src={c.image} alt="" loading="lazy" style={c.pos ? `object-position:${c.pos}` : undefined} /></figure>
             <div class="cat__cap">
               <h3>{c.title}</h3>
-              <span>{c.n} produkter</span>
             </div>
           </a>
         ))}
@@ -183,14 +176,12 @@ const [weekdays, friday] = site.hours;
       <nav class="index" aria-label="Fler profilprodukter">
         {profileIndex.map((c, i) => (
           <a href={`/${c.url}/`}>
-            <b>{pad(i + 1)}</b>
             <strong>{c.cat.name}</strong>
-            <i>{c.note} · {c.n} st</i>
+            <i>{c.note}</i>
             <svg width="22" height="22" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" /></svg>
           </a>
         ))}
         <a href="/tryck-och-brodyr/">
-          <b>{pad(profileIndex.length + 1)}</b>
           <strong>Tryck &amp; brodyr</strong>
           <i>Så funkar det, filformat och priser</i>
           <svg width="22" height="22" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square" /></svg>
@@ -203,13 +194,11 @@ const [weekdays, friday] = site.hours;
   <section class="section">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">03</span>
         <div><h2>Så går det till</h2></div>
       </header>
       <ol class="steps">
-        {site.steps.map((s: any, i: number) => (
+        {site.steps.map((s: any) => (
           <li>
-            <span class="steps__n">{pad(i + 1)}</span>
             <h3>{s.title}</h3>
             <p>{s.text}</p>
           </li>
@@ -222,7 +211,6 @@ const [weekdays, friday] = site.hours;
   <section class="section people">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">04</span>
         <div><h2>Personlig service</h2></div>
       </header>
       <div class="people__in">
@@ -231,7 +219,7 @@ const [weekdays, friday] = site.hours;
         ) : staging ? (
           <div class="ph">
             <span class="ph__tag">Platshållare – syns bara på testsajten</span>
-            Foto på er i butiken.<br />Riktigt foto, inte stockbild – det enskilt starkaste förtroendegreppet på sidan.
+            Foto på er i butiken.
           </div>
         ) : null}
         <div class="people__copy">
@@ -259,7 +247,7 @@ const [weekdays, friday] = site.hours;
             ) : (
               <div><b>1 dag</b><span>Svar på offert</span></div>
             )}
-            <div><b>{site.brands.length}</b><span>Varumärken</span></div>
+            <div><b>35+</b><span>Varumärken</span></div>
             <div><b>0</b><span>Mellanhänder på tryck &amp; brodyr</span></div>
           </div>
         </div>
@@ -271,7 +259,6 @@ const [weekdays, friday] = site.hours;
   <section class="section brands">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">05</span>
         <div>
           <h2>Märkena</h2>
           <p class="shead__lead">Leverantörer vi jobbar med. Saknas ert favoritmärke? Fråga – vi har fler.</p>
@@ -287,7 +274,6 @@ const [weekdays, friday] = site.hours;
   <section class="section section--sunk visit" id="butik">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">06</span>
         <div><h2>Kom förbi</h2></div>
       </header>
       <div class="visit__in">
@@ -324,7 +310,6 @@ const [weekdays, friday] = site.hours;
   <section class="section" id="offert">
     <div class="container">
       <header class="shead">
-        <span class="shead__num">07</span>
         <div><h2>Begär offert</h2></div>
       </header>
       <div class="quote">
@@ -404,7 +389,6 @@ const [weekdays, friday] = site.hours;
     border-bottom: var(--rule); padding: .85rem 0 .7rem;
   }
   .cat h3 { font-size: clamp(1.7rem, 1.4rem + 1vw, 2.2rem); font-weight: 800; text-transform: uppercase; line-height: 1; }
-  .cat__cap span { font-size: .88rem; color: var(--ink-2); white-space: nowrap; }
   .cat p { font-size: .95rem; color: var(--ink-2); margin-top: .7rem; max-width: 38ch; }
   .c1 { grid-column: 1 / 8; } .c1 figure { aspect-ratio: 4 / 3.1; }
   .c2 { grid-column: 8 / 13; margin-top: 7rem; } .c2 figure { aspect-ratio: 4 / 5; }
@@ -419,12 +403,11 @@ const [weekdays, friday] = site.hours;
   /* Indexrader */
   .index { margin-top: 4rem; border-top: var(--rule); }
   .index a {
-    display: grid; grid-template-columns: 7.5rem 1fr auto 2rem; align-items: center; gap: 1rem;
+    display: grid; grid-template-columns: 1fr auto 2rem; align-items: center; gap: 1rem;
     padding: 1.05rem 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
     text-decoration: none; transition: background-color .15s, padding .2s;
   }
   .index a:hover { background: var(--amber); padding-inline: 1rem; }
-  .index b { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; }
   .index strong { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.7rem, 1.3rem + 1.4vw, 2.4rem); line-height: 1; }
   .index i { font-style: normal; font-size: .9rem; color: var(--ink-2); }
   .index svg { justify-self: end; }
@@ -438,8 +421,7 @@ const [weekdays, friday] = site.hours;
   .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: var(--rule); }
   .steps li { padding: 1.3rem 1.4rem 0 0; }
   .steps li + li { border-left: 1px solid var(--line); padding-left: 1.4rem; }
-  .steps__n { font-family: var(--font-display); font-weight: 800; font-size: 3.4rem; line-height: 1; color: var(--amber); -webkit-text-stroke: 1.5px var(--ink); }
-  .steps h3 { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin: .9rem 0 .5rem; }
+  .steps h3 { font-size: 1.6rem; font-weight: 800; text-transform: uppercase; margin: 0 0 .5rem; }
   .steps p { color: var(--ink-2); font-size: .95rem; }
 
   /* Personlig service ----------------------------------------------------- */
@@ -522,7 +504,7 @@ const [weekdays, friday] = site.hours;
     .cats, .pcats { grid-template-columns: 1fr; gap: 2.4rem; }
     .c1, .c2, .c3, .c4, .p1, .p2, .p3 { grid-column: auto; grid-row: auto; margin-top: 0; }
     .c2 figure, .p1 figure { aspect-ratio: 4 / 3.4; }
-    .index a { grid-template-columns: 2.6rem 1fr 1.6rem; }
+    .index a { grid-template-columns: 1fr 1.6rem; }
     .index i { display: none; }
     .people__in, .visit__in { grid-template-columns: 1fr; }
     .visit__map { border-left: 0; border-top: var(--rule); min-height: 320px; }

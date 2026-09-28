@@ -105,14 +105,13 @@ p { text-wrap: pretty; }
 .grid { display: grid; gap: clamp(1rem, .6rem + 1.4vw, 1.75rem); }
 .cluster { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
 
-/* Numrerad sektionsrubrik: linje, nummer, versal rubrik */
+/* Sektionsrubrik: linje + versal rubrik */
 .shead {
-  display: grid; grid-template-columns: 7.5rem 1fr; align-items: start;
+  display: block;
   border-top: var(--rule); padding-top: 1.1rem; margin-bottom: clamp(2rem, 1.4rem + 2vw, 3.2rem);
 }
 .shead__num { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; line-height: 1; padding-top: .35rem; }
 .shead__lead { margin-top: 1rem; max-width: 54ch; color: var(--ink-2); }
-@media (max-width: 640px) { .shead { grid-template-columns: 2.6rem 1fr; } }
 
 .eyebrow {
   font-family: var(--font-body);

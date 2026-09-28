@@ -1,8 +1,8 @@
 ---
 import ProductImage from './ProductImage.astro';
 import type { Product } from '../lib/content';
-interface Props { product: Product; eager?: boolean }
-const { product: p, eager = false } = Astro.props;
+interface Props { product: Product; eager?: boolean; note?: string }
+const { product: p, eager = false, note } = Astro.props;
 const colors = p.variants.map((v) => v.color).filter(Boolean) as string[];
 ---
 <article class="card">
@@ -14,7 +14,9 @@ const colors = p.variants.map((v) => v.color).filter(Boolean) as string[];
       {p.brand && <span class="card__brand">{p.brand}</span>}
       <h3 class="card__title">{p.name}</h3>
       <div class="card__foot">
-        {colors.length > 1 ? (
+        {note ? (
+          <span class="card__note">{note}</span>
+        ) : colors.length > 1 ? (
           <span class="card__note">{colors.length} färger</span>
         ) : p.sku ? (
           <span class="card__note">Art.nr {p.sku}</span>
