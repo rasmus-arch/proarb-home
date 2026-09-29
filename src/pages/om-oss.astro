@@ -75,10 +75,10 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Om oss', href: '/om-oss/' }
       </div>
       <div class="find__map">
         <iframe
-          title="Karta till Proarb"
+          title={`Karta till ${site.legalName}`}
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          src={`https://www.openstreetmap.org/export/embed.html?bbox=16.49%2C59.36%2C16.53%2C59.38&layer=mapnik`}
+          src={`https://www.google.com/maps?q=${encodeURIComponent(site.address.street + ', ' + site.address.postalCode + ' ' + site.address.city)}&output=embed`}
         ></iframe>
       </div>
     </div>
