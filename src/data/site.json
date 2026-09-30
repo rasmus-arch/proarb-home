@@ -83,13 +83,14 @@
     "D&J",
     "D.A.D Sportswear",
     "Derby of Sweden",
+    "Fristads",
     "Graphix",
     "Harvest & Frost",
+    "Harvest Sportswear",
     "Helly Hansen",
     "ID Identity",
     "Jalas",
     "James & Nicholson",
-    "Harvest Sportswear",
     "Jobman",
     "Kosta Linnewäveri",
     "Lord Nelson",
@@ -103,6 +104,7 @@
     "Salomon",
     "Sievi",
     "Skechers",
+    "Snickers",
     "Solstickan Design",
     "TeeJays",
     "Tegera",
@@ -187,11 +189,180 @@
   "about": {
     "founded": "2000",
     "photo": "",
-    "quote": {
-      "text": "Man ringer, och sen är det löst. Så har det varit sedan första beställningen.",
-      "name": "Rasmus",
-      "company": "Näshultakök",
-      "label": "Helhetskund arbetskläder"
+    "reviews": [
+      {
+        "text": "Man ringer, och sen är det löst. Så har det varit sedan första beställningen.",
+        "name": "Rasmus",
+        "company": "Näshultakök",
+        "label": "Helhetskund arbetskläder"
+      },
+      {
+        "text": "Nichlas är kung på kundservice!",
+        "name": "Mathias Zingmark",
+        "company": "",
+        "label": ""
+      },
+      {
+        "text": "Jag är otroligt nöjd med mitt besök! Butiken känns fräsch, välorganiserad och har ett riktigt bra sortiment av arbets- och profilkläder samt tillbehör. Personal är väldigt trevlig, kunnig och tar sig verkligen tid att hjälpa till så att man hittar rätt produkter. Det märks att de bryr sig om sina kunder och erbjuder en personlig service som är svår att hitta idag. Det enda jag skulle önska är ett lite större utbud av sockerfria läskalternativ i drickakylen - i övrigt finns det verkligen inget att klaga på! Rekommenderas varmt!",
+        "name": "Jesper Moberg",
+        "company": "",
+        "label": ""
+      },
+      {
+        "text": "Vi handlar våra arbetskläder här och är alltid väldigt nöjda. Personalen ger fantastisk service, är hjälpsamma och ser till att vi hittar rätt produkter för våra behov. Rekommenderas varmt!",
+        "name": "Rojo AB",
+        "company": "",
+        "label": ""
+      },
+      {
+        "text": "Trevlig bemötande, snabb service och bra priser",
+        "name": "Johan Rundgren",
+        "company": "",
+        "label": ""
+      },
+      {
+        "text": "Välsorterad och städad butik med bästa bemötande! Finns ett brett utbud av arbetskläder. Hit ska man gå om man vill ha personlig service och ta en kopp kaffe samtidigt som man kan köpa arbetskläder av toppenkvalitet. Rekommenderas varmt!",
+        "name": "Pauline Javalds",
+        "company": "",
+        "label": ""
+      }
+    ]
+  },
+  "featuredBrands": [
+    {
+      "name": "Helly Hansen",
+      "logo": "/images/varumarken/helly-hansen.svg"
+    },
+    {
+      "name": "Snickers",
+      "logo": ""
+    },
+    {
+      "name": "Fristads",
+      "logo": ""
+    },
+    {
+      "name": "Blåkläder",
+      "logo": ""
+    },
+    {
+      "name": "Jobman",
+      "logo": "/images/varumarken/jobman.svg"
+    },
+    {
+      "name": "Cutter & Buck",
+      "logo": ""
+    },
+    {
+      "name": "Tee Jays",
+      "aliases": [
+        "TeeJays"
+      ],
+      "logo": "/images/varumarken/teejays.svg"
     }
-  }
+  ],
+  "featured": [
+    {
+      "title": "Arbetskläder",
+      "href": "/arbetsklader/",
+      "items": [
+        {
+          "slug": "hellyhansen-chelsea-evolution-2-0-vinterjacka",
+          "name": "Helly Hansen jacka",
+          "brand": "Helly Hansen",
+          "detail": "Art.nr 71341 · Black",
+          "image": ""
+        },
+        {
+          "slug": "",
+          "name": "Helly Hansen byxa",
+          "brand": "Helly Hansen",
+          "detail": "Art.nr 77381 · Black",
+          "image": ""
+        },
+        {
+          "slug": "",
+          "name": "Snickers byxa",
+          "brand": "Snickers",
+          "detail": "Art.nr 6218 · Black/black",
+          "image": ""
+        },
+        {
+          "slug": "",
+          "name": "Snickers 8041",
+          "brand": "Snickers",
+          "detail": "Colour 3104 · Khaki/svart",
+          "image": ""
+        }
+      ]
+    },
+    {
+      "title": "Profilkläder",
+      "href": "/ovriga-profilklader/",
+      "items": [
+        {
+          "slug": "teejays-fashion-full-zip-hood",
+          "name": "Tee Jays hoodie",
+          "brand": "Tee Jays",
+          "detail": "Art.nr 5435 · Black",
+          "image": ""
+        },
+        {
+          "slug": "teejays-luxury-stretch-polo",
+          "name": "Tee Jays piké",
+          "brand": "Tee Jays",
+          "detail": "Art.nr 1405 · Olivgrön",
+          "image": ""
+        },
+        {
+          "slug": "",
+          "name": "Cutter & Buck Wedderburn jacka",
+          "brand": "Cutter & Buck",
+          "detail": "Art.nr 351472 · Ivy green",
+          "image": ""
+        },
+        {
+          "slug": "cutter-buck-oak-harbor-vest-men",
+          "name": "Cutter & Buck Oak Harbor väst",
+          "brand": "Cutter & Buck",
+          "detail": "Art.nr 351476 · Marinblå",
+          "image": ""
+        }
+      ]
+    },
+    {
+      "title": "Profilprodukter",
+      "href": "/profilprodukter/",
+      "items": [
+        {
+          "slug": "",
+          "name": "Vinga korkskruv med tryck",
+          "brand": "Vinga",
+          "detail": "Art.nr P911.051",
+          "image": ""
+        },
+        {
+          "slug": "",
+          "name": "Trucker 5.0 Special",
+          "brand": "New Wave",
+          "detail": "Art.nr 040144184",
+          "image": ""
+        },
+        {
+          "slug": "",
+          "name": "Termosmugg svart",
+          "brand": "D&J · Lord Nelson",
+          "detail": "Art.nr 411058",
+          "image": ""
+        },
+        {
+          "slug": "vattenflaska-60-cl",
+          "name": "Vattenflaska transparent",
+          "brand": "D&J · Lord Nelson",
+          "detail": "Art.nr 410857",
+          "image": ""
+        }
+      ]
+    }
+  ]
 }

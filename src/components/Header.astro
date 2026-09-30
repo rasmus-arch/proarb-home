@@ -1,5 +1,4 @@
 ---
-import Logo from './Logo.astro';
 import { site } from '../lib/content';
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || (href !== '/' && path.startsWith(href));
@@ -9,7 +8,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 
 <header class="hdr" id="hdr">
   <div class="container hdr__in">
-    <a href="/" class="hdr__logo" aria-label="Proarb – till startsidan"><Logo /></a>
+    <a href="/" class="hdr__logo" aria-label="Profil & Arbetskläder – till startsidan"><img class="wordmark" src="/images/logo-lang.svg" alt="Profil & Arbetskläder" width="693" height="100" /></a>
 
     <nav class="nav" aria-label="Huvudmeny">
       <ul class="nav__list">
@@ -54,7 +53,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
 <div class="drawer" id="drawer" hidden>
   <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="Meny">
     <div class="drawer__top">
-      <Logo compact />
+      <img class="wordmark wordmark--sm" src="/images/logo-lang.svg" alt="Profil & Arbetskläder" width="693" height="100" />
       <button class="iconbtn" type="button" data-menu-close aria-label="Stäng meny">
         <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
       </button>
@@ -83,8 +82,9 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     border-bottom: var(--rule);
   }
   .hdr__in { display: flex; align-items: center; gap: 2rem; min-height: 4.75rem; }
-  .hdr__logo { text-decoration: none; margin-right: auto; display: block; }
-  .hdr__logo :global(.logo__mark) { height: 3.3rem; }
+  .hdr__logo { text-decoration: none; margin-right: auto; display: block; flex: 0 1 auto; min-width: 0; }
+  .wordmark { display: block; height: 2.5rem; width: auto; max-width: 100%; object-fit: contain; object-position: left center; }
+  .wordmark--sm { height: 1.9rem; }
 
   .nav { align-self: stretch; display: flex; }
   .nav__list { display: flex; gap: 1.6rem; list-style: none; padding: 0; margin: 0; }
@@ -150,11 +150,15 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     .nav { display: none; }
     .menubtn { display: inline-flex; }
     .hdr__in { gap: 1rem; }
-    .hdr__logo :global(.logo__mark) { height: 3rem; }
+    .wordmark { height: auto; width: 15.5rem; }
   }
   @media (max-width: 480px) {
-    .hdr__cta { padding-inline: .8rem; font-size: .95rem; }
-    .menubtn { padding-inline: .7rem; }
+    .hdr__in { gap: .5rem; min-height: 4.2rem; }
+    .hdr__logo { flex: 1 1 0; }
+    .wordmark { width: 100%; max-width: 15.5rem; }
+    .hdr__actions { gap: .4rem; }
+    .hdr__cta { padding-inline: .65rem; font-size: .92rem; }
+    .menubtn { padding-inline: .6rem; font-size: .92rem; }
   }
 
   .drawer { position: fixed; inset: 0; z-index: 100; background: rgba(15, 44, 51, .5); }

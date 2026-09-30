@@ -1,13 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProductGrid from '../components/ProductGrid.astro';
+import ProductImage from '../components/ProductImage.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import { site, productsIn, categoryByUrl } from '../lib/content';
+import { site, products, categoryByUrl } from '../lib/content';
 
 const UPLOADS = 'https://proarb.se/wp-content/uploads/2026/04/';
 const staging = process.env.STAGING === '1';
 const about = (site as any).about ?? {};
-const quote = about.quote ?? {};
+const reviews: { text: string; name: string; company?: string; label?: string }[] = about.reviews ?? [];
 
 const withCat = <T extends { url: string }>(items: T[]) =>
   items.map((item) => ({ ...item, cat: categoryByUrl(item.url)! }));
@@ -41,12 +41,19 @@ const profileIndex = withCat([
   { url: 'profilskjortor', note: 'Till kontoret och kassan' }
 ]);
 
-const featured = [
-  ...productsIn('arbetsjackor').slice(0, 1),
-  ...productsIn('arbetsbyxor').slice(0, 1),
-  ...productsIn('varselklader').slice(0, 1),
-  ...productsIn('arbetsskor').slice(0, 1)
-].filter((p, i, a) => a.findIndex((x) => x.slug === p.slug) === i);
+// Utvalda produkter – tre grupper, styrs från site.json (featured)
+const featuredGroups = ((site as any).featured ?? []).map((g: any) => ({
+  ...g,
+  items: g.items.map((it: any) => {
+    const product = it.slug ? products.find((x) => x.slug === it.slug) : undefined;
+    return { ...it, product, href: product ? `/produkt/${product.slug}/` : '/kontakt/' };
+  })
+}));
+
+// Varumärken: utvalda med logga, resten som text
+const featuredBrands: { name: string; logo?: string; aliases?: string[] }[] = (site as any).featuredBrands ?? [];
+const featuredNames = new Set(featuredBrands.flatMap((b) => [b.name, ...(b.aliases ?? [])].map((n) => n.toLowerCase())));
+const otherBrands = site.brands.filter((b: string) => !featuredNames.has(b.toLowerCase()));
 
 const mapQuery = encodeURIComponent(`${site.address.street}, ${site.address.postalCode} ${site.address.city}`);
 const DAY_LONG: Record<string, string> = { 'Mån–tors': 'Måndag–torsdag', Fredag: 'Fredag', 'Lör–sön': 'Lördag–söndag' };
@@ -138,14 +145,6 @@ const [weekdays, friday] = site.hours;
           </a>
         ))}
       </nav>
-
-      <div class="picks">
-        <div class="picks__head">
-          <h3>Ett urval</h3>
-          <p class="muted">Sajten visar en del av sortimentet. Hittar ni inte rätt plagg tar vi fram det ur leverantörernas kataloger.</p>
-        </div>
-        <ProductGrid products={featured} eagerCount={0} note="Begär offert" />
-      </div>
     </div>
   </section>
 
@@ -190,8 +189,56 @@ const [weekdays, friday] = site.hours;
     </div>
   </section>
 
-  <!-- 03 Så går det till -->
-  <section class="section">
+  <!-- Utvalda produkter -->
+  <section class="section picks">
+    <div class="container">
+      <header class="shead">
+        <div>
+          <h2>Utvalda produkter</h2>
+          <p class="shead__lead">
+            Ett axplock av det vi säljer mest av. Alla plagg går att få med ert tryck eller
+            er brodyr – be om pris så återkommer vi inom en arbetsdag.
+          </p>
+        </div>
+      </header>
+
+      {featuredGroups.map((g: any) => (
+        <div class="pgroup">
+          <div class="pgroup__head">
+            <h3>{g.title}</h3>
+            <a class="link-arrow" href={g.href}>Se alla <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg></a>
+          </div>
+          <ul class="pgroup__list">
+            {g.items.map((it: any) => (
+              <li>
+                <a class="fp" href={it.href}>
+                  <div class={`fp__media${it.image || it.product?.image ? '' : ' fp__media--empty'}`}>
+                    {it.image ? (
+                      <img src={it.image} alt={it.name} loading="lazy" />
+                    ) : it.product?.image ? (
+                      <ProductImage file={it.product.file} src={it.product.image} alt={it.name} sizes="(max-width: 700px) 70vw, 300px" class="fp__img" />
+                    ) : (
+                      <span class="fp__ph" aria-hidden="true">{it.brand}</span>
+                    )}
+                    {staging && !it.image && !it.product?.image && <span class="fp__tag">Bild saknas</span>}
+                  </div>
+                  <div class="fp__body">
+                    <span class="fp__brand">{it.brand}</span>
+                    <h4>{it.name}</h4>
+                    <span class="fp__detail">{it.detail}</span>
+                    <span class="fp__cta">Begär offert <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg></span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Så går det till -->
+  <section class="section section--sunk">
     <div class="container">
       <header class="shead">
         <div><h2>Så går det till</h2></div>
@@ -223,16 +270,32 @@ const [weekdays, friday] = site.hours;
           </div>
         ) : null}
         <div class="people__copy">
-          {quote.text ? (
-            <figure>
-              <blockquote class="pquote">{quote.text}</blockquote>
-              <figcaption class="pquote__by">— {quote.name}{quote.company && `, ${quote.company}`}{quote.label && <span class="pquote__tag">{quote.label}</span>}</figcaption>
-            </figure>
-          ) : staging ? (
-            <figure>
-              <blockquote class="pquote">Man ringer, och sen är det löst. Så har det varit sedan första beställningen.</blockquote>
-              <figcaption class="pquote__by">— [Namn], [Kund i Eskilstuna] <span class="ph__tag">Exempeltext – byt mot riktigt citat</span></figcaption>
-            </figure>
+          {reviews.length ? (
+            <div class="rv" data-reviews aria-roledescription="karusell" aria-label="Kundomdömen">
+              <div class="rv__stage">
+                {reviews.map((r, i) => (
+                  <figure class={`rv__item${i === 0 ? ' is-active' : ''}`} aria-hidden={i === 0 ? undefined : 'true'} data-i={i}>
+                    <blockquote class={`pquote${r.text.length > 170 ? ' pquote--long' : r.text.length > 90 ? ' pquote--mid' : ''}`}>{r.text}</blockquote>
+                    <figcaption class="pquote__by">— {r.name}{r.company && `, ${r.company}`}{r.label && <span class="pquote__tag">{r.label}</span>}</figcaption>
+                  </figure>
+                ))}
+              </div>
+              {reviews.length > 1 && (
+                <div class="rv__nav">
+                  <button class="rv__btn" type="button" data-rv-prev aria-label="Föregående omdöme">
+                    <svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M12 7H2M6 3 2 7l4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg>
+                  </button>
+                  <div class="rv__dots">
+                    {reviews.map((r, i) => (
+                      <button type="button" class={`rv__dot${i === 0 ? ' is-active' : ''}`} data-rv-dot={i} aria-label={`Visa omdöme ${i + 1} av ${reviews.length}`}></button>
+                    ))}
+                  </div>
+                  <button class="rv__btn" type="button" data-rv-next aria-label="Nästa omdöme">
+                    <svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg>
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <p class="pquote">
               Ingen kundtjänstkö. Ni når oss direkt på telefon, får svar samma dag
@@ -264,8 +327,15 @@ const [weekdays, friday] = site.hours;
           <p class="shead__lead">Leverantörer vi jobbar med. Saknas ert favoritmärke? Fråga – vi har fler.</p>
         </div>
       </header>
-      <ul class="brands__list" aria-label="Varumärken vi jobbar med">
-        {site.brands.map((b: string) => <li>{b}</li>)}
+      <ul class="blogos" aria-label="Våra största varumärken">
+        {featuredBrands.map((b) => (
+          <li class="blogos__item">
+            {b.logo ? <img src={b.logo} alt={b.name} loading="lazy" /> : <span class="blogos__word">{b.name}</span>}
+          </li>
+        ))}
+      </ul>
+      <ul class="brands__list" aria-label="Fler varumärken vi jobbar med">
+        {otherBrands.map((b: string) => <li>{b}</li>)}
       </ul>
     </div>
   </section>
@@ -338,7 +408,7 @@ const [weekdays, friday] = site.hours;
   /* Hero ------------------------------------------------------------------ */
   .hero { position: relative; background: var(--petrol-deep); }
   .hero__img {
-    width: 100%; height: min(80vh, 780px); min-height: 520px;
+    width: 100%; height: min(66vh, 640px); min-height: 440px;
     object-fit: cover; object-position: 30% 40%;
   }
   .hero__type {
@@ -421,10 +491,51 @@ const [weekdays, friday] = site.hours;
   .index i { font-style: normal; font-size: .9rem; color: var(--ink-2); }
   .index svg { justify-self: end; }
 
-  .picks { margin-top: clamp(3.5rem, 2.5rem + 3vw, 5.5rem); }
-  .picks__head { display: flex; justify-content: space-between; align-items: baseline; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
-  .picks__head h3 { font-size: var(--step-2); font-weight: 800; text-transform: uppercase; }
-  .picks__head p { max-width: 52ch; font-size: .95rem; }
+  /* Utvalda produkter */
+  .pgroup + .pgroup { margin-top: clamp(2.8rem, 2rem + 2.5vw, 4.2rem); }
+  .pgroup__head {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+    border-bottom: var(--rule); padding-bottom: .7rem; margin-bottom: 1.2rem;
+  }
+  .pgroup__head h3 { font-size: clamp(1.7rem, 1.3rem + 1.2vw, 2.3rem); font-weight: 800; text-transform: uppercase; line-height: 1; }
+  .pgroup__head .link-arrow { font-size: .92rem; white-space: nowrap; }
+  .pgroup__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(.8rem, .5rem + 1vw, 1.4rem); }
+  .fp { display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; }
+  .fp__media {
+    position: relative; aspect-ratio: 4 / 5; background: var(--bg-raised);
+    border: 1px solid var(--line); overflow: hidden; display: grid; place-items: center;
+    transition: border-color .15s;
+  }
+  .fp__media img, .fp__media :global(.fp__img) {
+    width: 100%; height: 100%; object-fit: contain; padding: 9%; mix-blend-mode: multiply;
+    transition: transform .5s cubic-bezier(.2, .8, .3, 1);
+  }
+  .fp__media--empty {
+    background: var(--petrol);
+    background-image: repeating-linear-gradient(135deg, transparent 0 18px, rgba(255, 255, 255, .04) 18px 19px);
+    border-color: var(--petrol);
+  }
+  .fp__ph {
+    font-family: var(--font-display); font-weight: 800; text-transform: uppercase; text-align: center;
+    font-size: clamp(1.5rem, 1.1rem + 1vw, 2rem); line-height: .95; color: var(--paper); padding: 1rem;
+  }
+  .fp__tag {
+    position: absolute; left: .6rem; top: .6rem; background: var(--amber); color: var(--ink);
+    font-size: .66rem; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; padding: 2px 6px;
+  }
+  .fp__body { display: flex; flex-direction: column; gap: .25rem; padding-top: .85rem; flex: 1; }
+  .fp__brand { font-size: .72rem; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+  .fp__body h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 600; line-height: 1.3; text-transform: none; }
+  .fp__detail { font-size: .86rem; color: var(--ink-2); }
+  .fp__cta {
+    margin-top: auto; padding-top: .7rem; display: inline-flex; align-items: center; gap: .4rem;
+    font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: .03em; text-transform: uppercase;
+  }
+  .fp__cta svg { transition: transform .2s; }
+  .fp:hover .fp__media { border-color: var(--ink); }
+  .fp:hover .fp__media img, .fp:hover .fp__media :global(.fp__img) { transform: scale(1.04); }
+  .fp:hover .fp__cta svg { transform: translateX(3px); }
+  .fp:hover h4 { text-decoration: underline; text-underline-offset: .18em; }
 
   /* Steg ------------------------------------------------------------------ */
   .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); border-top: var(--rule); }
@@ -450,6 +561,28 @@ const [weekdays, friday] = site.hours;
   }
   .pquote { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1.3rem + 2.2vw, 3.2rem); line-height: 1.05; }
   blockquote.pquote::before, blockquote.pquote::after { content: '”'; color: var(--amber); }
+  .pquote--mid { font-size: clamp(1.6rem, 1.15rem + 1.5vw, 2.4rem); line-height: 1.1; }
+  .pquote--long { font-family: var(--font-body); font-weight: 400; font-size: clamp(1.05rem, .95rem + .45vw, 1.3rem); line-height: 1.55; }
+  .pquote--long::before, .pquote--long::after { font-family: var(--font-display); font-weight: 700; font-size: 1.6em; line-height: 0; vertical-align: -.3em; }
+  .rv__stage { display: grid; }
+  .rv__item {
+    grid-area: 1 / 1; align-self: center; opacity: 0; visibility: hidden; transform: translateY(10px);
+    transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .3, 1), visibility 0s linear .6s;
+  }
+  .rv__item.is-active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .rv__nav { display: flex; align-items: center; gap: .9rem; margin-top: 1.8rem; }
+  .rv__btn {
+    display: grid; place-items: center; width: 2.6rem; height: 2.6rem; flex: none;
+    background: transparent; color: var(--paper); border: 1.5px solid color-mix(in srgb, var(--paper) 55%, transparent);
+    border-radius: var(--r); cursor: pointer; transition: background-color .15s, color .15s, border-color .15s;
+  }
+  .rv__btn:hover { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+  .rv__dots { display: flex; gap: .45rem; }
+  .rv__dot {
+    width: 1.6rem; height: 4px; padding: 0; border: 0; cursor: pointer;
+    background: color-mix(in srgb, var(--paper) 30%, transparent); transition: background-color .2s, width .3s;
+  }
+  .rv__dot.is-active { background: var(--amber); width: 2.6rem; }
   .pquote__by { margin-top: 1.4rem; font-size: .95rem; color: color-mix(in srgb, var(--paper) 75%, transparent); }
   .pquote__tag {
     display: inline-block; margin-left: .5rem; background: var(--amber); color: var(--ink); font-size: .7rem; font-weight: 650;
@@ -462,6 +595,23 @@ const [weekdays, friday] = site.hours;
   .facts span { font-size: .9rem; }
 
   /* Märken ---------------------------------------------------------------- */
+  .blogos {
+    list-style: none; padding: 0; margin: 0 0 clamp(2rem, 1.5rem + 1.5vw, 3rem);
+    display: grid; grid-template-columns: repeat(7, 1fr); border-top: var(--rule); border-left: var(--rule);
+  }
+  .blogos__item {
+    display: grid; place-items: center; height: clamp(6rem, 4.5rem + 3vw, 8rem); padding: 1rem;
+    border-right: var(--rule); border-bottom: var(--rule); background: var(--bg-raised);
+  }
+  .blogos__item img {
+    max-width: 82%; max-height: 3.6rem; width: auto; height: auto; object-fit: contain;
+    filter: grayscale(1) contrast(1.15); mix-blend-mode: multiply; transition: filter .25s;
+  }
+  .blogos__item:hover img { filter: none; }
+  .blogos__word {
+    font-family: var(--font-display); font-weight: 800; text-transform: uppercase; text-align: center;
+    font-size: clamp(1.15rem, .9rem + .7vw, 1.55rem); line-height: .95; letter-spacing: .01em;
+  }
   .brands__list {
     list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap;
     font-family: var(--font-display); font-weight: 700; text-transform: uppercase;
@@ -500,6 +650,9 @@ const [weekdays, friday] = site.hours;
   .quote__alt a { font-weight: 600; color: var(--ink); }
 
   /* Responsivt ------------------------------------------------------------ */
+  @media (max-width: 1100px) {
+    .blogos { grid-template-columns: repeat(4, 1fr); }
+  }
   @media (max-width: 1000px) {
     .steps { grid-template-columns: 1fr 1fr; }
     .steps li:nth-child(3) { border-left: 0; padding-left: 0; }
@@ -507,7 +660,7 @@ const [weekdays, friday] = site.hours;
     .quote { grid-template-columns: 1fr; }
   }
   @media (max-width: 860px) {
-    .hero__img { height: 74vh; min-height: 460px; object-position: 38% 30%; }
+    .hero__img { height: 56vh; min-height: 360px; object-position: 38% 30%; }
     .hero__type { position: static; margin-top: -10rem; background: none; }
     .hero__in { flex-direction: column; align-items: stretch; gap: 0; padding-inline: 0; }
     .hero h1 { padding-inline: var(--gutter); padding-bottom: 1.4rem; }
@@ -523,7 +676,17 @@ const [weekdays, friday] = site.hours;
     .visit__map { border-left: 0; border-top: var(--rule); min-height: 320px; }
     .visit__map iframe { min-height: 320px; }
   }
+  @media (max-width: 860px) {
+    .pgroup__list {
+      grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 62%;
+      overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+      margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+    }
+    .pgroup__list::-webkit-scrollbar { display: none; }
+    .pgroup__list > li { scroll-snap-align: start; }
+  }
   @media (max-width: 560px) {
+    .blogos { grid-template-columns: repeat(2, 1fr); }
     .steps { grid-template-columns: 1fr; }
     .steps li + li { border-left: 0; padding-left: 0; margin-top: 1.4rem; border-top: 1px solid var(--line); }
     .facts { grid-template-columns: 1fr; }
@@ -542,4 +705,33 @@ const [weekdays, friday] = site.hours;
     );
     document.querySelectorAll('.cat').forEach((el) => io.observe(el));
   }
+</script>
+
+<script>
+  // Kundomdömen: roterar automatiskt, pausar vid hovring/fokus och när man själv bläddrar
+  document.querySelectorAll<HTMLElement>('[data-reviews]').forEach((root) => {
+    const items = [...root.querySelectorAll<HTMLElement>('.rv__item')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-rv-dot]')];
+    if (items.length < 2) return;
+    let i = 0;
+    let timer: number | undefined;
+    const show = (n: number) => {
+      i = (n + items.length) % items.length;
+      items.forEach((el, k) => {
+        el.classList.toggle('is-active', k === i);
+        if (k === i) el.removeAttribute('aria-hidden'); else el.setAttribute('aria-hidden', 'true');
+      });
+      dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
+    };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stop = () => { if (timer) window.clearInterval(timer); timer = undefined; };
+    const start = () => { if (!reduce && !timer) timer = window.setInterval(() => show(i + 1), 7000); };
+    root.querySelector('[data-rv-prev]')?.addEventListener('click', () => { stop(); show(i - 1); });
+    root.querySelector('[data-rv-next]')?.addEventListener('click', () => { stop(); show(i + 1); });
+    dots.forEach((d, k) => d.addEventListener('click', () => { stop(); show(k); }));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    start();
+  });
 </script>
