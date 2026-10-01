@@ -239,19 +239,19 @@
     },
     {
       "name": "Fristads",
-      "logo": ""
+      "logo": "/images/varumarken/fristads.png"
     },
     {
       "name": "Blåkläder",
-      "logo": ""
+      "logo": "/images/varumarken/blaklader.webp"
     },
     {
       "name": "Jobman",
-      "logo": "/images/varumarken/jobman.svg"
+      "logo": "/images/varumarken/jobman.webp"
     },
     {
       "name": "Cutter & Buck",
-      "logo": ""
+      "logo": "/images/varumarken/cutter-buck.webp"
     },
     {
       "name": "Tee Jays",
