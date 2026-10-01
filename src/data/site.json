@@ -337,24 +337,29 @@
       "items": [
         {
           "slug": "",
-          "name": "Vinga korkskruv med tryck",
+          "name": "Vino kyparkorkskruv",
           "brand": "Vinga",
-          "detail": "Art.nr P911.051",
-          "image": ""
+          "detail": "Art.nr P911.051 · Svart",
+          "image": "/images/utvalda/vinga-korkskruv-p911051.webp",
+          "text": "Klassisk kyparkorkskruv i rostfritt stål och kolstål med folieskärare, tvåstegsöppnare och kapsylöppnare. Levereras i presentask. Går att få profilerad."
         },
         {
           "slug": "",
           "name": "Trucker 5.0 Special",
           "brand": "New Wave",
           "detail": "Art.nr 040144184",
-          "image": ""
+          "image": "/images/utvalda/trucker-5-special.webp",
+          "text": "Truckerkeps med nätbak. Går att få med er egen brodyr."
         },
         {
           "slug": "",
-          "name": "Termosmugg svart",
+          "name": "Termosmugg 35 cl",
           "brand": "D&J · Lord Nelson",
-          "detail": "Art.nr 411058",
-          "image": ""
+          "detail": "Art.nr 411058 · Finns i flera färger",
+          "image": "/images/utvalda/termosmugg-411058.webp",
+          "imageHover": "/images/utvalda/termosmugg-411058-miljo.webp",
+          "hoverCover": true,
+          "text": "Termosmugg i rostfritt stål med låsbart lock och D-ring för karbinhake. Dryck på 100 °C håller 71 °C efter sex timmar. Går att få profilerad."
         },
         {
           "slug": "vattenflaska-60-cl",

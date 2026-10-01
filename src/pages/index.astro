@@ -220,13 +220,14 @@ const [weekdays, friday] = site.hours;
                     ) : (
                       <span class="fp__ph" aria-hidden="true">{it.brand}</span>
                     )}
-                    {it.imageHover && <img class="fp__hover" src={it.imageHover} alt="" loading="lazy" aria-hidden="true" />}
+                    {it.imageHover && <img class={`fp__hover${it.hoverCover ? ' fp__hover--cover' : ''}`} src={it.imageHover} alt="" loading="lazy" aria-hidden="true" />}
                     {staging && !it.image && !it.product?.image && <span class="fp__tag">Bild saknas</span>}
                   </div>
                   <div class="fp__body">
                     <span class="fp__brand">{it.brand}</span>
                     <h4>{it.name}</h4>
                     <span class="fp__detail">{it.detail}</span>
+                    {it.text && <p class="fp__text">{it.text}</p>}
                     <span class="fp__cta">Begär offert <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg></span>
                   </div>
                 </a>
@@ -512,6 +513,7 @@ const [weekdays, friday] = site.hours;
     transition: transform .5s cubic-bezier(.2, .8, .3, 1);
   }
   .fp__media .fp__hover { position: absolute; inset: 0; opacity: 0; background: #fff; mix-blend-mode: normal; transition: opacity .35s ease, transform .5s cubic-bezier(.2, .8, .3, 1); }
+  .fp__media .fp__hover--cover { object-fit: cover; padding: 0; }
   .fp:hover .fp__media .fp__hover, .fp:focus-visible .fp__media .fp__hover { opacity: 1; }
   .fp__media--empty {
     background: var(--petrol);
@@ -530,6 +532,7 @@ const [weekdays, friday] = site.hours;
   .fp__brand { font-size: .72rem; font-weight: 650; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
   .fp__body h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 600; line-height: 1.3; text-transform: none; }
   .fp__detail { font-size: .86rem; color: var(--ink-2); }
+  .fp__text { font-size: .86rem; line-height: 1.5; color: var(--ink-2); margin-top: .35rem; }
   .fp__cta {
     margin-top: auto; padding-top: .7rem; display: inline-flex; align-items: center; gap: .4rem;
     font-family: var(--font-display); font-weight: 700; font-size: 1rem; letter-spacing: .03em; text-transform: uppercase;
