@@ -1,18 +1,31 @@
 ---
+import { site } from '../lib/content';
 interface Props { compact?: boolean; heading?: string }
 const { compact = false, heading = 'Få ett förslag inom en arbetsdag' } = Astro.props;
 ---
 <form
   class="qf"
+  id="offertformular"
   name="offert"
   method="POST"
   action="/send-quote.php"
+  data-quote-form
 >
+  <input type="hidden" name="sida" value={Astro.url.pathname} />
   <p class="visually-hidden">
     <label>Lämna tomt: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
   </p>
 
   {!compact && <h2 class="qf__title">{heading}</h2>}
+
+  <div class="qf__error" role="alert" data-error="1" hidden>
+    <strong>Kontrollera uppgifterna.</strong> Namn, företag och en giltig e-postadress behöver vara ifyllda.
+  </div>
+  <div class="qf__error" role="alert" data-error="2" hidden>
+    <strong>Förfrågan kunde inte skickas.</strong> Försök igen om en stund, eller ring
+    <a href={site.phoneHref}>{site.phone}</a> eller maila <a href={`mailto:${site.email}`}>{site.email}</a>.
+    Det du skrev finns kvar i formuläret.
+  </div>
 
   <div class="qf__row">
     <label class="fld">
@@ -110,4 +123,33 @@ const { compact = false, heading = 'Få ett förslag inom en arbetsdag' } = Astr
   .fld textarea { resize: vertical; }
   .qf__submit { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: .3rem; }
   .qf__fine { font-size: .82rem; color: var(--ink-3); }
+  .qf__error {
+    border-left: 4px solid #b3261e; background: #fbeae8; color: #5f1410;
+    padding: .85rem 1rem; font-size: .92rem; line-height: 1.5;
+  }
+  .qf__error a { color: inherit; font-weight: 600; }
 </style>
+
+<script>
+  // Visar felmeddelande efter ?fel=1|2 och återställer det besökaren skrev
+  // (sparas i sessionStorage vid inskick, rensas på tacksidan).
+  const KEY = 'proarb-offert';
+  document.querySelectorAll<HTMLFormElement>('[data-quote-form]').forEach((form) => {
+    const fel = new URLSearchParams(location.search).get('fel');
+    if (fel === '1' || fel === '2') {
+      form.querySelector<HTMLElement>(`[data-error="${fel}"]`)?.removeAttribute('hidden');
+      try {
+        const saved = JSON.parse(sessionStorage.getItem(KEY) || '{}');
+        for (const [name, value] of Object.entries(saved)) {
+          const field = form.elements.namedItem(name);
+          if (field && 'value' in field && name !== 'bot-field' && name !== 'sida') (field as HTMLInputElement).value = String(value);
+        }
+      } catch {}
+    }
+    form.addEventListener('submit', () => {
+      try {
+        sessionStorage.setItem(KEY, JSON.stringify(Object.fromEntries(new FormData(form) as any)));
+      } catch {}
+    });
+  });
+</script>
