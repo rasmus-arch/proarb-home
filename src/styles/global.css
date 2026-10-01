@@ -5,15 +5,15 @@
    ========================================================================== */
 
 :root {
-  --paper:         #efe9dd;
-  --paper-2:       #e6dfd0;
+  --paper:         #f6eddd;
+  --paper-2:       #efe3cf;
   --petrol:        #163d47;
   --petrol-deep:   #0f2c33;
   --amber:         #f7bd4c;
 
   --bg:            var(--paper);
   --bg-sunk:       var(--paper-2);
-  --bg-raised:     #f8f5ee;
+  --bg-raised:     #fbf6ec;
   --ink:           #141414;
   --ink-2:         #45443f;
   --ink-3:         #6f6c64;
