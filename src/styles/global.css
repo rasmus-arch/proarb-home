@@ -16,7 +16,7 @@
   --bg-raised:     #fbf6ec;
   --ink:           #141414;
   --ink-2:         #45443f;
-  --ink-3:         #6f6c64;
+  --ink-3:         #5e5b54;
   --line:          color-mix(in srgb, var(--ink) 18%, transparent);
   --line-strong:   var(--ink);
   --rule:          1.5px solid var(--ink);
@@ -81,6 +81,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: .18em; }
 a:hover { text-decoration-color: currentColor; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+/* Mörka ytor (petrol): gul fokusram så att den syns (WCAG 1.4.11 / 2.4.7) */
+.people :focus-visible, .ftr :focus-visible { outline-color: var(--amber); }
 ::selection { background: var(--amber); color: var(--ink); }
 
 h1, h2, h3, h4 {

@@ -297,6 +297,10 @@ const [weekdays, friday] = site.hours;
                   <button class="rv__btn" type="button" data-rv-next aria-label="Nästa omdöme">
                     <svg width="16" height="16" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" /></svg>
                   </button>
+                  <button class="rv__btn rv__toggle" type="button" data-rv-toggle aria-label="Pausa kundomdömena">
+                    <svg class="rv__icon-pause" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2v10M10 2v10" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+                    <svg class="rv__icon-play" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2v10l8-5z" fill="currentColor" /></svg>
+                  </button>
                 </div>
               )}
             </div>
@@ -568,6 +572,7 @@ const [weekdays, friday] = site.hours;
   .ph__tag {
     display: inline-block; background: var(--amber); color: var(--ink); font-size: .7rem; font-weight: 650;
     padding: 2px 6px; letter-spacing: .03em; text-transform: uppercase; vertical-align: middle; justify-self: center;
+    white-space: normal; max-width: 100%;
   }
   .pquote { font-family: var(--font-display); font-weight: 600; font-size: clamp(2rem, 1.3rem + 2.2vw, 3.2rem); line-height: 1.05; }
   blockquote.pquote::before, blockquote.pquote::after { content: '”'; color: var(--amber); }
@@ -580,19 +585,31 @@ const [weekdays, friday] = site.hours;
     transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .3, 1), visibility 0s linear .6s;
   }
   .rv__item.is-active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-  .rv__nav { display: flex; align-items: center; gap: .9rem; margin-top: 1.8rem; }
+  .rv, .people__copy, .people__in > * { min-width: 0; }
+  .rv__nav { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem .9rem; margin-top: 1.8rem; }
   .rv__btn {
     display: grid; place-items: center; width: 2.6rem; height: 2.6rem; flex: none;
     background: transparent; color: var(--paper); border: 1.5px solid color-mix(in srgb, var(--paper) 55%, transparent);
     border-radius: var(--r); cursor: pointer; transition: background-color .15s, color .15s, border-color .15s;
   }
   .rv__btn:hover { background: var(--amber); border-color: var(--amber); color: var(--ink); }
-  .rv__dots { display: flex; gap: .45rem; }
+  .rv__dots { display: flex; gap: .3rem; }
+  /* Klickytan är 24 px hög (WCAG 2.5.8); den synliga stapeln ritas med ::before */
   .rv__dot {
-    width: 1.6rem; height: 4px; padding: 0; border: 0; cursor: pointer;
-    background: color-mix(in srgb, var(--paper) 30%, transparent); transition: background-color .2s, width .3s;
+    position: relative; width: 1.6rem; height: 1.5rem; padding: 0; border: 0; cursor: pointer;
+    background: transparent; transition: width .3s;
   }
-  .rv__dot.is-active { background: var(--amber); width: 2.6rem; }
+  .rv__dot::before {
+    content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 4px; transform: translateY(-50%);
+    background: color-mix(in srgb, var(--paper) 45%, transparent); transition: background-color .2s;
+  }
+  .rv__dot:hover::before { background: var(--paper); }
+  .rv__dot.is-active { width: 2.6rem; }
+  .rv__dot.is-active::before { background: var(--amber); }
+  .rv__toggle { margin-left: auto; }
+  .rv__icon-play { display: none; }
+  .rv__toggle[aria-pressed='true'] .rv__icon-play { display: block; }
+  .rv__toggle[aria-pressed='true'] .rv__icon-pause { display: none; }
   .pquote__by { margin-top: 1.4rem; font-size: .95rem; color: color-mix(in srgb, var(--paper) 75%, transparent); }
   .pquote__tag {
     display: inline-block; margin-left: .5rem; background: var(--amber); color: var(--ink); font-size: .7rem; font-weight: 650;
@@ -721,30 +738,45 @@ const [weekdays, friday] = site.hours;
 </script>
 
 <script>
-  // Kundomdömen: roterar automatiskt, pausar vid hovring/fokus och när man själv bläddrar
+  // Kundomdömen: roterar automatiskt var 7:e sekund. Pausas tillfälligt vid
+  // hovring/fokus och permanent med pausknappen eller när man bläddrar själv
+  // (WCAG 2.2.2). Ingen autoplay alls vid "minska rörelse".
   document.querySelectorAll<HTMLElement>('[data-reviews]').forEach((root) => {
     const items = [...root.querySelectorAll<HTMLElement>('.rv__item')];
     const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-rv-dot]')];
+    const toggle = root.querySelector<HTMLButtonElement>('[data-rv-toggle]');
     if (items.length < 2) return;
     let i = 0;
     let timer: number | undefined;
+    let userPaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const show = (n: number) => {
       i = (n + items.length) % items.length;
       items.forEach((el, k) => {
         el.classList.toggle('is-active', k === i);
         if (k === i) el.removeAttribute('aria-hidden'); else el.setAttribute('aria-hidden', 'true');
       });
-      dots.forEach((d, k) => d.classList.toggle('is-active', k === i));
+      dots.forEach((d, k) => {
+        d.classList.toggle('is-active', k === i);
+        if (k === i) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+      });
     };
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const stop = () => { if (timer) window.clearInterval(timer); timer = undefined; };
-    const start = () => { if (!reduce && !timer) timer = window.setInterval(() => show(i + 1), 7000); };
-    root.querySelector('[data-rv-prev]')?.addEventListener('click', () => { stop(); show(i - 1); });
-    root.querySelector('[data-rv-next]')?.addEventListener('click', () => { stop(); show(i + 1); });
-    dots.forEach((d, k) => d.addEventListener('click', () => { stop(); show(k); }));
+    const start = () => { if (!userPaused && !timer) timer = window.setInterval(() => show(i + 1), 7000); };
+    const setPaused = (p: boolean) => {
+      userPaused = p;
+      toggle?.setAttribute('aria-pressed', String(p));
+      toggle?.setAttribute('aria-label', p ? 'Spela upp kundomdömena' : 'Pausa kundomdömena');
+      if (p) stop(); else start();
+    };
+    root.querySelector('[data-rv-prev]')?.addEventListener('click', () => { setPaused(true); show(i - 1); });
+    root.querySelector('[data-rv-next]')?.addEventListener('click', () => { setPaused(true); show(i + 1); });
+    dots.forEach((d, k) => d.addEventListener('click', () => { setPaused(true); show(k); }));
+    toggle?.addEventListener('click', () => setPaused(!userPaused));
     root.addEventListener('mouseenter', stop);
     root.addEventListener('mouseleave', start);
     root.addEventListener('focusin', stop);
-    start();
+    root.addEventListener('focusout', (e) => { if (!root.contains(e.relatedTarget as Node)) start(); });
+    setPaused(userPaused);
+    show(0);
   });
 </script>

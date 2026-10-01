@@ -12,7 +12,7 @@ const { compact = false, heading = 'Få ett förslag inom en arbetsdag' } = Astr
   data-quote-form
 >
   <input type="hidden" name="sida" value={Astro.url.pathname} />
-  <p class="visually-hidden">
+  <p class="visually-hidden" aria-hidden="true">
     <label>Lämna tomt: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
   </p>
 
