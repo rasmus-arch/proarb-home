@@ -39,8 +39,7 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
     </nav>
 
     <div class="hdr__actions">
-      <a class="hdr__tel" href={site.phoneHref}>{site.phone}</a>
-      <a class="btn btn--sm btn--accent hdr__cta" href="/kontakt/">Begär offert</a>
+      <a class="btn btn--accent hdr__cta" href="/kontakt/">Begär offert</a>
       <button class="menubtn" type="button" data-menu-open aria-expanded="false" aria-controls="drawer">
         <svg width="19" height="19" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5.5h14M3 10h14M3 14.5h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         <span>Meny</span>
@@ -92,9 +91,11 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   .nav__link {
     display: inline-flex; align-items: center; gap: .35rem;
     padding-block: .4rem; border-bottom: 2px solid transparent;
-    font-size: .94rem; font-weight: 550;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.25rem;
+    text-transform: uppercase; letter-spacing: .02em; line-height: 1.1; white-space: nowrap;
     text-decoration: none; color: var(--ink);
   }
+  .nav__link svg { flex: none; }
   .nav__link:hover, .nav__item:focus-within .nav__link { border-bottom-color: var(--ink); }
   .nav__link[aria-current='page'] { border-bottom-color: var(--amber); }
 
@@ -117,14 +118,8 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   .mega__all { margin: .6rem 1.1rem 0; font-size: .9rem; }
 
   .hdr__actions { display: flex; align-items: center; gap: .6rem; align-self: stretch; }
-  .hdr__tel {
-    display: flex; align-items: center; align-self: stretch;
-    border-left: var(--rule); padding-left: 1.6rem; margin-right: .6rem;
-    font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; letter-spacing: .01em;
-    text-decoration: none; white-space: nowrap;
-  }
-  .hdr__tel:hover { color: var(--petrol); }
   .hdr__cta, .menubtn { align-self: center; }
+  .hdr__cta { margin-left: .8rem; padding: .85rem 1.5rem .8rem; font-size: 1.2rem; }
 
   .iconbtn {
     display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
@@ -143,12 +138,10 @@ const isActive = (href: string) => path === href || (href !== '/' && path.starts
   }
   .menubtn:hover { background: var(--petrol); border-color: var(--petrol); }
 
-  @media (max-width: 1180px) {
-    .hdr__tel { display: none; }
-  }
-  @media (max-width: 1040px) {
+  @media (max-width: 1240px) {
     .nav { display: none; }
     .menubtn { display: inline-flex; }
+    .hdr__cta { margin-left: 0; padding: .7rem 1rem .65rem; font-size: 1.05rem; }
     .hdr__in { gap: 1rem; }
     .wordmark { height: auto; width: 15.5rem; }
   }
