@@ -607,11 +607,11 @@ const [weekdays, friday] = site.hours;
   /* Märken ---------------------------------------------------------------- */
   .blogos {
     list-style: none; padding: 0; margin: 0 0 clamp(2rem, 1.5rem + 1.5vw, 3rem);
-    display: grid; grid-template-columns: repeat(7, 1fr); border-top: var(--rule); border-left: var(--rule);
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 1rem;
   }
   .blogos__item {
     display: grid; place-items: center; height: clamp(6rem, 4.5rem + 3vw, 8rem); padding: 1rem;
-    border-right: var(--rule); border-bottom: var(--rule); background: transparent;
+    background: transparent;
   }
   .blogos__item img {
     max-width: 82%; max-height: 3.6rem; width: auto; height: auto; object-fit: contain;
@@ -698,6 +698,7 @@ const [weekdays, friday] = site.hours;
   }
   @media (max-width: 560px) {
     .blogos { grid-template-columns: repeat(2, 1fr); }
+    .blogos__item { height: 4.8rem; }
     .blogos__item:last-child:nth-child(odd) { grid-column: span 2; }
     .steps { grid-template-columns: 1fr; }
     .steps li + li { border-left: 0; padding-left: 0; margin-top: 1.4rem; border-top: 1px solid var(--line); }
