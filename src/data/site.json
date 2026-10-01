@@ -275,24 +275,25 @@
         },
         {
           "slug": "",
-          "name": "Helly Hansen byxa",
+          "name": "Helly Hansen Kensington Connect",
           "brand": "Helly Hansen",
           "detail": "Art.nr 77381 · Black",
-          "image": ""
+          "image": "/images/utvalda/hh-kensington-connect-77381.webp"
         },
         {
           "slug": "",
-          "name": "Snickers byxa",
+          "name": "Snickers stretchbyxor med hölsterfickor",
           "brand": "Snickers",
-          "detail": "Art.nr 6218 · Black/black",
-          "image": ""
+          "detail": "Art.nr 6218 · Black/black, Khaki/svart",
+          "image": "/images/utvalda/snickers-6218-black.webp",
+          "imageHover": "/images/utvalda/snickers-6218-khaki.webp"
         },
         {
           "slug": "",
-          "name": "Snickers 8041",
+          "name": "Snickers huvtröja i fleece",
           "brand": "Snickers",
-          "detail": "Colour 3104 · Khaki/svart",
-          "image": ""
+          "detail": "Art.nr 8041 · Black",
+          "image": "/images/utvalda/snickers-8041-fleece.webp"
         }
       ]
     },
