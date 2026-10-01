@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import QuoteCta from '../components/QuoteCta.astro';
+import { site } from '../lib/content';
 const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Tryck & brodyr', href: '/tryck-och-brodyr/' }];
 const methods = [
   { name: 'Brodyr', text: 'Sytt direkt i plagget. Tåligast över tid och känns påkostat – perfekt på jackor, pikéer och mössor.', best: 'Jackor, pikéer, skjortor' },
@@ -12,7 +13,7 @@ const methods = [
 ---
 <Base
   title="Tryck & brodyr på arbets- och profilkläder | Proarb"
-  description="Vi brandar era plagg med brodyr, transfer-, screen- eller reflextryck. Ni får alltid ett digitalt korrektur innan produktion."
+  description="Vi brandar era plagg med brodyr, transfer-, screen- eller reflextryck."
   breadcrumbs={crumbs}
 >
   <section class="hd">
@@ -49,13 +50,10 @@ const methods = [
         <li><strong>Helst vektor</strong> – .ai, .eps, .pdf eller .svg. Skalbart utan kvalitetsförlust.</li>
         <li><strong>Har ni bara en gammal bild?</strong> Vi ritar om den åt er mot en mindre avgift.</li>
       </ul>
-      <p class="muted files__note">
-        Ni får alltid ett digitalt korrektur som visar placering och storlek innan vi producerar något.
-      </p>
     </div>
   </section>
 
-  <QuoteCta heading="Skicka logotypen så visar vi hur det blir" text="Bifoga filen i förfrågan, eller maila den till info@proarb.se." />
+  <QuoteCta heading="Skicka logotypen så visar vi hur det blir" text={`Maila logotypen till ${site.email} och berätta vilka plagg ni tänkt er. Vi hjälper er välja rätt teknik och placering – och återkommer med pris.`} />
 </Base>
 
 <style>
@@ -70,6 +68,5 @@ const methods = [
   .mcard__best { margin-top: 1rem; padding-top: .8rem; border-top: 1px solid var(--line); font-size: .85rem; }
   .mcard__best span { color: var(--ink-3); display: block; font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .15rem; }
   .files { margin: 1.4rem 0 0; padding-left: 1.1rem; display: grid; gap: .6rem; color: var(--ink-2); max-width: 58ch; }
-  .files__note { margin-top: 1.4rem; font-size: .9rem; }
   h2 { margin-top: .7rem; }
 </style>
