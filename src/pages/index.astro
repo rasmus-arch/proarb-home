@@ -214,7 +214,7 @@ const [weekdays, friday] = site.hours;
             {g.items.map((it: any) => (
               <li>
                 <a class="fp" href={it.href}>
-                  <div class={`fp__media${it.image || it.product?.image ? '' : ' fp__media--empty'}`}>
+                  <div class={`fp__media${it.image || it.product?.image ? '' : ' fp__media--empty'}${it.imageHover ? ' fp__media--swap' : ''}`}>
                     {it.image ? (
                       <img src={it.image} alt={it.name} loading="lazy" />
                     ) : it.product?.image ? (
@@ -506,7 +506,7 @@ const [weekdays, friday] = site.hours;
   .pgroup__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(.8rem, .5rem + 1vw, 1.4rem); }
   .fp { display: flex; flex-direction: column; height: 100%; text-decoration: none; color: inherit; }
   .fp__media {
-    position: relative; aspect-ratio: 4 / 5; background: #fff;
+    position: relative; aspect-ratio: 4 / 5; background: transparent;
     border: 1px solid var(--line); overflow: hidden; display: grid; place-items: center;
     transition: border-color .15s;
   }
@@ -514,8 +514,10 @@ const [weekdays, friday] = site.hours;
     width: 100%; height: 100%; object-fit: contain; padding: 9%; mix-blend-mode: multiply;
     transition: transform .5s cubic-bezier(.2, .8, .3, 1);
   }
-  .fp__media .fp__hover { position: absolute; inset: 0; opacity: 0; background: #fff; mix-blend-mode: normal; transition: opacity .35s ease, transform .5s cubic-bezier(.2, .8, .3, 1); }
-  .fp__media .fp__hover--cover { object-fit: cover; padding: 0; }
+  .fp__media .fp__hover { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease, transform .5s cubic-bezier(.2, .8, .3, 1); }
+  .fp__media .fp__hover--cover { object-fit: cover; padding: 0; mix-blend-mode: normal; }
+  .fp__media--swap > img:first-child { transition: opacity .35s ease, transform .5s cubic-bezier(.2, .8, .3, 1); }
+  .fp:hover .fp__media--swap > img:first-child, .fp:focus-visible .fp__media--swap > img:first-child { opacity: 0; }
   .fp:hover .fp__media .fp__hover, .fp:focus-visible .fp__media .fp__hover { opacity: 1; }
   .fp__media--empty {
     background: var(--petrol);
