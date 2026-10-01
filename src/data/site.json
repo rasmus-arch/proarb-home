@@ -319,8 +319,10 @@
           "slug": "",
           "name": "Cutter & Buck Wedderburn jacka",
           "brand": "Cutter & Buck",
-          "detail": "Art.nr 351472 · Ivy green",
-          "image": ""
+          "detail": "Art.nr 351472 · Ivy green, Dark navy, Black",
+          "image": "/images/utvalda/cutter-buck-wedderburn-351472.webp",
+          "imageHover": "/images/utvalda/cutter-buck-wedderburn-miljo.webp",
+          "hoverCover": true
         },
         {
           "slug": "cutter-buck-oak-harbor-vest-men",
