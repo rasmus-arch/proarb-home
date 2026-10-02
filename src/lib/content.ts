@@ -1,6 +1,7 @@
 import productsJson from '../data/products.json';
 import categoriesJson from '../data/categories.json';
 import siteJson from '../data/site.json';
+import sortOrderJson from '../data/sort-order.json';
 
 export interface Variant {
   slug: string;
@@ -41,8 +42,21 @@ export const products = (productsJson as Product[]).filter((p) => p.name);
 
 export const categoryByUrl = (url: string) => categories.find((c) => c.url === url);
 
+/**
+ * Sortering per kategori, avläst från "Standardsortering" på proarb.se
+ * (src/data/sort-order.json). Produkter som saknas i listan hamnar sist.
+ */
+const sortOrder = sortOrderJson as Record<string, string[]>;
+
 export function productsIn(url: string): Product[] {
-  return products.filter((p) => p.categories.includes(url));
+  const list = products.filter((p) => p.categories.includes(url));
+  const order = sortOrder[url];
+  if (!order) return list;
+  const rank = new Map(order.map((slug, i) => [slug, i]));
+  return list
+    .map((p, i) => ({ p, r: rank.get(p.slug) ?? order.length + i }))
+    .sort((a, b) => a.r - b.r)
+    .map(({ p }) => p);
 }
 
 /** Underkategorier till en toppkategori, i menyordning. */
