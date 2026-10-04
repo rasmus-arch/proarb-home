@@ -1,11 +1,11 @@
 ---
 /**
  * Visar en produktbild.
- * Finns bilden nersynkad lokalt (src/assets/products/) optimeras den av Astro
- * till AVIF/WebP i flera storlekar. Annars används originalets URL som fallback,
- * så att sajten alltid byggs även utan `npm run sync`.
+ * Finns bilden lokalt (se src/lib/images.ts) optimeras den av Astro till WebP
+ * i flera storlekar. Annars används originalets URL som fallback.
  */
 import { Image } from 'astro:assets';
+import { localImage } from '../lib/images';
 
 interface Props {
   file?: string | null;
@@ -24,7 +24,7 @@ const {
   file,
   src,
   alt,
-  widths = [240, 400, 640, 900],
+  widths = [300, 600],
   sizes = '(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 300px',
   width = 900,
   height = 900,
@@ -33,20 +33,20 @@ const {
   class: className
 } = Astro.props;
 
-const local = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/assets/products/**/*.{jpeg,jpg,png,webp,avif,gif}',
-  { eager: true }
-);
-const entry = file ? local[`/src/assets/products/${file}`] : undefined;
+const entry = localImage(file, src);
+// reservbilden i src ska inte vara originalet i full storlek, utan den största i srcset
+const fallbackWidth = entry ? Math.min(Math.max(...widths), entry.width) : undefined;
 ---
 
 {
   entry ? (
     <Image
-      src={entry.default}
+      src={entry}
       alt={alt}
+      width={fallbackWidth}
       widths={widths}
       sizes={sizes}
+      quality={72}
       loading={loading}
       fetchpriority={fetchpriority}
       decoding="async"

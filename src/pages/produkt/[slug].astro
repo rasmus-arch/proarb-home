@@ -4,7 +4,9 @@ import Base from '../../layouts/Base.astro';
 import ProductImage from '../../components/ProductImage.astro';
 import ProductGrid from '../../components/ProductGrid.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getImage } from 'astro:assets';
 import { products, categories, relatedTo, site, excerpt, type Product } from '../../lib/content';
+import { localImage } from '../../lib/images';
 
 export const getStaticPaths = (() =>
   products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }))) satisfies GetStaticPaths;
@@ -25,6 +27,17 @@ const colors = product.variants.filter((v) => v.color);
 const gallery = product.gallery?.length ? product.gallery : product.image ? [product.image] : [];
 const related = relatedTo(product);
 
+// Stor version av en bild – till bildväxlaren och delningsbilden
+const large = async (file?: string | null, src?: string | null) => {
+  const m = localImage(file, src);
+  if (!m) return src ?? null;
+  return (await getImage({ src: m, width: Math.min(800, m.width), format: 'webp', quality: 72 })).src;
+};
+const thumbs = colors.length > 1 ? colors : gallery.map((g, i) => ({ image: g, file: i === 0 ? product.file : null, color: null }));
+const thumbFull = await Promise.all(thumbs.map((v: any) => large(v.file, v.image)));
+const mainFull = await large(product.file, product.image);
+const shareImage = mainFull ? new URL(mainFull, site.url).toString() : undefined;
+
 const ld = {
   '@context': 'https://schema.org',
   '@type': 'Product',
@@ -32,7 +45,7 @@ const ld = {
   description: excerpt(product.description, 300) || `${product.name} från Proarb i Eskilstuna.`,
   ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
   ...(product.sku ? { sku: product.sku } : {}),
-  ...(product.image ? { image: product.image } : {}),
+  ...(shareImage ? { image: shareImage } : {}),
   offers: {
     '@type': 'Offer',
     availability: 'https://schema.org/InStock',
@@ -49,7 +62,7 @@ const ld = {
   title={`${product.name}${product.brand ? '' : ''} | Proarb`}
   description={excerpt(product.description, 155) || `${product.name} – beställ med tryck eller brodyr från Proarb i Eskilstuna.`}
   breadcrumbs={crumbs}
-  image={product.image ?? undefined}
+  image={shareImage}
   jsonLd={ld}
 >
   <div class="container p-wrap">
@@ -64,17 +77,17 @@ const ld = {
             alt={product.name}
             loading="eager"
             fetchpriority="high"
-            widths={[400, 700, 1000]}
+            widths={[400, 800]}
             sizes="(max-width: 900px) 92vw, 540px"
             class="p__img"
           />
         </div>
         {(gallery.length > 1 || colors.length > 1) && (
           <ul class="p__thumbs">
-            {(colors.length > 1 ? colors : gallery.map((g, i) => ({ image: g, file: i === 0 ? product.file : null, color: null }))).map(
+            {thumbs.map(
               (v: any, i: number) => (
                 <li>
-                  <button type="button" class={`thumb ${i === 0 ? 'thumb--on' : ''}`} data-src={v.image} title={v.color ?? `Bild ${i + 1}`}>
+                  <button type="button" class={`thumb ${i === 0 ? 'thumb--on' : ''}`} data-src={thumbFull[i]} title={v.color ?? `Bild ${i + 1}`}>
                     <ProductImage file={v.file} src={v.image} alt={v.color ?? ''} sizes="80px" widths={[80, 160]} class="thumb__img" />
                     <span class="visually-hidden">{v.color ?? `Bild ${i + 1}`}</span>
                   </button>
@@ -171,10 +184,10 @@ const ld = {
   thumbs.forEach((t) =>
     t.addEventListener('click', () => {
       const img = stage?.querySelector('img');
-      const next = t.querySelector('img');
+      const next = t.dataset.src;
       if (!img || !next) return;
       img.removeAttribute('srcset');
-      img.src = next.currentSrc || next.src;
+      img.src = next;
       thumbs.forEach((x) => x.classList.remove('thumb--on'));
       t.classList.add('thumb--on');
     })

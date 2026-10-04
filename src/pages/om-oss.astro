@@ -22,7 +22,16 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Om oss', href: '/om-oss/' }
   </section>
 
   <section class="section section--top0">
-    <div class="container prose">
+    <div class="container about">
+      <img
+        class="about__photo"
+        src="/images/personal/om-oss-1000.webp"
+        srcset="/images/personal/om-oss-600.webp 600w, /images/personal/om-oss-1000.webp 1000w"
+        sizes="(max-width: 800px) 100vw, 36vw"
+        width="1000" height="1784"
+        alt="Medarbetare i Profil & Arbetsklädervästen med en profilerad kaffemugg i butiken"
+      />
+      <div class="prose">
       <p class="prose__big">
         Hos oss möts du av ett genuint engagemang, ett högt driv och en vilja att alltid hitta
         den bästa lösningen för just dig och ditt företag.
@@ -40,6 +49,7 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Om oss', href: '/om-oss/' }
       <p>
         Vi siktar högt, tänker långsiktigt och strävar alltid efter att överträffa dina förväntningar.
       </p>
+      </div>
     </div>
   </section>
 
@@ -92,6 +102,12 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Om oss', href: '/om-oss/' }
   .hd .eyebrow { margin-top: 1.3rem; }
   .hd h1 { margin: .7rem 0 1rem; max-width: 18ch; }
   .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
+  .about { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 1rem + 3vw, 4rem); align-items: center; }
+  .about__photo { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; object-position: 50% 45%; border-radius: var(--r-lg); }
+  @media (max-width: 800px) {
+    .about { grid-template-columns: 1fr; }
+    .about__photo { max-width: 30rem; }
+  }
   .prose { max-width: 62ch; display: grid; gap: 1.1rem; color: var(--ink-2); font-size: 1.03rem; line-height: 1.7; }
   .prose__big { font-size: var(--step-1); color: var(--ink); line-height: 1.5; }
   .cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); margin-top: 1.6rem; }

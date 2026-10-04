@@ -4,7 +4,6 @@ import ProductImage from '../components/ProductImage.astro';
 import QuoteForm from '../components/QuoteForm.astro';
 import { site, products, categoryByUrl } from '../lib/content';
 
-const UPLOADS = 'https://proarb.se/wp-content/uploads/2026/04/';
 const staging = process.env.STAGING === '1';
 const about = (site as any).about ?? {};
 const reviews: { text: string; name: string; company?: string; label?: string }[] = about.reviews ?? [];
@@ -31,9 +30,9 @@ const workIndex = withCat([
 ]);
 
 const profileFeature = withCat([
-  { url: 'profiltrojor', slot: 'p1', title: 'Profiltröjor', image: UPLOADS + '1110228_HeavyTshirt_2.jpg', pos: 'center top' },
-  { url: 'ovriga-profilklader', slot: 'p2', title: 'Profilkläder', image: UPLOADS + 'profilklader-1536x540.webp' },
-  { url: 'give-aways', slot: 'p3', title: 'Give aways', image: UPLOADS + 'Skarmbild-2026-04-01-103244.png' }
+  { url: 'profiltrojor', slot: 'p1', title: 'Profiltröjor', image: '/images/kategorier/profiltrojor.webp', pos: 'center top' },
+  { url: 'ovriga-profilklader', slot: 'p2', title: 'Profilkläder', image: '/images/kategorier/profilklader.webp' },
+  { url: 'give-aways', slot: 'p3', title: 'Give aways', image: '/images/kategorier/give-aways.webp' }
 ]);
 
 const profileIndex = withCat([
@@ -266,7 +265,15 @@ const [weekdays, friday] = site.hours;
       </header>
       <div class="people__in">
         {about.photo ? (
-          <img class="people__photo" src={about.photo} alt={`Personalen i butiken på ${site.address.street}`} loading="lazy" />
+          <img
+            class="people__photo"
+            src={about.photo}
+            srcset={`${about.photo.replace(/-1000\.webp$/, '-600.webp')} 600w, ${about.photo} 1000w`}
+            sizes="(max-width: 1000px) 100vw, 40vw"
+            width="1000" height="1625"
+            alt={`Medarbetare i Snickers-hörnan i butiken på ${site.address.street}`}
+            loading="lazy"
+          />
         ) : staging ? (
           <div class="ph">
             <span class="ph__tag">Platshållare – syns bara på testsajten</span>
@@ -563,7 +570,7 @@ const [weekdays, friday] = site.hours;
   .people .shead { border-color: var(--paper); }
   .people__in { display: grid; grid-template-columns: 5fr 7fr; gap: 3rem; align-items: start; }
   .people__in > .people__copy:only-child { grid-column: 1 / -1; max-width: 62rem; }
-  .people__photo { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .people__photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 38%; }
   .ph {
     aspect-ratio: 4 / 5; border: 1.5px dashed color-mix(in srgb, var(--paper) 55%, transparent);
     display: grid; place-content: center; gap: 1rem; text-align: center; padding: 2rem;
