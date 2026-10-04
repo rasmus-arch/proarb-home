@@ -10,19 +10,49 @@ RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
 # Gamla WordPress/WooCommerce-URL:er -> nya
-RewriteRule ^product/(.*)$ /produkt/$1 [R=301,L]
-RewriteRule ^product-category/arbetsklader/?(.*)$ /arbetsklader/ [R=301,L]
-RewriteRule ^product-category/profilprodukter/?(.*)$ /profilprodukter/ [R=301,L]
+# Produkter: en adress per storlek/färg på gamla sajten -> slås upp i gammal-produkt.php
+RewriteRule ^gamla-produkter/ - [F,L]
+RewriteRule ^product/([^/]+)/?$ /gammal-produkt.php?s=$1 [L]
+RewriteRule ^product/ /arbetsklader/ [R=301,L]
+
+# Kategorier
+RewriteRule ^product-category/arbetsklader/arbetbyxor/? /arbetsbyxor/ [R=301,L]
+RewriteRule ^product-category/arbetsklader/arbetshandskar/? /arbetshandskar/ [R=301,L]
+RewriteRule ^product-category/arbetsklader/arbetsjackor/? /arbetsjackor/ [R=301,L]
+RewriteRule ^product-category/arbetsklader/arbetsshorts/? /arbetsshorts-piratbyxor/ [R=301,L]
+RewriteRule ^product-category/arbetsklader/arbetsskor/? /arbetsskor/ [R=301,L]
+RewriteRule ^product-category/arbetsklader/arbetstrojor/? /arbetstrojor/ [R=301,L]
+RewriteRule ^product-category/arbetsklader/varselklader/? /varselklader/ [R=301,L]
+RewriteRule ^product-category/profilprodukter/give-aways/? /give-aways/ [R=301,L]
+RewriteRule ^product-category/profilprodukter/profilklader/profiljackor/? /profiljackor/ [R=301,L]
+RewriteRule ^product-category/profilprodukter/profilklader/profilskjortor/? /profilskjortor/ [R=301,L]
+RewriteRule ^product-category/profilprodukter/profilklader/profiltrojor/? /profiltrojor/ [R=301,L]
+RewriteRule ^product-category/profilprodukter/profilklader/? /ovriga-profilklader/ [R=301,L]
+RewriteRule ^product-category/profilprodukter/? /profilprodukter/ [R=301,L]
+RewriteRule ^product-category/ /arbetsklader/ [R=301,L]
+
+# Varumärkessidor
+RewriteRule ^brand/(atg|tegera)/? /arbetshandskar/ [R=301,L]
+RewriteRule ^brand/(jalas|skechers)/? /arbetsskor/ [R=301,L]
+RewriteRule ^brand/(clique|craft|cutter-buck|graphix|harvest-frost|id-identity|james-harvest|nightingale|printer|queen-anne|teejays|under-armour)/? /ovriga-profilklader/ [R=301,L]
+RewriteRule ^brand/(dj|kosta-linnewafveri|lord-nelson|orrefors|solstickan|toppoint)/? /give-aways/ [R=301,L]
+RewriteRule ^brand/ /arbetsklader/ [R=301,L]
+
+# Övriga sidor
 RewriteRule ^shop/?$ /arbetsklader/ [R=301,L]
-RewriteRule ^cart/?$ /kontakt/ [R=301,L]
-RewriteRule ^checkout/?$ /kontakt/ [R=301,L]
-RewriteRule ^my-account/?$ /kontakt/ [R=301,L]
+RewriteRule ^(cart|checkout|my-account)(/.*)?$ /kontakt/ [R=301,L]
 RewriteRule ^rea-2/?$ /arbetsklader/ [R=301,L]
-RewriteRule ^ny-start/?$ / [R=301,L]
-RewriteRule ^sample-page/?$ / [R=301,L]
+RewriteRule ^flamsakra-produkter/?$ /arbetsklader/ [R=301,L]
+RewriteRule ^restaurang/?$ /ovriga-profilklader/ [R=301,L]
+RewriteRule ^(utemobler|vm-2026)/?$ /profilprodukter/ [R=301,L]
 RewriteRule ^privacy-policy/?$ /integritetspolicy/ [R=301,L]
+RewriteRule ^(ny-start|sample-page|hello-world)/?$ / [R=301,L]
+RewriteRule ^(author|category|product-tag|tag)/ / [R=301,L]
 RewriteRule ^wp-admin/?(.*)$ / [R=301,L]
 RewriteRule ^wp-login\.php$ / [R=301,L]
+RewriteRule ^(feed|comments/feed)/?$ / [R=301,L]
+RewriteRule ^(wp-sitemap|sitemap_index|sitemap)\.xml$ /sitemap-index.xml [R=301,L]
+RewriteRule ^[a-z_]+-sitemap[0-9]*\.xml$ /sitemap-index.xml [R=301,L]
 
 # Astro bygger med trailingSlash "always" och format "directory",
 # dvs varje sida ligger som en egen mapp med index.html i.
