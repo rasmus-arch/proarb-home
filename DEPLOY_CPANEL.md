@@ -4,7 +4,23 @@ Sajten är statisk (Astro, `output: 'static'`), så cPanel-servern behöver bara
 kunna servera vanliga filer + PHP för offertformuläret. Node.js behöver
 **inte** vara installerat på webbhotellet – bygget körs på din egen dator.
 
-## 1. Bygg sajten lokalt
+## 1. Bygg sajten i GitHub (enklast)
+
+Workflowet `.github/workflows/bygg.yml` bygger sajten och gör en färdig zip:
+
+- **Automatiskt:** varje push till en `claude/…`-gren bygger testsajten.
+- **Manuellt:** *Actions* → *Bygg sajten* → *Run workflow* → välj gren och
+  `testsajt` (noindex + platshållare) eller `skarp` (för proarb.se).
+
+Hämta zipen under **Releases** i repot: `Testbygge` → `LADDA-UPP-testsajt.zip`
+(eller `Skarpt bygge` → `LADDA-UPP-skarp.zip`). Den ersätts vid varje nytt
+bygge, så länken är alltid senaste versionen. Zipen finns även som artefakt
+på själva körningen under *Actions* (där packas den i en extra zip av GitHub).
+
+Ladda upp zipen enligt steg 2 nedan. Bygget tar några minuter första gången
+(alla produktbilder skalas om), sedan går det fortare tack vare cachen.
+
+## 1b. …eller bygg lokalt
 
 ```bash
 npm install

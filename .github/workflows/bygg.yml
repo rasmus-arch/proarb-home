@@ -1,0 +1,88 @@
+# Bygger sajten och lägger en färdig zip att ladda upp till cPanel.
+# Körs automatiskt (testsajt) vid varje push till arbetsgrenen, eller manuellt:
+# Actions → "Bygg sajten" → Run workflow (välj testsajt eller skarp).
+# Zipen hamnar under Releases (testbygge / skarpt-bygge) och som artefakt på körningen.
+name: Bygg sajten
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: 'Vilket bygge?'
+        type: choice
+        options:
+          - testsajt
+          - skarp
+        default: testsajt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bygg-${{ inputs.variant || 'testsajt' }}
+  cancel-in-progress: true
+
+jobs:
+  bygg:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      # testsajt: noindex + platshållare. skarp: indexeras av Google.
+      STAGING: ${{ inputs.variant != 'skarp' && '1' || '' }}
+      ZIP: LADDA-UPP-${{ inputs.variant || 'testsajt' }}.zip
+      TAG: ${{ inputs.variant == 'skarp' && 'skarpt-bygge' || 'testbygge' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Produktdatan som är incheckad (products.json synkas annars från proarb.se)
+      - name: Produktdata
+        run: cp src/data/products.seed.json src/data/products.json
+
+      # Astro sparar skalade bilder här – återanvänds så att bygget går fort
+      - name: Bildcache
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-bilder-${{ hashFiles('src/assets/**', 'public/images/**') }}
+          restore-keys: astro-bilder-
+
+      - name: Bygg
+        run: npx astro build
+
+      - name: Zippa
+        run: |
+          find dist -type d -exec chmod 755 {} \;
+          find dist -type f -exec chmod 644 {} \;
+          (cd dist && zip -qrX "../$ZIP" .)
+          ls -lh "$ZIP"
+
+      - name: Publicera zip under Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" "$ZIP" \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "${{ inputs.variant == 'skarp' && 'Skarpt bygge' || 'Testbygge' }} – ${GITHUB_REF_NAME} ${GITHUB_SHA::7}" \
+            --notes "Byggd $(TZ=Europe/Stockholm date '+%Y-%m-%d %H:%M') från ${GITHUB_REF_NAME} (${GITHUB_SHA::7}). Ladda upp $ZIP till cPanel och packa upp den i webbroten."
+
+      - name: Spara även som artefakt
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ZIP }}
+          path: ${{ env.ZIP }}
+          compression-level: 0
+          retention-days: 14
