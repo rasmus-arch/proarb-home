@@ -62,11 +62,7 @@ jobs:
         run: npx astro build
 
       - name: Zippa
-        run: |
-          find dist -type d -exec chmod 755 {} \;
-          find dist -type f -exec chmod 644 {} \;
-          (cd dist && zip -qrX "../$ZIP" .)
-          ls -lh "$ZIP"
+        run: python3 scripts/zip-dist.py "$ZIP"
 
       - name: Publicera zip under Releases
         env:
