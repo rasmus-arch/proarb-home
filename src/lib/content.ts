@@ -87,6 +87,27 @@ export function productsIn(url: string): Product[] {
       .sort((a, b) => a.t - b.t || a.i - b.i)
       .map(({ p }) => p);
   }
+  if (url === 'profilprodukter') {
+    // De prioriterade give-awayen och profilkläderna blandas jämnt; övriga give aways sist
+    const isGiveaway = (p: Product) => p.categories.includes('give-aways');
+    const top = list
+      .filter((p) => isGiveaway(p) && giveawayTier(p) < GIVEAWAY_TIERS.length)
+      .map((p, i) => ({ p, t: giveawayTier(p), i }))
+      .sort((a, b) => a.t - b.t || a.i - b.i)
+      .map(({ p }) => p);
+    const clothes = list.filter((p) => !isGiveaway(p));
+    const rest = list.filter((p) => isGiveaway(p) && giveawayTier(p) === GIVEAWAY_TIERS.length);
+    const mixed: Product[] = [];
+    const total = top.length + clothes.length;
+    let a = 0;
+    let b = 0;
+    for (let n = 0; n < total; n++) {
+      // välj den lista som ligger längst efter sin andel
+      const pickClothes = b < clothes.length && (a >= top.length || b / clothes.length <= a / top.length);
+      mixed.push(pickClothes ? clothes[b++] : top[a++]);
+    }
+    list = [...mixed, ...rest];
+  }
   return list;
 }
 
