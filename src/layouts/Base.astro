@@ -77,7 +77,7 @@ gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personali
 gtag('set','url_passthrough',true);gtag('js',new Date());gtag('config','${ga4Id}');
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
 if(h.indexOf('tel:')===0)gtag('event','click_phone');else if(h.indexOf('mailto:')===0)gtag('event','click_email');
-else if(h.indexOf('google.com/maps')>-1)gtag('event','click_map');else if(/\/kontakt\/\?produkt=/.test(h))gtag('event','click_product_quote');});`
+else if(h.indexOf('google.com/maps')>-1)gtag('event','click_map');else if(h.indexOf('/kontakt/?produkt=')>-1)gtag('event','click_product_quote');});`
   : '';
 
 const crumbLd = breadcrumbs.length
