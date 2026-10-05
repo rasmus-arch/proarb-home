@@ -5,7 +5,7 @@ import ProductImage from '../../components/ProductImage.astro';
 import ProductGrid from '../../components/ProductGrid.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import { getImage } from 'astro:assets';
-import { products, categories, relatedTo, site, excerpt, type Product } from '../../lib/content';
+import { products, categories, relatedTo, site, excerpt, brandHref, type Product } from '../../lib/content';
 import { localImage } from '../../lib/images';
 
 export const getStaticPaths = (() =>
@@ -99,7 +99,7 @@ const ld = {
       </div>
 
       <div class="p__info">
-        {product.brand && <p class="eyebrow">{product.brand}</p>}
+        {product.brand && <p class="eyebrow"><a class="eyebrow__link" href={brandHref(product.brand)}>{product.brand}</a></p>}
         <h1>{product.name}</h1>
 
         <div class="cluster p__tags">
@@ -149,9 +149,9 @@ const ld = {
 
   .p__main {
     background: var(--bg-sunk); border: 1px solid var(--line); border-radius: var(--r-lg);
-    aspect-ratio: 1; display: grid; place-items: center; overflow: hidden;
+    aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; position: relative;
   }
-  .p__main :global(.p__img) { width: 100%; height: 100%; object-fit: contain; padding: 6%; mix-blend-mode: multiply; }
+  .p__main :global(.p__img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6%; mix-blend-mode: multiply; }
   .p__thumbs { list-style: none; display: flex; gap: .5rem; padding: 0; margin: .7rem 0 0; flex-wrap: wrap; }
   .thumb {
     width: 4.25rem; height: 4.25rem; padding: .3rem; cursor: pointer;
@@ -159,8 +159,11 @@ const ld = {
     overflow: hidden;
   }
   .thumb--on { border-color: var(--ink); }
-  .thumb :global(.thumb__img) { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .thumb { position: relative; }
+  .thumb :global(.thumb__img) { position: absolute; inset: 0; width: 100%; height: 100%; padding: .3rem; box-sizing: border-box; object-fit: contain; mix-blend-mode: multiply; }
 
+  .eyebrow__link { color: inherit; text-decoration: none; }
+  .eyebrow__link:hover { text-decoration: underline; }
   .p__info h1 { font-size: var(--step-4); margin: .6rem 0 1rem; }
   .p__tags { margin-bottom: 1.4rem; }
   .p__desc { color: var(--ink-2); font-size: 1.02rem; line-height: 1.65; max-width: 56ch; }

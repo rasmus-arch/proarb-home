@@ -16,11 +16,11 @@
   "hours": [
     {
       "days": "Mån–tors",
-      "time": "07–16"
+      "time": "06.55–16"
     },
     {
       "days": "Fredag",
-      "time": "07–15"
+      "time": "06.55–15"
     },
     {
       "days": "Lör–sön",
@@ -39,8 +39,8 @@
   },
   "usp": [
     {
-      "title": "Eget tryckeri & broderi",
-      "text": "In-house tryck, brodyr och reflex – full kontroll på kvalitet och leveranstider, utan mellanhänder."
+      "title": "Eget tryckeri",
+      "text": "Vi trycker själva i huset – full kontroll på kvalitet och leveranstider. Broderi löser vi smidigt via våra leverantörer."
     },
     {
       "title": "Rätt klassning, varje gång",
@@ -188,7 +188,7 @@
   ],
   "about": {
     "founded": "2000",
-    "photo": "/images/personal/butiken-1000.webp",
+    "photo": "/images/personal/butiken-800.webp",
     "reviews": [
       {
         "text": "Man ringer, och sen är det löst. Så har det varit sedan första beställningen.",
@@ -238,16 +238,12 @@
       "logo": "/images/varumarken/snickers.webp"
     },
     {
-      "name": "Fristads",
-      "logo": "/images/varumarken/fristads.png"
-    },
-    {
-      "name": "Blåkläder",
-      "logo": "/images/varumarken/blaklader.webp"
-    },
-    {
       "name": "Jobman",
       "logo": "/images/varumarken/jobman.webp"
+    },
+    {
+      "name": "Fristads",
+      "logo": "/images/varumarken/fristads.png"
     },
     {
       "name": "Cutter & Buck",
@@ -259,6 +255,10 @@
         "TeeJays"
       ],
       "logo": "/images/varumarken/teejays.svg"
+    },
+    {
+      "name": "Blåkläder",
+      "logo": "/images/varumarken/blaklader.webp"
     }
   ],
   "featured": [
@@ -281,7 +281,7 @@
           "image": "/images/utvalda/hh-kensington-connect-77381.webp"
         },
         {
-          "slug": "",
+          "slug": "snickers-stretchbyxor-med-holsterfickor-6218",
           "name": "Snickers stretchbyxor med hölsterfickor",
           "brand": "Snickers",
           "detail": "Art.nr 6218 · Black/black, Khaki/svart",
@@ -289,7 +289,7 @@
           "imageHover": "/images/utvalda/snickers-6218-khaki.webp"
         },
         {
-          "slug": "",
+          "slug": "snickers-huvtroja-i-fleece-med-hellang-dragkedja-8041",
           "name": "Snickers huvtröja i fleece",
           "brand": "Snickers",
           "detail": "Art.nr 8041 · Black",

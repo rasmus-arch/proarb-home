@@ -48,15 +48,69 @@ export const categoryByUrl = (url: string) => categories.find((c) => c.url === u
  */
 const sortOrder = sortOrderJson as Record<string, string[]>;
 
+const text = (p: Product) => `${p.name} ${p.brand ?? ''}`.toLowerCase();
+
+/** Give aways: vattenflaskor, kepsar, pennor, termosmuggar, Solstickan och de modernare
+ *  designprodukterna först – resten (sängkläder, badrumstextil m.m.) sist. */
+const GIVEAWAY_TIERS: RegExp[] = [
+  /vattenflaska|aluminiumflaska|stålflaska|dricksflaska|sportflaska|water ?bottle/,
+  /\bkeps|trucker|\bcap\b|mössa|beanie/,
+  /\bpenn|kulspets|kulpenn|\bpen\b/,
+  /termos|thermo|\bmugg|muggar|\bkopp\b/,
+  /solstickan/,
+  /orrefors|kosta|blacksmith|queen anne|lord nelson|nightingale|toppoint|skärbräda|kyl|cykelväska|korkskruv|\bvin\b|grill|brandfilt|picknick|carry|kylkorg/
+];
+const giveawayTier = (p: Product) => {
+  const t = text(p);
+  const i = GIVEAWAY_TIERS.findIndex((rx) => rx.test(t));
+  return i === -1 ? GIVEAWAY_TIERS.length : i;
+};
+
 export function productsIn(url: string): Product[] {
-  const list = products.filter((p) => p.categories.includes(url));
+  let list = products.filter((p) => p.categories.includes(url));
   const order = sortOrder[url];
-  if (!order) return list;
-  const rank = new Map(order.map((slug, i) => [slug, i]));
-  return list
-    .map((p, i) => ({ p, r: rank.get(p.slug) ?? order.length + i }))
-    .sort((a, b) => a.r - b.r)
-    .map(({ p }) => p);
+  if (order) {
+    const rank = new Map(order.map((slug, i) => [slug, i]));
+    list = list
+      .map((p, i) => ({ p, r: rank.get(p.slug) ?? order.length + i }))
+      .sort((a, b) => a.r - b.r)
+      .map(({ p }) => p);
+  }
+  // Handskar hör hemma sist i den samlade arbetsklädesvyn
+  if (url === 'arbetsklader') {
+    const gloves = (p: Product) => p.categories.includes('arbetshandskar');
+    list = [...list.filter((p) => !gloves(p)), ...list.filter(gloves)];
+  }
+  if (url === 'give-aways') {
+    list = list
+      .map((p, i) => ({ p, t: giveawayTier(p), i }))
+      .sort((a, b) => a.t - b.t || a.i - b.i)
+      .map(({ p }) => p);
+  }
+  return list;
+}
+
+/** Varumärken – nyckel utan mellanslag/tecken så att "Tee Jays" och "TeeJays" blir samma */
+export const brandKey = (name: string) => name.toLowerCase().replace(/[^a-z0-9åäö]/g, '');
+export const brandSlug = (name: string) =>
+  name.toLowerCase().replace(/å|ä/g, 'a').replace(/ö/g, 'o').replace(/[^a-z0-9\s-]/g, '').trim().replace(/[\s-]+/g, '-');
+/** Det namn som står i site.brands (t.ex. "TeeJays" för "Tee Jays") */
+export const canonicalBrand = (name: string) =>
+  (siteJson.brands as string[]).find((b) => brandKey(b) === brandKey(name)) ?? name;
+export const brandHref = (name: string) => `/varumarke/${brandSlug(canonicalBrand(name))}/`;
+
+/** Ordning på märkesfilter och märkeslistor: Helly Hansen, Snickers, Jobman, ProJob, ID Identity,
+ *  sedan övriga alfabetiskt, Blåkläder längst bort. */
+const BRAND_FIRST = ['helly hansen', 'snickers', 'jobman', 'projob', 'id identity'].map(brandKey);
+const BRAND_LAST = ['blåkläder'].map(brandKey);
+export function brandOrder(a: string, b: string): number {
+  const rank = (n: string) => {
+    const k = brandKey(n);
+    const f = BRAND_FIRST.indexOf(k);
+    if (f !== -1) return f;
+    return BRAND_LAST.includes(k) ? 1000 : 100;
+  };
+  return rank(a) - rank(b) || a.localeCompare(b, 'sv');
 }
 
 /** Underkategorier till en toppkategori, i menyordning. */

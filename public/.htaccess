@@ -31,11 +31,10 @@ RewriteRule ^product-category/profilprodukter/profilklader/? /ovriga-profilklade
 RewriteRule ^product-category/profilprodukter/? /profilprodukter/ [R=301,L]
 RewriteRule ^product-category/ /arbetsklader/ [R=301,L]
 
-# Varumärkessidor
-RewriteRule ^brand/(atg|tegera)/? /arbetshandskar/ [R=301,L]
-RewriteRule ^brand/(jalas|skechers)/? /arbetsskor/ [R=301,L]
-RewriteRule ^brand/(clique|craft|cutter-buck|graphix|harvest-frost|id-identity|james-harvest|nightingale|printer|queen-anne|teejays|under-armour)/? /ovriga-profilklader/ [R=301,L]
-RewriteRule ^brand/(dj|kosta-linnewafveri|lord-nelson|orrefors|solstickan|toppoint)/? /give-aways/ [R=301,L]
+# Varumärkessidor (gamla /brand/<namn>/ -> nya /varumarke/<namn>/)
+RewriteRule ^brand/james-harvest/? /varumarke/harvest-sportswear/ [R=301,L]
+RewriteRule ^brand/solstickan/? /varumarke/solstickan-design/ [R=301,L]
+RewriteRule ^brand/(atg|blaklader|clique|craft|cutter-buck|dj|graphix|harvest-frost|helly-hansen|id-identity|jalas|james-nicholson|jobman|kosta-linnewaveri|lord-nelson|monitor|nightingale|orrefors|printer|projob|queen-anne|skechers|teejays|tegera|toppoint|under-armour)/? /varumarke/$1/ [R=301,L]
 RewriteRule ^brand/ /arbetsklader/ [R=301,L]
 
 # Övriga sidor

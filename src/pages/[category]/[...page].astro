@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import ProductGrid from '../../components/ProductGrid.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import QuoteCta from '../../components/QuoteCta.astro';
-import { categories, productsIn, site } from '../../lib/content';
+import { categories, productsIn, site, brandOrder } from '../../lib/content';
 
 export const getStaticPaths = (({ paginate }) =>
   categories.flatMap((c) =>
@@ -24,7 +24,7 @@ const root = c.group === 'arbete'
   : { name: 'Profilprodukter', href: '/profilprodukter/' };
 const isRoot = ['arbetsklader', 'profilprodukter'].includes(c.url);
 const crumbs = [{ name: 'Hem', href: '/' }, ...(isRoot ? [] : [root]), { name: c.name, href: `/${c.url}/` }];
-const brands = [...new Set(page.data.map((p: any) => p.brand).filter(Boolean))].sort() as string[];
+const brands = [...new Set(page.data.map((p: any) => p.brand).filter(Boolean))].sort(brandOrder) as string[];
 const suffix = page.currentPage > 1 ? ` – sida ${page.currentPage}` : '';
 
 const itemListLd = {

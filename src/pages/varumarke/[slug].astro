@@ -1,0 +1,78 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import ProductGrid from '../../components/ProductGrid.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import QuoteCta from '../../components/QuoteCta.astro';
+import { site, products, brandKey, brandSlug, brandOrder } from '../../lib/content';
+
+export const getStaticPaths = (() =>
+  (site.brands as string[]).map((name) => ({
+    params: { slug: brandSlug(name) },
+    props: {
+      name,
+      items: products.filter((p) => p.brand && brandKey(p.brand) === brandKey(name))
+    }
+  }))) satisfies GetStaticPaths;
+
+const { name, items } = Astro.props as { name: string; items: typeof products };
+const crumbs = [{ name: 'Hem', href: '/' }, { name, href: `/varumarke/${brandSlug(name)}/` }];
+const others = (site.brands as string[]).filter((b) => b !== name).sort(brandOrder);
+---
+
+<Base
+  title={`${name} – arbetskläder och profilkläder | Proarb Eskilstuna`}
+  description={`${name} hos Proarb i Eskilstuna. Se produkter eller begär offert – vi tar fram ${name} med tryck, och brodyr via våra leverantörer.`}
+  breadcrumbs={crumbs}
+>
+  <section class="bhead">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <p class="eyebrow">Varumärke</p>
+      <h1>{name}</h1>
+      <p class="lead">
+        {items.length > 0
+          ? `Ett urval ur ${name}-sortimentet. Saknas modellen ni letar efter tar vi fram den – hör av er.`
+          : `Vi levererar ${name}. Berätta vad ni behöver så tar vi fram förslag, storlekar och pris.`}
+      </p>
+    </div>
+  </section>
+
+  {items.length > 0 && (
+    <section class="section section--tight">
+      <div class="container">
+        <p class="count">{items.length} {items.length === 1 ? 'produkt' : 'produkter'}</p>
+        <ProductGrid products={items} />
+      </div>
+    </section>
+  )}
+
+  <section class="section section--tight">
+    <div class="container">
+      <p class="eyebrow">Fler varumärken</p>
+      <ul class="more">
+        {others.map((b) => <li><a href={`/varumarke/${brandSlug(b)}/`}>{b}</a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <QuoteCta
+    heading={`Fråga om ${name}`}
+    text="Beskriv behovet så återkommer vi med förslag – ofta samma dag."
+  />
+</Base>
+
+<style>
+  .bhead { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .bhead .eyebrow { margin-top: 1.3rem; }
+  .bhead h1 { margin: .7rem 0 1rem; max-width: 20ch; }
+  .bhead .lead { max-width: 56ch; }
+  .section--tight { padding-block: clamp(1.8rem, 1.2rem + 2vw, 3rem) clamp(1rem, .8rem + 1vw, 1.8rem); }
+  .count { font-size: .92rem; color: var(--ink-2); margin-bottom: 1.2rem; }
+  .more { list-style: none; padding: 0; margin: 1rem 0 0; display: flex; flex-wrap: wrap; gap: .45rem; }
+  .more a {
+    display: inline-flex; padding: .45rem .95rem; border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill); font-size: .9rem; font-weight: 520; text-decoration: none; color: var(--ink-2);
+  }
+  .more a:hover { border-color: var(--ink); color: var(--ink); }
+</style>

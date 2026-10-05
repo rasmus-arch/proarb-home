@@ -31,7 +31,11 @@ const DAY_GROUPS: Record<string, string[]> = {
 const openingHoursSpecification = site.hours
   .filter((h: { days: string; time: string }) => h.time !== 'Stängt')
   .map((h: { days: string; time: string }) => {
-    const [opens, closes] = h.time.split('–').map((t) => `${t.padStart(2, '0')}:00`);
+    // "06.55–16" -> 06:55 / 16:00
+    const [opens, closes] = h.time.split('–').map((t) => {
+      const [hh, mm = '00'] = t.trim().split(/[.:]/);
+      return `${hh.padStart(2, '0')}:${mm.padStart(2, '0')}`;
+    });
     return {
       '@type': 'OpeningHoursSpecification',
       dayOfWeek: DAY_GROUPS[h.days] ?? [],

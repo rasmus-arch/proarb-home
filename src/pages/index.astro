@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ProductImage from '../components/ProductImage.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import { site, products, categoryByUrl } from '../lib/content';
+import { site, products, categoryByUrl, brandHref, brandOrder } from '../lib/content';
 
 const staging = process.env.STAGING === '1';
 const about = (site as any).about ?? {};
@@ -14,7 +14,7 @@ const withCat = <T extends { url: string }>(items: T[]) =>
 // Arbetskläder – fyra bildkort i asymmetriskt raster
 const workFeature = withCat([
   { url: 'arbetsklader', slot: 'c1', title: 'Arbetskläder', image: '/images/kategorier/arbetsklader.jpg',
-    text: 'Byxor, jackor och tröjor från Blåkläder, Helly Hansen, Jobman och ProJob.' },
+    text: 'Byxor, jackor och tröjor från Helly Hansen, Snickers, Jobman, ProJob och Blåkläder.' },
   { url: 'varselklader', slot: 'c2', title: 'Varsel', image: '/images/kategorier/varselklader.webp',
     text: 'Certifierat enligt EN ISO 20471. Vi kollar klassningen åt er.' },
   { url: 'arbetsbyxor', slot: 'c3', title: 'Byxor', image: '/images/kategorier/arbetsbyxor.webp' },
@@ -52,7 +52,9 @@ const featuredGroups = ((site as any).featured ?? []).map((g: any) => ({
 // Varumärken: utvalda med logga, resten som text
 const featuredBrands: { name: string; logo?: string; aliases?: string[] }[] = (site as any).featuredBrands ?? [];
 const featuredNames = new Set(featuredBrands.flatMap((b) => [b.name, ...(b.aliases ?? [])].map((n) => n.toLowerCase())));
-const otherBrands = site.brands.filter((b: string) => !featuredNames.has(b.toLowerCase()));
+const otherBrands = site.brands
+  .filter((b: string) => !featuredNames.has(b.toLowerCase()))
+  .sort(brandOrder);
 
 const mapQuery = encodeURIComponent(`${site.address.street}, ${site.address.postalCode} ${site.address.city}`);
 const DAY_LONG: Record<string, string> = { 'Mån–tors': 'Måndag–torsdag', Fredag: 'Fredag', 'Lör–sön': 'Lördag–söndag' };
@@ -108,7 +110,7 @@ const [weekdays, friday] = site.hours;
     <div class="container strip__in">
       <a href="#butik">{site.address.street}<small>{site.address.postalCode} {site.address.city} · Butik &amp; showroom</small></a>
       <a href="#butik">{weekdays.days} {weekdays.time}<small>{friday.days} {friday.time} · helger stängt</small></a>
-      <a href="/tryck-och-brodyr/">Eget tryck &amp; brodyr</a>
+      <a href="/tryck-och-brodyr/">Eget tryckeri</a>
     </div>
   </div>
 
@@ -157,7 +159,7 @@ const [weekdays, friday] = site.hours;
           <h2>Profilprodukter</h2>
           <p class="shead__lead">
             Tröjor, pikéer och give aways med er logotyp – till säljkåren, mässan,
-            laget eller julbordet. Tryck och brodyr gör vi själva.
+            laget eller julbordet. Tryck gör vi själva, och brodyr löser vi via våra leverantörer.
           </p>
         </div>
       </header>
@@ -268,9 +270,9 @@ const [weekdays, friday] = site.hours;
           <img
             class="people__photo"
             src={about.photo}
-            srcset={`${about.photo.replace(/-1000\.webp$/, '-600.webp')} 600w, ${about.photo} 1000w`}
+            srcset={`${about.photo.replace(/-800\.webp$/, '-500.webp')} 500w, ${about.photo} 800w`}
             sizes="(max-width: 1000px) 100vw, 40vw"
-            width="1000" height="1625"
+            width="800" height="1285"
             alt={`Medarbetare i Snickers-hörnan i butiken på ${site.address.street}`}
             loading="lazy"
           />
@@ -326,7 +328,7 @@ const [weekdays, friday] = site.hours;
               <div><b>1 dag</b><span>Svar på offert</span></div>
             )}
             <div><b>35+</b><span>Varumärken</span></div>
-            <div><b>0</b><span>Mellanhänder på tryck &amp; brodyr</span></div>
+            <div><b>0</b><span>Mellanhänder på tryck</span></div>
           </div>
         </div>
       </div>
@@ -345,12 +347,14 @@ const [weekdays, friday] = site.hours;
       <ul class="blogos" aria-label="Våra största varumärken">
         {featuredBrands.map((b) => (
           <li class="blogos__item">
-            {b.logo ? <img src={b.logo} alt={b.name} loading="lazy" /> : <span class="blogos__word">{b.name}</span>}
+            <a href={brandHref(b.name)}>
+              {b.logo ? <img src={b.logo} alt={b.name} loading="lazy" /> : <span class="blogos__word">{b.name}</span>}
+            </a>
           </li>
         ))}
       </ul>
       <ul class="brands__list" aria-label="Fler varumärken vi jobbar med">
-        {otherBrands.map((b: string) => <li>{b}</li>)}
+        {otherBrands.map((b: string) => <li><a href={brandHref(b)}>{b}</a></li>)}
       </ul>
     </div>
   </section>
@@ -522,7 +526,7 @@ const [weekdays, friday] = site.hours;
     transition: border-color .15s;
   }
   .fp__media img, .fp__media :global(.fp__img) {
-    width: 100%; height: 100%; object-fit: contain; padding: 9%; mix-blend-mode: multiply;
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 9%; mix-blend-mode: multiply;
     transition: transform .5s cubic-bezier(.2, .8, .3, 1);
   }
   .fp__media .fp__hover { position: absolute; inset: 0; opacity: 0; transition: opacity .35s ease, transform .5s cubic-bezier(.2, .8, .3, 1); }
@@ -570,7 +574,7 @@ const [weekdays, friday] = site.hours;
   .people .shead { border-color: var(--paper); }
   .people__in { display: grid; grid-template-columns: 5fr 7fr; gap: 3rem; align-items: start; }
   .people__in > .people__copy:only-child { grid-column: 1 / -1; max-width: 62rem; }
-  .people__photo { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 38%; }
+  .people__photo { width: 100%; height: auto; aspect-ratio: 5 / 8; object-fit: cover; object-position: 50% 40%; }
   .ph {
     aspect-ratio: 4 / 5; border: 1.5px dashed color-mix(in srgb, var(--paper) 55%, transparent);
     display: grid; place-content: center; gap: 1rem; text-align: center; padding: 2rem;
@@ -641,6 +645,7 @@ const [weekdays, friday] = site.hours;
     max-width: 82%; max-height: 3.6rem; width: auto; height: auto; object-fit: contain;
     mix-blend-mode: multiply; transition: transform .25s;
   }
+  .blogos__item a { display: grid; place-items: center; width: 100%; height: 100%; color: inherit; text-decoration: none; }
   .blogos__item:hover img { transform: scale(1.05); }
   .blogos__word {
     font-family: var(--font-display); font-weight: 800; text-transform: uppercase; text-align: center;
@@ -652,6 +657,8 @@ const [weekdays, friday] = site.hours;
     font-size: clamp(1.7rem, 1.1rem + 2vw, 2.9rem); line-height: 1.12;
   }
   .brands__list li { white-space: nowrap; }
+  .brands__list a { color: inherit; text-decoration: none; }
+  .brands__list a:hover { text-decoration: underline; text-decoration-thickness: .06em; text-underline-offset: .12em; }
   .brands__list li:not(:last-child)::after {
     content: '/'; margin-inline: .35em; font-weight: 600;
     color: color-mix(in srgb, var(--ink) 28%, transparent);
