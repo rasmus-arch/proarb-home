@@ -42,7 +42,7 @@ export default defineConfig({
   site: 'https://proarb.se',
   trailingSlash: 'always',
   prefetch: { prefetchAll: true, defaultStrategy: 'viewport' },
-  integrations: [sitemap(), pruneUnusedImages()],
+  integrations: [sitemap({ filter: (page) => !/\/(sok|tack)\/$/.test(page) }), pruneUnusedImages()],
   image: {
     domains: ['proarb.se'],
     responsiveStyles: true

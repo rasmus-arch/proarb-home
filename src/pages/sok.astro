@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import QuoteCta from '../components/QuoteCta.astro';
+const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Sök', href: '/sok/' }];
+---
+<Base title="Sök | Proarb" description="Sök bland arbetskläder, profilkläder och profilprodukter hos Proarb." breadcrumbs={crumbs} noindex>
+  <section class="shd">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <h1 id="sok-h1">Sök</h1>
+      <form class="sform" role="search" action="/sok/" method="get">
+        <label class="visually-hidden" for="sok-q">Sök produkter, märken och kategorier</label>
+        <input id="sok-q" name="q" type="search" autocomplete="off" placeholder="Sök produkt, artikelnummer eller märke" />
+        <button class="btn btn--accent" type="submit">Sök</button>
+      </form>
+      <p class="count" id="sok-count" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <ul class="rows" id="sok-rows"></ul>
+      <noscript><p>Sökningen kräver JavaScript. Bläddra i <a href="/arbetsklader/">Arbetskläder</a> eller <a href="/profilprodukter/">Profilprodukter</a>, eller ring oss.</p></noscript>
+    </div>
+  </section>
+
+  <QuoteCta heading="Hittar ni inte det ni söker?" text="Sajten visar ett urval. Berätta vad ni letar efter så tar vi fram förslag – ofta samma dag." />
+</Base>
+
+<style>
+  .shd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .shd h1 { margin: 1.3rem 0 1.2rem; }
+  .sform { display: flex; gap: .6rem; max-width: 42rem; }
+  .sform input {
+    flex: 1; min-width: 0; height: 3.2rem; padding: 0 1rem; font: inherit; font-size: 1.05rem;
+    color: var(--ink); background: var(--bg-raised); border: 1.5px solid var(--ink); border-radius: var(--r);
+  }
+  .sform .btn { height: 3.2rem; padding-block: 0; }
+  .count { margin-top: 1rem; color: var(--ink-2); font-size: .95rem; min-height: 1.4em; }
+  .section--tight { padding-block: 1.2rem var(--section); }
+  .rows { list-style: none; margin: 0; padding: 0; max-width: 56rem; }
+  .rows :global(li a) {
+    display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 1rem; align-items: center;
+    padding: .7rem .4rem; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--line);
+  }
+  .rows :global(li a:hover) { background: var(--amber); }
+  .rows :global(.thumb) { width: 4.5rem; height: 4.5rem; display: grid; place-items: center; background: var(--bg-sunk); }
+  .rows :global(.thumb img) { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .rows :global(.name) { font-weight: 600; line-height: 1.25; }
+  .rows :global(.meta) { display: block; font-size: .88rem; color: var(--ink-2); margin-top: .15rem; }
+  .rows :global(.tag) { font-size: .72rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--ink); padding: .15rem .45rem; border-radius: 2px; }
+  @media (max-width: 520px) { .rows :global(li a) { grid-template-columns: 3.4rem 1fr; } .rows :global(.thumb) { width: 3.4rem; height: 3.4rem; } .rows :global(.tag) { display: none; } .sform .btn { padding-inline: 1rem; } }
+</style>
+
+<script>
+  import { loadIndex, search, typeLabel, track } from '../lib/search';
+  const input = document.getElementById('sok-q') as HTMLInputElement;
+  const rows = document.getElementById('sok-rows') as HTMLElement;
+  const count = document.getElementById('sok-count') as HTMLElement;
+  const q = new URLSearchParams(location.search).get('q')?.trim() ?? '';
+  input.value = q;
+  if (q) {
+    document.title = `Sök: ${q} | Proarb`;
+    loadIndex().then((idx) => {
+      const hits = search(idx, q, 200);
+      count.textContent = hits.length ? `${hits.length} träffar för ”${q}”` : `Inga träffar för ”${q}”. Prova ett kortare ord, eller begär offert nedan.`;
+      for (const e of hits) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = e.u;
+        const th = document.createElement('span');
+        th.className = 'thumb';
+        if (e.i) {
+          const im = document.createElement('img');
+          im.src = e.i; im.alt = ''; im.loading = 'lazy';
+          th.append(im);
+        }
+        const tx = document.createElement('span');
+        const nm = document.createElement('span');
+        nm.className = 'name';
+        nm.textContent = e.n;
+        const mt = document.createElement('span');
+        mt.className = 'meta';
+        mt.textContent = [e.b, e.s ? `Art.nr ${e.s}` : '', e.c].filter(Boolean).join(' · ');
+        tx.append(nm, mt);
+        a.append(th, tx);
+        const tg = typeLabel(e);
+        if (tg) { const t = document.createElement('span'); t.className = 'tag'; t.textContent = tg; a.append(t); }
+        li.append(a);
+        rows.append(li);
+      }
+      track(q);
+    });
+  } else {
+    input.focus();
+  }
+</script>

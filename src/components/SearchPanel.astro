@@ -1,0 +1,211 @@
+---
+// Sökpanel under headern. Resultat byggs i webbläsaren från /sok-index.json (laddas först vid fokus).
+---
+<div class="srch" id="srch" hidden>
+  <div class="container srch__in">
+    <form class="srch__form" role="search" action="/sok/" method="get">
+      <label class="visually-hidden" for="srch-q">Sök produkter, märken och kategorier</label>
+      <svg class="srch__icon" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M13 13l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input
+        id="srch-q" name="q" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search"
+        placeholder="Sök produkt, artikelnummer eller märke"
+        role="combobox" aria-expanded="false" aria-controls="srch-list" aria-autocomplete="list"
+      />
+      <button class="btn btn--accent srch__go" type="submit">Sök</button>
+      <button class="srch__close" type="button" data-srch-close aria-label="Stäng sök">
+        <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+    </form>
+    <p class="visually-hidden" id="srch-status" role="status" aria-live="polite"></p>
+    <ul class="srch__list" id="srch-list" role="listbox" aria-label="Sökförslag" hidden></ul>
+    <a class="srch__all link-arrow" id="srch-all" href="/sok/" hidden>Visa alla träffar</a>
+  </div>
+</div>
+
+<style is:global>
+  .srch {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 60;
+    background: var(--bg); border-bottom: var(--rule); box-shadow: 0 18px 30px -22px rgba(15, 44, 51, .5);
+  }
+  .srch[hidden] { display: none; }
+  .srch__in { padding-block: 1rem 1.2rem; }
+  .srch__form { position: relative; display: flex; align-items: center; gap: .6rem; }
+  .srch__icon { position: absolute; left: .9rem; color: var(--ink-3); pointer-events: none; }
+  .srch__form input {
+    flex: 1; min-width: 0; height: 3.2rem; padding: 0 1rem 0 2.7rem; font: inherit; font-size: 1.05rem;
+    color: var(--ink); background: var(--bg-raised); border: 1.5px solid var(--ink); border-radius: var(--r);
+  }
+  .srch__form input::-webkit-search-cancel-button { display: none; }
+  .srch__go { height: 3.2rem; padding-block: 0; }
+  .srch__close {
+    display: grid; place-items: center; flex: none; width: 3.2rem; height: 3.2rem; cursor: pointer;
+    background: transparent; color: var(--ink); border: var(--rule); border-radius: var(--r);
+  }
+  .srch__close:hover { background: var(--ink); color: var(--paper); }
+  .srch__list { list-style: none; margin: .8rem 0 0; padding: 0; max-height: min(62vh, 30rem); overflow-y: auto; border-top: 1px solid var(--line); }
+  .srch__list[hidden], .srch__all[hidden] { display: none; }
+  .srch__item a {
+    display: grid; grid-template-columns: 3rem 1fr auto; gap: .9rem; align-items: center;
+    padding: .55rem .4rem; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--line);
+  }
+  .srch__item a[aria-selected='true'], .srch__item a:hover { background: var(--amber); }
+  .srch__thumb { width: 3rem; height: 3rem; display: grid; place-items: center; background: var(--bg-sunk); }
+  .srch__thumb img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .srch__name { font-weight: 600; line-height: 1.25; }
+  .srch__meta { display: block; font-size: .84rem; color: var(--ink-2); }
+  .srch__tag {
+    font-size: .72rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase;
+    border: 1px solid var(--ink); padding: .15rem .45rem; border-radius: 2px;
+  }
+  .srch__empty { padding: 1rem .4rem; color: var(--ink-2); }
+  .srch__all { display: inline-flex; margin-top: .9rem; font-size: .95rem; }
+  @media (max-width: 520px) {
+    .srch__go { display: none; }
+    .srch__item a { grid-template-columns: 2.6rem 1fr; }
+    .srch__tag { display: none; }
+  }
+</style>
+
+<script>
+  import { loadIndex, search, typeLabel, track, type Entry } from '../lib/search';
+
+  const panel = document.getElementById('srch') as HTMLElement;
+  const input = document.getElementById('srch-q') as HTMLInputElement;
+  const list = document.getElementById('srch-list') as HTMLUListElement;
+  const status = document.getElementById('srch-status') as HTMLElement;
+  const all = document.getElementById('srch-all') as HTMLAnchorElement;
+  const openers = document.querySelectorAll<HTMLElement>('[data-srch-open]');
+  let active = -1;
+  let timer: number | undefined;
+  let lastTracked = '';
+
+  const setOpen = (open: boolean) => {
+    panel.hidden = !open;
+    openers.forEach((b) => b.setAttribute('aria-expanded', String(open)));
+    if (open) {
+      input.focus();
+      loadIndex();
+    }
+  };
+  const close = () => {
+    setOpen(false);
+    (document.querySelector('[data-srch-open]') as HTMLElement | null)?.focus();
+  };
+  openers.forEach((b) =>
+    b.addEventListener('click', () => {
+      // stäng ev. mobilmeny först
+      const drawer = document.getElementById('drawer');
+      if (drawer && !drawer.hidden) (document.querySelector('[data-menu-close]') as HTMLElement | null)?.click();
+      setOpen(panel.hidden);
+    })
+  );
+  panel.querySelector('[data-srch-close]')?.addEventListener('click', close);
+
+  const item = (e: Entry, i: number) => {
+    const li = document.createElement('li');
+    li.className = 'srch__item';
+    li.setAttribute('role', 'presentation');
+    const a = document.createElement('a');
+    a.href = e.u;
+    a.id = `srch-opt-${i}`;
+    a.setAttribute('role', 'option');
+    a.setAttribute('aria-selected', 'false');
+    const thumb = document.createElement('span');
+    thumb.className = 'srch__thumb';
+    if (e.i) {
+      const img = document.createElement('img');
+      img.src = e.i;
+      img.alt = '';
+      img.loading = 'lazy';
+      thumb.append(img);
+    }
+    const txt = document.createElement('span');
+    const name = document.createElement('span');
+    name.className = 'srch__name';
+    name.textContent = e.n;
+    const meta = document.createElement('span');
+    meta.className = 'srch__meta';
+    meta.textContent = [e.b, e.s ? `Art.nr ${e.s}` : '', e.c].filter(Boolean).join(' · ');
+    txt.append(name, meta);
+    a.append(thumb, txt);
+    const tag = typeLabel(e);
+    if (tag) {
+      const t = document.createElement('span');
+      t.className = 'srch__tag';
+      t.textContent = tag;
+      a.append(t);
+    }
+    li.append(a);
+    return li;
+  };
+
+  const select = (i: number) => {
+    const opts = [...list.querySelectorAll<HTMLElement>('[role=option]')];
+    opts.forEach((o, n) => o.setAttribute('aria-selected', String(n === i)));
+    active = i;
+    if (opts[i]) {
+      input.setAttribute('aria-activedescendant', opts[i].id);
+      opts[i].scrollIntoView({ block: 'nearest' });
+    } else input.removeAttribute('aria-activedescendant');
+  };
+
+  const run = async () => {
+    const q = input.value.trim();
+    list.replaceChildren();
+    active = -1;
+    input.removeAttribute('aria-activedescendant');
+    if (q.length < 2) {
+      list.hidden = true;
+      all.hidden = true;
+      input.setAttribute('aria-expanded', 'false');
+      status.textContent = '';
+      return;
+    }
+    const hits = search(await loadIndex(), q, 40);
+    if (input.value.trim() !== q) return; // föråldrat svar
+    const shown = hits.slice(0, 8);
+    if (!hits.length) {
+      const li = document.createElement('li');
+      li.className = 'srch__empty';
+      li.textContent = 'Inga träffar. Prova ett kortare ord, eller begär offert – vi tar fram det mesta.';
+      list.append(li);
+    } else shown.forEach((e, i) => list.append(item(e, i)));
+    list.hidden = false;
+    input.setAttribute('aria-expanded', String(hits.length > 0));
+    all.hidden = hits.length === 0;
+    all.href = `/sok/?q=${encodeURIComponent(q)}`;
+    all.textContent = hits.length > shown.length ? `Visa alla träffar (${hits.length}${hits.length >= 40 ? '+' : ''})` : 'Visa alla träffar';
+    status.textContent = hits.length ? `${hits.length} träffar` : 'Inga träffar';
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      if (q !== lastTracked) {
+        lastTracked = q;
+        track(q);
+      }
+    }, 1200);
+  };
+
+  input.addEventListener('input', run);
+  input.addEventListener('focus', () => loadIndex());
+  input.addEventListener('keydown', (e) => {
+    const n = list.querySelectorAll('[role=option]').length;
+    if (e.key === 'ArrowDown' && n) { e.preventDefault(); select((active + 1) % n); }
+    else if (e.key === 'ArrowUp' && n) { e.preventDefault(); select((active - 1 + n) % n); }
+    else if (e.key === 'Enter' && active >= 0) {
+      e.preventDefault();
+      list.querySelectorAll<HTMLAnchorElement>('[role=option]')[active]?.click();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !panel.hidden) close();
+    // "/" öppnar sök (utom när man skriver i ett fält)
+    if (e.key === '/' && panel.hidden && !/^(INPUT|TEXTAREA|SELECT)$/.test((e.target as HTMLElement).tagName)) {
+      e.preventDefault();
+      setOpen(true);
+    }
+  });
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (!panel.hidden && !t.closest('#srch') && !t.closest('[data-srch-open]')) setOpen(false);
+  });
+</script>
