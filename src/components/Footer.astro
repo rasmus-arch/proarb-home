@@ -38,6 +38,7 @@ const year = new Date().getFullYear();
           <li><a href="/kontakt/">Kontakt &amp; offert</a></li>
           <li><a href="/tryck-och-brodyr/">Tryck &amp; brodyr</a></li>
           <li><a href="/integritetspolicy/">Integritetspolicy</a></li>
+          {(site.analytics as any)?.cookieYesKey && <li><a href="#" class="cky-banner-element">Cookie-inställningar</a></li>}
         </ul>
       </nav>
     </div>

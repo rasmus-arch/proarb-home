@@ -34,6 +34,8 @@
     "linkedin": "https://www.linkedin.com/company/profil-&-arbetskläder-ab/posts/?feedView=all"
   },
   "analytics": {
+    "cookieYesKey": "",
+    "ga4Id": "",
     "gtmId": "",
     "googleSiteVerification": ""
   },

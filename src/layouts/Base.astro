@@ -68,6 +68,17 @@ const org = {
 
 const gtmId = site.analytics?.gtmId?.trim();
 const siteVerification = site.analytics?.googleSiteVerification?.trim();
+// CookieYes (cookie-banner) och Google Analytics 4. Tomma ID:n = ingenting laddas.
+const cookieYesKey = (site.analytics as any)?.cookieYesKey?.trim();
+const ga4Id = (site.analytics as any)?.ga4Id?.trim();
+const ga4Init = ga4Id
+  ? `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+gtag('set','url_passthrough',true);gtag('js',new Date());gtag('config','${ga4Id}');
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href]');if(!a)return;var h=a.getAttribute('href')||'';
+if(h.indexOf('tel:')===0)gtag('event','click_phone');else if(h.indexOf('mailto:')===0)gtag('event','click_email');
+else if(h.indexOf('google.com/maps')>-1)gtag('event','click_map');else if(/\/kontakt\/\?produkt=/.test(h))gtag('event','click_product_quote');});`
+  : '';
 
 const crumbLd = breadcrumbs.length
   ? {
@@ -90,6 +101,9 @@ const crumbLd = breadcrumbs.length
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Byggd av Rasmus Gustafsson https://rasmusgustafsson.com -->
     <meta name="designer" content="Byggd av Rasmus Gustafsson https://rasmusgustafsson.com" />
+    {cookieYesKey && !staging && (
+      <script id="cookieyes" type="text/javascript" src={`https://cdn-cookieyes.com/client_data/${cookieYesKey}/script.js`}></script>
+    )}
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -109,6 +123,12 @@ const crumbLd = breadcrumbs.length
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
     {crumbLd && <script type="application/ld+json" set:html={JSON.stringify(crumbLd)} />}
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {ga4Id && !staging && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`}></script>
+        <script is:inline set:html={ga4Init} />
+      </>
+    )}
     {gtmId && (
       <script set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtmId}');`} />
     )}
