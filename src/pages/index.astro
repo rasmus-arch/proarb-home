@@ -270,9 +270,9 @@ const [weekdays, friday] = site.hours;
           <img
             class="people__photo"
             src={about.photo}
-            srcset={`${about.photo.replace(/-800\.webp$/, '-500.webp')} 500w, ${about.photo} 800w`}
+            srcset={`${about.photo.replace(/-1000\.webp$/, '-500.webp')} 500w, ${about.photo} 1000w`}
             sizes="(max-width: 1000px) 100vw, 40vw"
-            width="800" height="1285"
+            width="1000" height="1399"
             alt={`Medarbetare i Snickers-hörnan i butiken på ${site.address.street}`}
             loading="lazy"
           />
@@ -574,7 +574,7 @@ const [weekdays, friday] = site.hours;
   .people .shead { border-color: var(--paper); }
   .people__in { display: grid; grid-template-columns: 5fr 7fr; gap: 3rem; align-items: start; }
   .people__in > .people__copy:only-child { grid-column: 1 / -1; max-width: 62rem; }
-  .people__photo { width: 100%; height: auto; aspect-ratio: 5 / 8; object-fit: cover; object-position: 50% 40%; }
+  .people__photo { width: 100%; height: auto; }
   .ph {
     aspect-ratio: 4 / 5; border: 1.5px dashed color-mix(in srgb, var(--paper) 55%, transparent);
     display: grid; place-content: center; gap: 1rem; text-align: center; padding: 2rem;
