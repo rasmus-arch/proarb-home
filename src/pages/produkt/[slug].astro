@@ -113,7 +113,9 @@ const ld = {
           {product.categories.includes('varselklader') && <span class="tag tag--hivis">EN ISO 20471</span>}
         </div>
 
-        {product.description && <p class="p__desc">{product.description}</p>}
+        {product.description && (
+          <div class="p__desc">{product.description.split(/\n+/).map((para) => <p>{para}</p>)}</div>
+        )}
 
         {colors.length > 1 && (
           <p class="p__colors"><strong>Färger:</strong> {colors.map((c) => c.color).join(', ')}</p>
@@ -173,6 +175,7 @@ const ld = {
   .eyebrow__link:hover { text-decoration: underline; }
   .p__info h1 { font-size: var(--step-4); margin: .6rem 0 1rem; }
   .p__tags { margin-bottom: 1.4rem; }
+  .p__desc p + p { margin-top: .8em; }
   .p__desc { color: var(--ink-2); font-size: 1.02rem; line-height: 1.65; max-width: 56ch; }
   .p__colors { margin-top: 1rem; font-size: .95rem; color: var(--ink-2); }
   .p__spec {

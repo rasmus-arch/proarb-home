@@ -38,10 +38,19 @@ export interface Category {
 
 export const site = siteJson;
 export const categories = categoriesJson as Category[];
-// Beskrivningar från exporten innehåller ibland bokstavliga "\n" – gör om till mellanslag
+// Beskrivningar från exporten innehåller bokstavliga "\n" (backslash + n) och lösa backslashar.
+// Radbrytningarna blir riktiga (stycken), resten städas.
+const cleanDescription = (d: string) =>
+  d
+    .replace(/\\n/g, '\n')
+    .replace(/\\/g, '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/ ?\n ?/g, '\n')
+    .replace(/\n{2,}/g, '\n\n')
+    .trim();
 export const products = (productsJson as Product[])
   .filter((p) => p.name)
-  .map((p) => ({ ...p, description: (p.description ?? '').replace(/(?:\\n)+/g, ' ').replace(/\s+/g, ' ').trim() }));
+  .map((p) => ({ ...p, description: cleanDescription(p.description ?? '') }));
 
 export const categoryByUrl = (url: string) => categories.find((c) => c.url === url);
 
@@ -163,6 +172,7 @@ export const brandsInUse = (): string[] =>
 
 export function excerpt(text: string, max = 120): string {
   if (!text) return '';
+  text = text.replace(/\s+/g, ' ').trim();
   if (text.length <= max) return text;
   const cut = text.slice(0, max);
   return cut.slice(0, cut.lastIndexOf(' ')) + '…';
