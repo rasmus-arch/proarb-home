@@ -19873,5 +19873,92 @@
     ],
     "variants": [],
     "file": null
+  },
+  {
+    "slug": "hellyhansen-kensington-connect-77381",
+    "name": "Helly Hansen Kensington Connect",
+    "sku": "77381",
+    "brand": "Helly Hansen",
+    "description": "Arbetsbyxa från Helly Hansen. Färg på bilden: svart. Går att få med tryck eller brodyr.",
+    "categories": [
+      "arbetsbyxor",
+      "arbetsklader"
+    ],
+    "image": "/images/utvalda/hh-kensington-connect-77381.webp",
+    "gallery": [
+      "/images/utvalda/hh-kensington-connect-77381.webp"
+    ],
+    "variants": [],
+    "file": null
+  },
+  {
+    "slug": "cutter-buck-wedderburn-351472",
+    "name": "Wedderburn jacka",
+    "sku": "351472",
+    "brand": "Cutter & Buck",
+    "description": "Jacka från Cutter & Buck. Finns i Ivy green, Dark navy och Black. Går att få med tryck eller brodyr.",
+    "categories": [
+      "profiljackor",
+      "profilprodukter"
+    ],
+    "image": "/images/utvalda/cutter-buck-wedderburn-351472.webp",
+    "gallery": [
+      "/images/utvalda/cutter-buck-wedderburn-351472.webp",
+      "/images/utvalda/cutter-buck-wedderburn-miljo.webp"
+    ],
+    "variants": [],
+    "file": null
+  },
+  {
+    "slug": "vinga-vino-kyparkorkskruv-p911051",
+    "name": "Vino kyparkorkskruv",
+    "sku": "P911.051",
+    "brand": "Vinga",
+    "description": "Klassisk kyparkorkskruv i rostfritt stål och kolstål med folieskärare, tvåstegsöppnare och kapsylöppnare. Levereras i presentask. Går att få profilerad.",
+    "categories": [
+      "give-aways",
+      "profilprodukter"
+    ],
+    "image": "/images/utvalda/vinga-korkskruv-p911051.webp",
+    "gallery": [
+      "/images/utvalda/vinga-korkskruv-p911051.webp"
+    ],
+    "variants": [],
+    "file": null
+  },
+  {
+    "slug": "new-wave-trucker-5-0-special-040144184",
+    "name": "Trucker 5.0 Special",
+    "sku": "040144184",
+    "brand": "New Wave",
+    "description": "Truckerkeps med nätbak. Går att få med er egen brodyr.",
+    "categories": [
+      "ovriga-profilklader",
+      "profilprodukter"
+    ],
+    "image": "/images/utvalda/trucker-5-special.webp",
+    "gallery": [
+      "/images/utvalda/trucker-5-special.webp"
+    ],
+    "variants": [],
+    "file": null
+  },
+  {
+    "slug": "termosmugg-35-cl-411058",
+    "name": "Termosmugg 35 cl",
+    "sku": "411058",
+    "brand": "D&J",
+    "description": "Termosmugg i rostfritt stål med låsbart lock och D-ring för karbinhake. Dryck på 100 °C håller 71 °C efter sex timmar. Finns i flera färger. Går att få profilerad.",
+    "categories": [
+      "give-aways",
+      "profilprodukter"
+    ],
+    "image": "/images/utvalda/termosmugg-411058.webp",
+    "gallery": [
+      "/images/utvalda/termosmugg-411058.webp",
+      "/images/utvalda/termosmugg-411058-miljo.webp"
+    ],
+    "variants": [],
+    "file": null
   }
 ]
