@@ -38,7 +38,10 @@ export interface Category {
 
 export const site = siteJson;
 export const categories = categoriesJson as Category[];
-export const products = (productsJson as Product[]).filter((p) => p.name);
+// Beskrivningar från exporten innehåller ibland bokstavliga "\n" – gör om till mellanslag
+export const products = (productsJson as Product[])
+  .filter((p) => p.name)
+  .map((p) => ({ ...p, description: (p.description ?? '').replace(/(?:\\n)+/g, ' ').replace(/\s+/g, ' ').trim() }));
 
 export const categoryByUrl = (url: string) => categories.find((c) => c.url === url);
 

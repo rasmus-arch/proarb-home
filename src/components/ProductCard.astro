@@ -3,7 +3,7 @@ import ProductImage from './ProductImage.astro';
 import type { Product } from '../lib/content';
 interface Props { product: Product; eager?: boolean; note?: string }
 const { product: p, eager = false, note } = Astro.props;
-const colors = p.variants.map((v) => v.color).filter(Boolean) as string[];
+const colors = [...new Set(p.variants.map((v) => v.color?.toLowerCase()).filter(Boolean))] as string[];
 ---
 <article class="card">
   <a class="card__link" href={`/produkt/${p.slug}/`}>

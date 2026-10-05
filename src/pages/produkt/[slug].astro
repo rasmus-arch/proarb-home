@@ -23,7 +23,11 @@ const crumbs = [
   ...(main && main !== root ? [{ name: main.name, href: `/${main.url}/` }] : []),
   { name: product.name, href: `/produkt/${product.slug}/` }
 ];
-const colors = product.variants.filter((v) => v.color);
+// En miniatyr per färg (varianter kan vara många: samma färg i flera storlekar)
+const colors = product.variants.filter(
+  (v, i, all) => v.color && all.findIndex((x) => x.color && x.color.toLowerCase() === v.color!.toLowerCase()) === i
+);
+const sizes = [...new Set(product.variants.map((v) => v.size).filter((s) => s && s.toLowerCase() !== 'one size'))] as string[];
 const gallery = product.gallery?.length ? product.gallery : product.image ? [product.image] : [];
 const related = relatedTo(product);
 
@@ -114,11 +118,14 @@ const ld = {
         {colors.length > 1 && (
           <p class="p__colors"><strong>Färger:</strong> {colors.map((c) => c.color).join(', ')}</p>
         )}
+        {sizes.length > 1 && (
+          <p class="p__colors"><strong>Storlekar:</strong> {sizes.join(', ')}</p>
+        )}
 
         <dl class="p__spec">
           {product.sku && <div><dt>Artikelnummer</dt><dd>{product.sku}</dd></div>}
           {product.brand && <div><dt>Varumärke</dt><dd>{product.brand}</dd></div>}
-          <div><dt>Storlekar</dt><dd>Hela leverantörens storleksskala</dd></div>
+          <div><dt>Storlekar</dt><dd>{sizes.length > 1 ? sizes.join(', ') : 'Hela leverantörens storleksskala'}</dd></div>
           <div><dt>Profilering</dt><dd>Tryck, brodyr eller reflex</dd></div>
         </dl>
 
