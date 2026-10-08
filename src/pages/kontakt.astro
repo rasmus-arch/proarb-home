@@ -13,12 +13,22 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Kontakt', href: '/kontakt/'
   <section class="hd">
     <div class="container">
       <Breadcrumbs items={crumbs} />
-      <p class="eyebrow">Kontakt</p>
-      <h1>Berätta vad ni behöver</h1>
-      <p class="lead">
-        Fyll i formuläret så återkommer vi med ett förslag – plagg, storlekar, pris och hur
-        logotypen placeras. Vill ni hellre prata är telefonen alltid snabbast.
-      </p>
+      <div class="hd__grid">
+        <div>
+          <p class="eyebrow">Kontakt</p>
+          <h1>Berätta vad ni behöver</h1>
+          <p class="lead">
+            Fyll i formuläret så återkommer vi med ett förslag – plagg, storlekar, pris och hur
+            logotypen placeras. Vill ni hellre prata är telefonen alltid snabbast.
+          </p>
+        </div>
+        <img
+          class="hd__photo"
+          src="/images/personal/om-oss-600.webp"
+          width="600" height="1070"
+          alt="Medarbetare i Profil & Arbetsklädervästen med en profilerad kaffemugg i butiken"
+        />
+      </div>
     </div>
   </section>
 
@@ -64,6 +74,12 @@ const crumbs = [{ name: 'Hem', href: '/' }, { name: 'Kontakt', href: '/kontakt/'
 
 <style>
   .hd { padding-block: clamp(1.5rem, 1rem + 2vw, 2.75rem) 0; }
+  .hd__grid { display: grid; grid-template-columns: 1fr auto; gap: clamp(1.5rem, 1rem + 3vw, 4rem); align-items: end; }
+  .hd__photo { width: clamp(11rem, 8rem + 12vw, 17rem); aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 14%; border-radius: var(--r-lg); display: block; }
+  @media (max-width: 720px) {
+    .hd__grid { grid-template-columns: 1fr; gap: 1.2rem; }
+    .hd__photo { width: 100%; max-width: 20rem; aspect-ratio: 16 / 9; }
+  }
   .hd .eyebrow { margin-top: 1.3rem; }
   .hd h1 { margin: .7rem 0 1rem; max-width: 16ch; }
   .section--top0 { padding-top: clamp(2rem, 1.5rem + 2vw, 3rem); }
